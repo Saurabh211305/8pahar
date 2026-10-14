@@ -1,207 +1,644 @@
 ---
+/**
+ * Section 01 — Hero, recreated from the approved 8PAHAR reference.
+ * Desktop: copy + service strip on the left over the light background,
+ * architectural photograph on the right with a soft tonal transition,
+ * annotation labels pinned to image coordinates, callout bottom-right.
+ */
 import { hero } from '../../content/site';
-import CtaLink from '../ui/CtaLink.astro';
-import Picture from '../ui/Picture.astro';
-import CoveragePlan from '../illustrations/CoveragePlan.astro';
-import { heroImageSizes } from '../../content/images';
----
-<section class="hero surface-ivory" aria-labelledby="hero-title" data-hero>
-  <div class="container hero__grid">
-    <div class="hero__copy">
-      <p class="hero__eyebrow">
-        {hero.eyebrow.map((item, i) => (
-          <>
-            {i > 0 && <span class="hero__dot" aria-hidden="true">·</span>}
-            <span>{item}</span>
-          </>
-        ))}
-      </p>
-      <h1 id="hero-title" class="display hero__title">
-        You Don’t Need More Cameras. <em>You Need Fewer Blind Spots.</em>
-      </h1>
-      <p class="lede hero__lede">{hero.lede}</p>
-      <div class="cta-row hero__ctas">
-        <CtaLink cta={hero.primary} />
-        <CtaLink cta={hero.secondary} variant="secondary" />
-      </div>
-      <p class="hero__descriptor">
-        <span class="hero__rule" aria-hidden="true"></span>
-        Intelligent Security Systems
-      </p>
-    </div>
+import { images, heroImageSizes } from '../../content/images';
+import Icon from '../ui/Icon.astro';
 
-    <div class="hero__visual">
-      <div class="frame hero__frame">
-        <Picture name="hero-residence" alt={hero.imageAlt} sizes={heroImageSizes} priority />
-      </div>
-      <aside class="hero__panel" aria-label={hero.panel.label}>
-        <p class="hero__panel-label">{hero.panel.label}</p>
-        <CoveragePlan class="hero__plan" />
-        <ul role="list" class="hero__legend">
-          {hero.panel.legend.map((l) => (
-            <li><span class:list={['hero__swatch', `hero__swatch--${l.key}`]} aria-hidden="true"></span>{l.text}</li>
-          ))}
-        </ul>
-        <p class="hero__panel-caption">{hero.panel.caption}</p>
-      </aside>
+const photo = images['hero-architecture'];
+const srcset = photo.widths.map((w) => `/images/${photo.name}-${w}.webp ${w}w`).join(', ');
+---
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <div class="hero__copy">
+    <p class="hero__eyebrow">
+      <span class="hero__rule" aria-hidden="true"></span>
+      <span>{hero.eyebrow}</span>
+      <span class="hero__audiences">{hero.audiences.join('  |  ')}</span>
+    </p>
+
+    <h1 id="hero-title" class="hero__title">
+      {hero.titleLines.map((line) => <><span class="hero__line">{line}</span>{' '}</>)}
+      {hero.titleAccentLines.map((line, i) => (
+        <><span class="hero__line hero__line--accent">
+          {line}
+          {i === hero.titleAccentLines.length - 1 && (
+            <svg class="hero__stroke" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path d="M4 17.5C52 12 118 8.6 190 8.2c38-.2 72 .8 104 2.6-31 .6-70 1.8-108 3.7-58 2.9-112 6.8-176 10.4-4 .2-8-2.6-6-7.4Z" fill="currentColor" />
+            </svg>
+          )}
+        </span>{' '}</>
+      ))}
+    </h1>
+
+    <p class="hero__lede">{hero.lede}</p>
+
+    <div class="hero__ctas">
+      <a
+        class="hero__cta hero__cta--primary"
+        href={hero.primary.href}
+        data-cta="audit"
+        data-cta-source={hero.primary.source}
+        data-cta-label={hero.primary.label}
+        data-prefill-requirement={hero.primary.requirement}
+      >
+        <Icon name="calendar" size={36} strokeWidth={1.4} />
+        <span class="hero__cta-text">
+          <span class="hero__cta-label">{hero.primary.label}<Icon name="arrow" size={20} /></span>
+          <span class="hero__cta-note">{hero.primaryNote}</span>
+        </span>
+      </a>
+      <a class="hero__cta hero__cta--secondary" href={hero.secondary.href} data-cta="nav" data-cta-source={hero.secondary.source} data-cta-label={hero.secondary.label}>
+        <Icon name="chat" size={36} strokeWidth={1.4} />
+        <span class="hero__cta-label hero__cta-label--wrap">Tell Us Your <br />Security Problem</span>
+      </a>
     </div>
   </div>
+
+  <figure class="hero__media">
+    <div class="hero__photo">
+    <img
+      class="hero__img"
+      src={`/images/${photo.name}-1280.webp`}
+      srcset={srcset}
+      sizes={heroImageSizes}
+      alt={hero.imageAlt}
+      width={photo.width}
+      height={photo.height}
+      fetchpriority="high"
+      decoding="sync"
+    />
+    </div>
+    <svg class="hero__arcs" viewBox="0 0 1672 941" aria-hidden="true" focusable="false">
+      <g fill="none" stroke="#995739" stroke-width="1.1">
+        <path d="M702 0 A399 399 0 0 0 509 476" stroke-opacity="0.7" vector-effect="non-scaling-stroke" />
+        <path d="M548 260 A300 300 0 0 0 423 453" stroke-opacity="0.5" vector-effect="non-scaling-stroke" />
+        <path d="M850 0 V36 M840 1 H860" stroke-opacity="0.6" vector-effect="non-scaling-stroke" />
+        <circle cx="850" cy="42" r="6" stroke-opacity="0.6" vector-effect="non-scaling-stroke" />
+      </g>
+    </svg>
+    <p class="hero__tag hero__tag--coverage">
+      <span class="hero__tag-dot" aria-hidden="true"></span>
+      <span><strong>{hero.labels.coverage.title}</strong><span>{hero.labels.coverage.detail}</span></span>
+    </p>
+    <p class="hero__tag hero__tag--gap">
+      <span class="hero__tag-dot" aria-hidden="true"></span>
+      <strong>{hero.labels.gap.title.replace(' Blind', '\nBlind')}</strong>
+    </p>
+    <figcaption class="visually-hidden">Illustrative coverage annotations on an architectural photograph; not a live camera feed or a customer installation.</figcaption>
+  </figure>
+
+  <ul role="list" class="hero__strip" aria-label="What 8PAHAR covers">
+    {hero.strip.map((item) => (
+      <li>
+        <a class="hero__strip-item" href={item.href}>
+          <Icon name={item.icon} size={38} strokeWidth={1.5} />
+          <span class="hero__strip-title">{item.title.split(' ')[0]}<br />{item.title.split(' ').slice(1).join(' ')}</span>
+          <span class="hero__strip-text">{item.text}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <a class="hero__callout" href={hero.callout.href} data-cta="nav" data-cta-source="hero-callout" data-cta-label="See how a security audit helps">
+    <span class="hero__callout-icon" aria-hidden="true"><Icon name="arrow" size={22} /></span>
+    <span class="hero__callout-text">{hero.callout.text.replace(' Helps', '\nHelps')}</span>
+    <img class="hero__callout-thumb" src="/images/hero-callout-thumb.webp" alt="" width="304" height="190" loading="lazy" decoding="async" />
+  </a>
 </section>
 
 <style>
   .hero {
-    padding-block: clamp(28px, 5vw, 72px) clamp(64px, 8vw, 112px);
-  }
-  .hero__grid {
+    --hero-ivory: #f8f3ec;
+    --hero-terracotta: #995739;
+    --hero-green: #0b2b25;
+    --hero-pad: max(clamp(16px, 4.4vw, 72px), calc((100% - 1648px) / 2 + 72px));
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: grid;
-    gap: clamp(36px, 5vw, 72px);
-    align-items: center;
+    grid-template-columns: minmax(0, 960px) 1fr;
+    grid-template-rows: 1fr auto;
+    min-height: max(760px, calc(100svh - var(--header-h)));
+    padding: clamp(40px, 9.6vh, 90px) var(--hero-pad) clamp(28px, 4.6vh, 42px);
+    background: var(--hero-ivory);
+    color: var(--onyx);
   }
-  @media (min-width: 1024px) {
-    .hero__grid {
-      grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
-    }
-  }
+
+  /* ---------- Copy ---------- */
   .hero__copy {
-    display: grid;
-    gap: clamp(18px, 2vw, 26px);
-    justify-items: start;
+    position: relative;
+    z-index: 2;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+    max-width: 760px;
+    padding-left: 18px;
   }
   .hero__eyebrow {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--terracotta-ink);
-  }
-  .hero__dot {
-    color: var(--grey);
-  }
-  .hero__title {
-    max-width: 15ch;
-  }
-  .hero__title em {
-    display: block;
-    font-style: italic;
-    color: var(--green);
-  }
-  .hero__lede {
-    max-width: 52ch;
-  }
-  .hero__ctas {
-    margin-top: 6px;
-  }
-  .hero__descriptor {
-    display: flex;
     align-items: center;
-    gap: 14px;
-    margin-top: 8px;
-    font-size: var(--fs-label);
-    font-weight: 600;
-    letter-spacing: 0.28em;
+    gap: 10px 18px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--ink-muted);
   }
   .hero__rule {
-    width: 40px;
-    height: 1px;
-    background: var(--terracotta);
+    width: 48px;
+    height: 1.5px;
+    background: var(--onyx);
   }
-
-  .hero__visual {
+  .hero__audiences {
+    margin-left: 24px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    white-space: pre;
+    color: var(--hero-terracotta);
+  }
+  .hero__title {
+    margin-top: 30px;
+    font-family: var(--font-serif);
+    font-size: clamp(2.6rem, 1.98rem + 3.2vw, 5.3rem);
+    font-weight: 530;
+    font-variation-settings: 'opsz' 72;
+    line-height: 0.93;
+    letter-spacing: -0.012em;
+    color: #0a1410;
+    text-wrap: initial;
+  }
+  .hero__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .hero__line--accent {
     position: relative;
+    font-weight: 470;
+    letter-spacing: -0.022em;
+    width: fit-content;
+    color: var(--hero-terracotta);
   }
-  .hero__frame {
-    aspect-ratio: 4 / 5;
-    border-radius: var(--radius-lg);
+  .hero__stroke {
+    position: absolute;
+    left: 1.98em;
+    bottom: -0.22em;
+    width: 2.9em;
+    height: 0.31em;
+    color: var(--hero-terracotta);
+    pointer-events: none;
   }
-  .hero__frame :global(img) {
-    object-position: 58% 50%;
-  }
-  @media (max-width: 1023px) {
-    .hero__frame {
-      aspect-ratio: 4 / 3;
-    }
-  }
-  @media (max-width: 599px) {
-    .hero__frame {
-      aspect-ratio: 5 / 4;
-    }
+  .hero__lede {
+    max-width: 528px;
+    margin-top: 40px;
+    font-size: clamp(1.0625rem, 0.95rem + 0.38vw, 1.36rem);
+    font-weight: 450;
+    line-height: 1.4;
+    color: #141716;
   }
 
-  /* Glass panel: the one place the hero uses translucency — it carries the coverage idea. */
-  .hero__panel {
-    position: absolute;
-    left: clamp(-56px, -4vw, -24px);
-    bottom: clamp(20px, 4vw, 40px);
-    width: min(300px, 70%);
-    display: grid;
-    gap: 10px;
-    padding: 18px 18px 16px;
-    border-radius: var(--radius-lg);
-    background: rgba(244, 239, 231, 0.84);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(14px) saturate(130%);
-    -webkit-backdrop-filter: blur(14px) saturate(130%);
-    box-shadow: 0 24px 48px -20px rgba(17, 18, 18, 0.45);
-  }
-  .hero__panel-label {
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--green);
-  }
-  .hero__panel :global(.hero__plan) {
-    width: 100%;
-    height: auto;
-  }
-  .hero__legend {
+  /* ---------- CTAs ---------- */
+  .hero__ctas {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    color: var(--ink-soft);
+    margin-top: 22px;
   }
-  .hero__legend li {
+  .hero__cta {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 22px;
+    min-height: 84px;
+    padding: 14px 30px;
+    border-radius: 7px;
+    text-decoration: none;
+    transition:
+      background-color 0.2s var(--ease),
+      border-color 0.2s var(--ease);
   }
-  .hero__swatch {
-    width: 14px;
-    height: 10px;
-    border-radius: 2px;
+  .hero__cta--primary {
+    min-width: 368px;
+    background: var(--hero-green);
+    color: var(--ivory);
   }
-  .hero__swatch--covered {
-    background: rgba(23, 60, 54, 0.28);
-    border: 1px solid var(--green);
+  .hero__cta--primary:hover {
+    background: #06201b;
   }
-  .hero__swatch--gap {
-    background: repeating-linear-gradient(45deg, var(--terracotta) 0 1.5px, transparent 1.5px 4px);
-    border: 1px dashed var(--terracotta);
+  .hero__cta--secondary {
+    min-width: 288px;
+    border: 1.5px solid rgba(17, 18, 18, 0.55);
+    background: rgba(255, 255, 255, 0.35);
+    color: var(--onyx);
   }
-  .hero__panel-caption {
-    font-size: var(--fs-xs);
-    line-height: 1.5;
-    color: var(--ink-soft);
+  .hero__cta--secondary:hover {
+    border-color: var(--onyx);
+    background: rgba(255, 255, 255, 0.6);
   }
-  @media (max-width: 1023px) {
-    .hero__panel {
-      left: auto;
-      right: 16px;
-      bottom: 16px;
+  .hero__cta-text {
+    display: grid;
+    gap: 4px;
+  }
+  .hero__cta-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.22rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .hero__cta-label--wrap {
+    display: block;
+  }
+  .hero__cta-label :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+  .hero__cta:hover .hero__cta-label :global(svg) {
+    transform: translateX(3px);
+  }
+  .hero__cta-note {
+    font-size: 0.9375rem;
+    color: rgba(244, 239, 231, 0.86);
+  }
+
+  /* ---------- Photograph ---------- */
+  .hero__media {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: -9%;
+    height: 100%;
+    aspect-ratio: 1672 / 941;
+    margin: 0;
+    container-type: inline-size;
+  }
+  .hero__photo {
+    position: absolute;
+    inset: 0;
+    /* tonal transition into the light text area */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0, 0, 0, 0.4) 27%, #000 37%);
+    mask-image: linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0, 0, 0, 0.4) 27%, #000 37%);
+  }
+  .hero__photo::before {
+    /* hazy wash over the upper-left sky, as in the reference */
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(ellipse 34% 52% at 30% 0%, rgba(248, 243, 236, 0.78), rgba(248, 243, 236, 0));
+    pointer-events: none;
+  }
+  .hero__photo::after {
+    /* lift the lower-left foreground so the service strip stays legible */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(248, 243, 236, 0.94) 0%, rgba(248, 243, 236, 0.7) 14%, rgba(248, 243, 236, 0) 30%);
+    -webkit-mask-image: linear-gradient(90deg, #000 44%, transparent 58%);
+    mask-image: linear-gradient(90deg, #000 44%, transparent 58%);
+    pointer-events: none;
+  }
+  .hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero__arcs {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  /* Annotation labels, positioned in image coordinates (% of the photograph). */
+  .hero__tag {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    margin: 0;
+    padding: 0.85em 1.1em;
+    border-radius: 0.55em;
+    font-size: clamp(11px, 0.92cqi, 15px);
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .hero__tag strong {
+    display: block;
+    font-weight: 600;
+  }
+  .hero__tag span span {
+    display: block;
+    font-size: 0.86em;
+    opacity: 0.85;
+  }
+  .hero__tag-dot {
+    flex: none;
+    width: 0.62em;
+    height: 0.62em;
+    border-radius: 50%;
+  }
+  .hero__tag--coverage {
+    left: 55.4%;
+    top: 20.6%;
+    min-width: 12.6%;
+    min-height: 7.3%;
+    background: rgba(248, 246, 242, 0.86);
+    color: var(--onyx);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 20px -10px rgba(17, 18, 18, 0.45);
+  }
+  .hero__tag--coverage .hero__tag-dot {
+    background: #1d7a45;
+  }
+  .hero__tag--coverage::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    width: 2.6em;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.85);
+  }
+  .hero__tag--gap {
+    left: 79.8%;
+    top: 50.6%;
+    white-space: pre-line;
+    background: rgba(110, 50, 30, 0.82);
+    color: #fbf3ee;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .hero__tag--gap .hero__tag-dot {
+    background: #e27d5d;
+  }
+  .hero__tag--gap strong {
+    font-weight: 500;
+  }
+
+  /* ---------- Service strip ---------- */
+  .hero__strip {
+    position: relative;
+    z-index: 2;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: start;
+    margin-top: 40px;
+    padding-left: 18px;
+  }
+  .hero__strip li + li {
+    border-left: 1px solid rgba(17, 18, 18, 0.22);
+  }
+  .hero__strip-item {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 18px;
+    row-gap: 10px;
+    align-items: center;
+    padding: 4px 34px;
+    color: var(--onyx);
+    text-decoration: none;
+  }
+  .hero__strip li:first-child .hero__strip-item {
+    padding-left: 0;
+  }
+  .hero__strip-item :global(svg) {
+    grid-row: 1;
+  }
+  .hero__strip-title {
+    font-size: 0.96rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .hero__strip-text {
+    grid-column: 2;
+    font-size: 0.875rem;
+    color: #3b3d3b;
+  }
+  .hero__strip-item:hover .hero__strip-title {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* ---------- Callout ---------- */
+  .hero__callout {
+    position: absolute;
+    z-index: 2;
+    right: clamp(16px, 3vw, 52px);
+    bottom: clamp(24px, 4.4vh, 42px);
+    display: grid;
+    grid-template-columns: auto 1fr 146px;
+    align-items: center;
+    gap: 16px;
+    width: 482px;
+    height: 100px;
+    padding-left: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(17, 25, 18, 0.94);
+    color: var(--ivory);
+    text-decoration: none;
+    box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.6);
+  }
+  .hero__callout-icon {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border: 1.5px solid rgba(244, 239, 231, 0.85);
+    border-radius: 50%;
+    transition: background-color 0.2s var(--ease);
+  }
+  .hero__callout:hover .hero__callout-icon {
+    background: rgba(244, 239, 231, 0.12);
+  }
+  .hero__callout-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    white-space: pre-line;
+    line-height: 1.35;
+  }
+  .hero__callout-thumb {
+    width: 146px;
+    height: 100px;
+    object-fit: cover;
+  }
+  .hero :focus-visible {
+    outline: 2px solid var(--hero-terracotta);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Laptop (1181–1559px): keep the composition, protect the copy ---------- */
+  @media (max-width: 1559px) {
+    .hero__photo {
+      /* Start the photograph just after the copy column: 100cqw = photo width,
+         109vw ≈ hero width + the 9% right overhang, so this is a hero-relative x. */
+      --fade-start: calc(100cqw - 109vw + 770px);
+      -webkit-mask-image: linear-gradient(90deg, transparent var(--fade-start), rgba(0, 0, 0, 0.45) calc(var(--fade-start) + 90px), #000 calc(var(--fade-start) + 200px));
+      mask-image: linear-gradient(90deg, transparent var(--fade-start), rgba(0, 0, 0, 0.45) calc(var(--fade-start) + 90px), #000 calc(var(--fade-start) + 200px));
+    }
+    .hero__photo::after {
+      -webkit-mask-image: linear-gradient(90deg, #000 calc(100cqw - 109vw + 980px), transparent calc(100cqw - 109vw + 1180px));
+      mask-image: linear-gradient(90deg, #000 calc(100cqw - 109vw + 980px), transparent calc(100cqw - 109vw + 1180px));
+    }
+    .hero__arcs {
+      display: none;
+    }
+    .hero__strip-item {
+      padding-inline: 24px;
+    }
+    .hero__callout {
+      grid-template-columns: auto 1fr;
+      width: 330px;
+      height: 84px;
+      padding-right: 20px;
+    }
+    .hero__callout-thumb {
+      display: none;
+    }
+  }
+  @media (max-width: 1399px) {
+    .hero__strip {
+      grid-template-columns: repeat(2, auto);
+      row-gap: 18px;
+    }
+    .hero__strip li:nth-child(3) {
+      border-left: 0;
+    }
+    .hero__strip li:nth-child(3) .hero__strip-item {
+      padding-left: 0;
+    }
+  }
+
+  /* ---------- Tablet & mobile: stacked ---------- */
+  @media (max-width: 1180px) {
+    .hero {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 32px 0 40px;
+    }
+    .hero__copy {
+      order: 1;
+      max-width: none;
+      padding: 0 var(--gutter);
+    }
+    .hero__audiences {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
+    .hero__title {
+      margin-top: 22px;
+    }
+    .hero__lede {
+      margin-top: 24px;
+    }
+    .hero__media {
+      order: 2;
+      position: relative;
+      right: auto;
+      width: 125%;
+      height: auto;
+      margin: 32px 0 0 -25%;
+    }
+    .hero__arcs {
+      display: none;
+    }
+    .hero__photo {
+      -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 48%);
+      mask-image: linear-gradient(90deg, transparent 30%, #000 48%);
+    }
+    .hero__photo::before {
+    /* hazy wash over the upper-left sky, as in the reference */
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(ellipse 34% 52% at 30% 0%, rgba(248, 243, 236, 0.78), rgba(248, 243, 236, 0));
+    pointer-events: none;
+  }
+  .hero__photo::after {
+      display: none;
+    }
+    .hero__tag {
+      font-size: clamp(10px, 1.7cqi, 13px);
+    }
+    .hero__strip {
+      order: 3;
+      margin-top: 28px;
+      padding: 0 var(--gutter);
+    }
+    .hero__callout {
+      order: 4;
+      position: relative;
+      right: auto;
+      bottom: auto;
+      grid-template-columns: auto 1fr 146px;
+      width: auto;
+      max-width: 560px;
+      height: 100px;
+      margin: 28px var(--gutter) 0;
+      padding-right: 0;
+    }
+    .hero__callout-thumb {
+      display: block;
     }
   }
   @media (max-width: 599px) {
-    .hero__panel {
-      position: relative;
-      inset: auto;
-      width: auto;
-      margin: -48px 12px 0;
+    .hero__line {
+      white-space: normal;
+    }
+    .hero__ctas {
+      flex-direction: column;
+    }
+    .hero__cta {
+      min-width: 0;
+      width: 100%;
+      padding-inline: 22px;
+    }
+    .hero__media {
+      width: 175%;
+      margin-left: -75%;
+    }
+    .hero__strip {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 0;
+    }
+    .hero__strip-item {
+      padding: 6px 0 6px 16px;
+      column-gap: 12px;
+    }
+    .hero__strip li:nth-child(odd) .hero__strip-item {
+      padding-left: 0;
+    }
+    .hero__callout {
+      grid-template-columns: auto 1fr 96px;
+      gap: 14px;
+      height: 88px;
+      padding-left: 16px;
+    }
+    .hero__callout-icon {
+      width: 44px;
+      height: 44px;
+    }
+    .hero__callout-thumb {
+      width: 96px;
+      height: 88px;
+    }
+    .hero__callout-text {
+      font-size: 0.875rem;
     }
   }
 </style>

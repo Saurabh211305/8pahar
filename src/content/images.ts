@@ -15,6 +15,8 @@ export interface ImageSource {
 const img = (name: string, widths: number[], width: number, height: number): ImageSource => ({ name, widths, width, height });
 
 export const images = {
+  // Approved hero photograph (supplied asset; baked-in labels removed by scripts/clean-hero-labels.py).
+  'hero-architecture': img('hero-architecture', [960, 1280, 1672], 1672, 941),
   'hero-residence': img('hero-residence', [640, 960, 1280, 1800], 1800, 1200),
   'cctv-pole': img('cctv-pole', [480, 800, 1200], 1200, 800),
   'monitoring-room': img('monitoring-room', [640, 960, 1400], 1400, 933),
@@ -29,4 +31,4 @@ export const images = {
 export type ImageName = keyof typeof images;
 
 /** Rendered width of the hero photograph — shared by the <img> and its preload hint. */
-export const heroImageSizes = '(min-width: 1024px) 46vw, 100vw';
+export const heroImageSizes = '(min-width: 1181px) 90vw, (min-width: 600px) 125vw, 175vw';

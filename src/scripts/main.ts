@@ -30,7 +30,7 @@ function initMobileNav(): { close: () => void } {
     toggle.setAttribute('aria-expanded', String(open));
     nav.classList.toggle('is-open', open);
     if (label) label.textContent = open ? 'Close menu' : 'Open menu';
-    if (open) nav.querySelector<HTMLElement>('a')?.focus();
+    if (open) nav.querySelector<HTMLElement>('a, button')?.focus();
     else if (returnFocus) toggle.focus();
   };
 
@@ -45,6 +45,40 @@ function initMobileNav(): { close: () => void } {
     if (mq.matches) setOpen(false);
   });
   return { close: () => setOpen(false) };
+}
+
+/** Header dropdowns: disclosure buttons (click / Enter / Space), Esc and outside-click close. */
+function initMenus(): void {
+  const toggles = [...document.querySelectorAll<HTMLButtonElement>('[data-menu-toggle]')];
+  if (!toggles.length) return;
+  const closeAll = (except?: HTMLButtonElement) =>
+    toggles.forEach((t) => t !== except && t.setAttribute('aria-expanded', 'false'));
+
+  toggles.forEach((toggle) =>
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      closeAll(toggle);
+      toggle.setAttribute('aria-expanded', String(open));
+    }),
+  );
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest('[data-menu]') || target.closest('[data-menu] a')) closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const open = toggles.find((t) => t.getAttribute('aria-expanded') === 'true');
+    if (open) {
+      closeAll();
+      open.focus();
+    }
+  });
+  // Close a desktop dropdown once keyboard focus leaves it.
+  document.querySelectorAll<HTMLElement>('[data-menu]').forEach((menu) =>
+    menu.addEventListener('focusout', (e) => {
+      if (!menu.contains(e.relatedTarget as Node | null)) closeAll();
+    }),
+  );
 }
 
 /* ------------------------------------------------------------------ Forms */
@@ -330,6 +364,7 @@ function initMobileCta(): void {
 captureAttribution(LIMITS.attribution);
 initHeader();
 const nav = initMobileNav();
+initMenus();
 initCtas(nav);
 document.querySelectorAll<LeadForm>('form[data-lead-form]').forEach(initLeadForm);
 initFaqDeepLinks();

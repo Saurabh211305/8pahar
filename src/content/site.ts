@@ -18,21 +18,32 @@ export interface Cta {
   source: string;
 }
 
-/* ---------- Section 01 — Hero ---------- */
+/* ---------- Section 01 — Hero (approved reference design) ---------- */
 export const hero = {
-  eyebrow: ['Residential', 'Commercial', 'Industrial'],
-  title: 'You Don’t Need More Cameras. You Need Fewer Blind Spots.',
-  lede: 'From security assessments to intelligent surveillance and ongoing maintenance, 8PAHAR helps you identify security gaps and build a system designed around your property’s needs.',
+  eyebrow: 'Intelligent Security Systems',
+  audiences: ['Residential', 'Commercial', 'Industrial'],
+  titleLines: ['You Don’t Need', 'More Cameras.'],
+  titleAccentLines: ['You Need Fewer', 'Blind Spots.'],
+  lede: 'A smarter approach to security — from assessment to surveillance, access control and ongoing support.',
   primary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'hero' } satisfies Cta,
+  primaryNote: 'Get a property-specific assessment',
   secondary: { label: 'Tell Us Your Security Problem', href: '#enquiry', source: 'hero' } satisfies Cta,
-  imageAlt: 'Contemporary two-storey home at dusk with lit interiors, a landscaped lawn and a large tree beside the entrance',
-  panel: {
-    label: 'Coverage review',
-    caption: 'We look at how people, vehicles and deliveries actually move through a property — then check what the cameras can genuinely see.',
-    legend: [
-      { key: 'covered', text: 'Effective view' },
-      { key: 'gap', text: 'Blind spot' },
-    ],
+  imageAlt: 'Contemporary stone-clad residence at dusk with a landscaped boundary wall, a sliding gate and a ceiling-mounted dome camera above the entrance',
+  labels: {
+    coverage: { title: 'Live Coverage', detail: 'Main Entrance' },
+    gap: { title: 'Potential Blind Spot' },
+  },
+  strip: [
+    { icon: 'eye', title: 'Surveillance Systems', text: 'See what matters.', href: '#service-cctv' },
+    { icon: 'lock', title: 'Access Control', text: 'Manage entry points.', href: '#service-access' },
+    { icon: 'chart', title: 'Security Assessment', text: 'Find the gaps.', href: '#audit' },
+    { icon: 'wrench', title: 'Maintenance & Support', text: 'Keep it performing.', href: '#maintenance' },
+  ] as const,
+  callout: {
+    text: 'See How a Security Audit Helps You Protect What Matters',
+    // No video exists yet: the callout links to the on-page explanation of the audit process.
+    href: '#how-it-works',
+    thumbAlt: '',
   },
 };
 

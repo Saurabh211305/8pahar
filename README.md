@@ -40,6 +40,15 @@ Page order: 01 Hero · 02 Problems · 03 Security health check (audit form) ·
 surveillance · 08 How it works · 09 Why 8PAHAR · 10 AMC · 11 FAQ · 12 Final
 enquiry form.
 
+## Hero (approved reference design)
+
+The header and hero recreate the approved reference mock-up. The photograph is
+the supplied asset (`brand-source/hero-architecture-reference.webp`); its
+baked-in labels were removed with `scripts/clean-hero-labels.py` and re-created
+as HTML. The "See how a security audit helps" callout links to the How it works
+section because no video exists yet — point `hero.callout.href` in
+`src/content/site.ts` at a real video when one is produced.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is

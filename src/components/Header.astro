@@ -1,33 +1,120 @@
 ---
-import Logo from './brand/Logo.astro';
-import CtaLink from './ui/CtaLink.astro';
+/**
+ * Site header — recreated from the approved 8PAHAR header/hero reference.
+ * Left: owl mark + bilingual lockup. Centre: five menus whose items point
+ * only at sections that exist on the home page. Right: expert + audit CTAs.
+ */
+import Wordmark from './brand/Wordmark.astro';
+import HindiWord from './brand/HindiWord.astro';
 import Icon from './ui/Icon.astro';
+import { services, industries } from '../content/site';
+import { telHref } from '../config/business';
 
-const nav = [
-  { label: 'Services', href: '#services' },
-  { label: 'Industries', href: '#industries' },
-  { label: 'How It Works', href: '#how-it-works' },
-  { label: 'FAQ', href: '#faq' },
-];
 const isHome = Astro.url.pathname === '/';
 const prefix = isHome ? '' : '/';
+const a = (hash: string) => `${prefix}${hash}`;
+
+const menus = [
+  {
+    id: 'solutions',
+    label: 'Solutions',
+    items: [{ label: 'All solutions', href: a('#services') }, ...services.items.map((s) => ({ label: s.title, href: a(`#service-${s.id}`) }))],
+  },
+  {
+    id: 'industries',
+    label: 'Industries',
+    items: [{ label: 'All industries', href: a('#industries') }, ...industries.items.map((i) => ({ label: i.label, href: a(`#industry-${i.id}`) }))],
+  },
+  {
+    id: 'approach',
+    label: 'Our Approach',
+    items: [
+      { label: 'The 8-stage security architecture', href: a('#approach') },
+      { label: 'Intelligent surveillance', href: a('#intelligent-surveillance') },
+      { label: 'How it works', href: a('#how-it-works') },
+      { label: 'Why 8PAHAR', href: a('#why-8pahar') },
+    ],
+  },
+  {
+    id: 'support',
+    label: 'AMC & Support',
+    items: [
+      { label: 'Ongoing security & AMC', href: a('#maintenance') },
+      { label: 'Repair & annual maintenance', href: a('#service-amc') },
+      { label: 'AMC questions', href: a('#faq-amc') },
+    ],
+  },
+  {
+    id: 'resources',
+    label: 'Resources',
+    items: [
+      { label: 'Frequently asked questions', href: a('#faq') },
+      { label: 'Privacy notice', href: '/privacy' },
+      { label: 'Terms & conditions', href: '/terms' },
+    ],
+  },
+];
+
+// "Talk to a Security Expert": call when a number is configured, otherwise the working enquiry form.
+const expert = telHref
+  ? { href: telHref, attrs: { 'data-contact': 'phone', 'data-cta-source': 'header-expert' } }
+  : {
+      href: a('#enquiry'),
+      attrs: { 'data-cta': 'service', 'data-cta-source': 'header-expert', 'data-cta-label': 'Talk to a Security Expert', 'data-prefill-requirement': 'question' },
+    };
 ---
 <header class="site-header" data-header>
-  <div class="container site-header__inner">
-    <a class="site-header__brand" href={isHome ? '#top' : '/'} aria-label="8PAHAR — Intelligent Security Systems, home">
-      <Logo />
+  <div class="hdr">
+    <a class="hdr__brand" href={isHome ? '#top' : '/'} aria-label="8PAHAR — Intelligent Security Systems. आठ पहर — Watchful. Always. Home">
+      <img class="hdr__owl" src="/brand/owl-mark.webp" alt="" width="129" height="176" />
+      <span class="hdr__lockup">
+        <Wordmark class="hdr__word" title="" />
+        <span class="hdr__desc">Intelligent Security Systems</span>
+      </span>
+      <span class="hdr__divider" aria-hidden="true"></span>
+      <span class="hdr__hindi">
+        <HindiWord class="hdr__hindi-word" />
+        <span class="hdr__tagline">Watchful. Always.</span>
+      </span>
     </a>
 
-    <nav class="site-nav" id="site-nav" aria-label="Main" data-nav>
-      <ul role="list" class="site-nav__list">
-        {nav.map((item) => (
-          <li><a class="site-nav__link" href={`${prefix}${item.href}`}>{item.label}</a></li>
-        ))}
-      </ul>
-      <CtaLink class="site-nav__cta" cta={{ label: 'Book a Security Audit', href: `${prefix}#audit`, requirement: 'security-audit', source: 'header' }} />
-    </nav>
+    <div class="hdr__panel" id="site-nav" data-nav>
+      <nav class="hdr__nav" aria-label="Main">
+        <ul role="list" class="hdr__menus">
+          {menus.map((menu) => (
+            <li class="hdr__menu" data-menu>
+              <button class="hdr__trigger" type="button" aria-expanded="false" aria-controls={`menu-${menu.id}`} data-menu-toggle>
+                {menu.label}
+                <Icon name="chevron" size={16} class="hdr__chev" />
+              </button>
+              <ul role="list" class="hdr__dropdown" id={`menu-${menu.id}`}>
+                {menu.items.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
-    <button class="site-header__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <div class="hdr__actions">
+        <a class="hdr__btn hdr__btn--expert" href={expert.href} {...expert.attrs}>
+          <Icon name="headset" size={30} strokeWidth={1.5} />
+          <span>Talk to a <br />Security Expert</span>
+        </a>
+        <a
+          class="hdr__btn hdr__btn--audit"
+          href={a('#audit')}
+          data-cta="audit"
+          data-cta-source="header"
+          data-cta-label="Book a Security Audit"
+          data-prefill-requirement="security-audit"
+        >
+          <span>Book a <br />Security Audit</span>
+          <Icon name="arrow" size={22} />
+        </a>
+      </div>
+    </div>
+
+    <button class="hdr__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
       <span class="visually-hidden" data-nav-toggle-label>Open menu</span>
       <Icon name="menu" size={22} class="icon-open" />
       <Icon name="close" size={22} class="icon-close" />
@@ -37,85 +124,227 @@ const prefix = isHome ? '' : '/';
 
 <style>
   .site-header {
+    --hdr-h: var(--header-h);
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(244, 239, 231, 0.9);
+    background: rgba(250, 247, 243, 0.94);
     backdrop-filter: saturate(140%) blur(12px);
     -webkit-backdrop-filter: saturate(140%) blur(12px);
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.2s var(--ease);
+    border-bottom-right-radius: 26px;
+    box-shadow: 0 1px 0 rgba(17, 18, 18, 0);
+    transition: box-shadow 0.2s var(--ease);
   }
   .site-header.is-scrolled {
-    border-bottom-color: var(--line);
+    box-shadow: 0 1px 0 var(--line);
   }
-  .site-header__inner {
+  .hdr {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 24px;
-    min-height: var(--header-h);
-  }
-  .site-header__brand {
-    display: inline-flex;
-    padding-block: 6px;
-    text-decoration: none;
-  }
-  .site-header__brand :global(.logo__mark img) {
-    height: 40px;
-  }
-  .site-header__brand :global(.logo__word) {
-    width: 104px;
+    max-width: 1648px;
+    min-height: var(--hdr-h);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4.4vw, 72px) clamp(16px, 4.2vw, 70px);
   }
 
-  .site-nav {
+  /* ---- Brand lockup ---- */
+  .hdr__brand {
     display: flex;
     align-items: center;
-    gap: clamp(20px, 3vw, 40px);
-  }
-  .site-nav__list {
-    display: flex;
-    gap: clamp(18px, 2.4vw, 32px);
-  }
-  .site-nav__link {
-    position: relative;
-    display: inline-block;
-    padding-block: 10px;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--ink-soft);
+    flex: none;
+    color: var(--onyx);
     text-decoration: none;
-    transition: color 0.2s var(--ease);
   }
-  .site-nav__link::after {
+  .hdr__owl {
+    width: auto;
+    height: 60px;
+    margin-right: 14px;
+  }
+  .hdr__lockup {
+    display: grid;
+    gap: 7px;
+  }
+  .hdr .hdr__brand :global(.hdr__word) {
+    width: 152px;
+    height: auto;
+  }
+  .hdr__desc,
+  .hdr__tagline {
+    font-size: 8.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .hdr__divider {
+    width: 1px;
+    height: 48px;
+    margin-inline: 22px;
+    background: rgba(17, 18, 18, 0.22);
+  }
+  .hdr__hindi {
+    display: grid;
+    gap: 9px;
+    color: var(--hero-terracotta, #995739);
+  }
+  .hdr .hdr__brand :global(.hdr__hindi-word) {
+    width: 82px;
+    height: auto;
+  }
+  .hdr__tagline {
+    font-size: 8px;
+    letter-spacing: 0.18em;
+  }
+
+  /* ---- Navigation ---- */
+  .hdr__panel {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+  }
+  .hdr__nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .hdr__menus {
+    display: flex;
+    gap: clamp(16px, 1.9vw, 31px);
+  }
+  .hdr__menu {
+    position: relative;
+  }
+  .hdr__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--onyx);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .hdr__trigger:hover {
+    color: var(--green);
+  }
+  .hdr__trigger :global(.hdr__chev) {
+    transition: transform 0.2s var(--ease);
+  }
+  .hdr__trigger[aria-expanded='true'] :global(.hdr__chev) {
+    transform: rotate(180deg);
+  }
+  .hdr__dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: -18px;
+    z-index: 5;
+    display: none;
+    min-width: 250px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--white);
+    box-shadow: 0 20px 44px -18px rgba(17, 18, 18, 0.35);
+  }
+  .hdr__dropdown::before {
+    /* hover bridge between trigger and panel */
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 4px;
-    height: 1px;
-    background: var(--terracotta);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.25s var(--ease);
+    top: -12px;
+    height: 12px;
   }
-  .site-nav__link:hover {
-    color: var(--ink);
+  .hdr__trigger[aria-expanded='true'] + .hdr__dropdown {
+    display: block;
   }
-  .site-nav__link:hover::after {
-    transform: scaleX(1);
+  @media (hover: hover) and (min-width: 1181px) {
+    .hdr__menu:hover .hdr__dropdown {
+      display: block;
+    }
   }
-  .site-nav :global(.site-nav__cta) {
-    min-height: 46px;
-    padding: 10px 18px;
+  :global(html:not(.js)) .hdr__menu:focus-within .hdr__dropdown {
+    display: block;
+  }
+  .hdr__dropdown a {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .hdr__dropdown a:hover,
+  .hdr__dropdown a:focus-visible {
+    background: var(--ivory);
+    color: var(--onyx);
   }
 
-  /* Neumorphic toggle — a small, tactile control on the ivory header. */
-  .site-header__toggle {
+  /* ---- CTAs ---- */
+  .hdr__actions {
+    display: flex;
+    gap: 14px;
+    flex: none;
+  }
+  .hdr__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    height: 68px;
+    padding: 0 22px;
+    border-radius: 9px;
+    font-size: 0.97rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color 0.2s var(--ease),
+      border-color 0.2s var(--ease);
+  }
+  .hdr__btn--expert {
+    width: 192px;
+    border: 1.5px solid var(--onyx);
+    color: var(--onyx);
+    background: transparent;
+  }
+  .hdr__btn--expert:hover {
+    background: rgba(17, 18, 18, 0.04);
+  }
+  .hdr__btn :global(svg) {
+    flex: none;
+  }
+  .hdr__btn--audit {
+    width: 190px;
+    padding-inline: 28px 20px;
+    background: var(--hero-green, #0b2b25);
+    border: 1.5px solid var(--hero-green, #0b2b25);
+    color: var(--ivory);
+  }
+  .hdr__btn--audit:hover {
+    background: #06201b;
+  }
+  .hdr__btn--audit :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+  .hdr__btn--audit:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  /* ---- Mobile toggle (neumorphic, as elsewhere on the site) ---- */
+  .hdr__toggle {
     display: none;
     place-items: center;
     width: 48px;
     height: 48px;
+    margin-left: auto;
     border: 0;
     border-radius: 12px;
     background: var(--ivory);
@@ -125,64 +354,118 @@ const prefix = isHome ? '' : '/';
       -4px -4px 10px rgba(255, 255, 255, 0.85);
     cursor: pointer;
   }
-  .site-header__toggle[aria-expanded='true'] {
+  .hdr__toggle[aria-expanded='true'] {
     box-shadow:
       inset 3px 3px 8px rgba(17, 18, 18, 0.14),
       inset -3px -3px 8px rgba(255, 255, 255, 0.9);
   }
-  .site-header__toggle :global(.icon-close),
-  .site-header__toggle[aria-expanded='true'] :global(.icon-open) {
+  .hdr__toggle :global(.icon-close),
+  .hdr__toggle[aria-expanded='true'] :global(.icon-open) {
     display: none;
   }
-  .site-header__toggle[aria-expanded='true'] :global(.icon-close) {
+  .hdr__toggle[aria-expanded='true'] :global(.icon-close) {
     display: block;
   }
 
-  @media (max-width: 960px) {
-    .site-header__toggle {
+  /* ---- Responsive ---- */
+  @media (max-width: 1439px) {
+    .hdr__divider,
+    .hdr__hindi {
+      display: none;
+    }
+  }
+  @media (max-width: 1180px) {
+    .site-header {
+      border-bottom-right-radius: 0;
+    }
+    .hdr__owl {
+      height: 46px;
+    }
+    .hdr .hdr__brand :global(.hdr__word) {
+      width: 124px;
+    }
+    .hdr__toggle {
       display: grid;
     }
-    .site-nav {
+    .hdr__panel {
       position: fixed;
-      inset: var(--header-h) 0 auto 0;
+      inset: var(--hdr-h) 0 auto 0;
       flex-direction: column;
       align-items: stretch;
-      gap: 24px;
-      padding: 16px var(--gutter) 28px;
+      gap: 20px;
+      max-height: calc(100dvh - var(--hdr-h));
+      overflow-y: auto;
+      padding: 12px var(--gutter) 24px;
       background: var(--ivory);
       border-bottom: 1px solid var(--line);
       box-shadow: 0 24px 40px -24px rgba(17, 18, 18, 0.3);
-      max-height: calc(100dvh - var(--header-h));
-      overflow-y: auto;
     }
-    /* Hidden by default only when JS is available to open it. */
-    :global(.js) .site-nav:not(.is-open) {
+    :global(.js) .hdr__panel:not(.is-open) {
       display: none;
     }
-    :global(html:not(.js)) .site-nav {
+    :global(html:not(.js)) .hdr__panel {
       position: static;
       box-shadow: none;
-      border: 0;
-      padding: 0 0 16px;
     }
-    :global(html:not(.js)) .site-header__toggle {
-      display: none;
-    }
-    :global(html:not(.js)) .site-header__inner {
+    :global(html:not(.js)) .hdr {
       flex-wrap: wrap;
     }
-    .site-nav__list {
+    :global(html:not(.js)) .hdr__toggle {
+      display: none;
+    }
+    .hdr__nav {
+      justify-content: stretch;
+    }
+    .hdr__menus {
       flex-direction: column;
       gap: 0;
+      width: 100%;
     }
-    .site-nav__link {
-      display: block;
-      padding-block: 14px;
-      font-size: 1.125rem;
+    .hdr__trigger {
+      justify-content: space-between;
+      width: 100%;
+      min-height: 54px;
+      font-size: 1.0625rem;
       border-bottom: 1px solid var(--line);
     }
-    .site-nav__link::after {
+    .hdr__dropdown {
+      position: static;
+      min-width: 0;
+      padding: 6px 0 10px;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+    .hdr__dropdown a {
+      white-space: normal;
+      padding: 10px 12px;
+    }
+    .hdr__actions {
+      flex-direction: column;
+    }
+    .hdr__btn {
+      width: 100%;
+      height: 60px;
+      justify-content: center;
+    }
+    .hdr__btn--audit {
+      justify-content: center;
+    }
+    .hdr__btn br {
       display: none;
+    }
+  }
+  @media (max-width: 420px) {
+    .hdr__owl {
+      height: 40px;
+      margin-right: 10px;
+    }
+    .hdr .hdr__brand :global(.hdr__word) {
+      width: 108px;
+    }
+    .hdr__desc {
+      font-size: 7.5px;
+      letter-spacing: 0.12em;
     }
   }
 </style>
