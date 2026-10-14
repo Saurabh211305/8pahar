@@ -1,0 +1,347 @@
+/**
+ * Landing-page copy. Edit text here without touching layout components.
+ *
+ * Copy rules: no invented statistics, clients, certifications, response
+ * times or guarantees. Capabilities are described as "where supported" and
+ * every engagement's scope is agreed per project.
+ */
+import type { PropertyType, Requirement } from '../lib/lead-schema';
+
+export interface Cta {
+  label: string;
+  href: string;
+  /** Pre-selects a property type in the destination form. */
+  property?: PropertyType;
+  /** Pre-selects a requirement in the destination form. */
+  requirement?: Requirement;
+  /** Analytics label for the CTA's position on the page. */
+  source: string;
+}
+
+/* ---------- Section 01 — Hero ---------- */
+export const hero = {
+  eyebrow: ['Residential', 'Commercial', 'Industrial'],
+  title: 'You Don’t Need More Cameras. You Need Fewer Blind Spots.',
+  lede: 'From security assessments to intelligent surveillance and ongoing maintenance, 8PAHAR helps you identify security gaps and build a system designed around your property’s needs.',
+  primary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'hero' } satisfies Cta,
+  secondary: { label: 'Tell Us Your Security Problem', href: '#enquiry', source: 'hero' } satisfies Cta,
+  imageAlt: 'Contemporary two-storey home at dusk with lit interiors, a landscaped lawn and a large tree beside the entrance',
+  panel: {
+    label: 'Coverage review',
+    caption: 'We look at how people, vehicles and deliveries actually move through a property — then check what the cameras can genuinely see.',
+    legend: [
+      { key: 'covered', text: 'Effective view' },
+      { key: 'gap', text: 'Blind spot' },
+    ],
+  },
+};
+
+/* ---------- Section 02 — Problems ---------- */
+export const problems = {
+  eyebrow: 'Identify the gaps',
+  title: 'Your Property May Be Covered. But Is It Actually Secure?',
+  lede: 'A camera alone does not guarantee effective security. Placement, coverage, equipment condition, access management, monitoring, and maintenance all influence how well a system serves a property.',
+  items: [
+    {
+      id: 'blind-spots',
+      title: 'Blind Spots',
+      text: 'Areas outside effective camera coverage — often side passages, rear boundaries, stairwells and the edges of parking areas.',
+      detail: 'Coverage gaps are rarely obvious from the recorder screen. They show up when you walk the property against what each camera actually sees.',
+    },
+    {
+      id: 'wrong-placement',
+      title: 'Wrong Placement',
+      text: 'Equipment positioned without considering the required view — too high to identify a face, or facing glare instead of the gate.',
+    },
+    {
+      id: 'limited-awareness',
+      title: 'Limited Awareness',
+      text: 'Events may go unnoticed when suitable monitoring or alerting is absent and footage is only reviewed after something happens.',
+    },
+    {
+      id: 'unmanaged-access',
+      title: 'Unmanaged Access',
+      text: 'Entry points may lack appropriate access-control measures, so there is no clear record of who came in, and when.',
+    },
+    {
+      id: 'system-downtime',
+      title: 'System Downtime',
+      text: 'Cameras, storage or recorders may become unavailable — and the gap is often discovered only when footage is needed.',
+    },
+    {
+      id: 'missed-maintenance',
+      title: 'Missed Maintenance',
+      text: 'Small technical issues — a loose connector, a dirty lens, a full drive — can remain unresolved for months.',
+    },
+  ],
+  primary: { label: 'Find My Security Gaps', href: '#audit', requirement: 'security-audit', source: 'problems' } satisfies Cta,
+  secondary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'problems' } satisfies Cta,
+  link: { label: 'Explore Security Solutions', href: '#services', source: 'problems' } satisfies Cta,
+};
+
+/* ---------- Section 03 — Security health check ---------- */
+export const audit = {
+  eyebrow: 'Security health check',
+  title: 'Know Your Security Gaps Before They Become Problems.',
+  lede: 'A security audit is the starting point for every 8PAHAR engagement. We review your property and how it is used, so recommendations are based on evidence rather than a standard camera package.',
+  coverTitle: 'What the assessment may cover',
+  cover: [
+    'Camera placement and viewing coverage',
+    'Entry and exit points',
+    'Perimeter and vulnerable areas',
+    'Existing equipment condition',
+    'Recording and storage requirements',
+    'Access-control requirements',
+    'Monitoring and alerting needs',
+    'Maintenance requirements',
+  ],
+  scopeNote: 'The actual scope depends on your property and the service agreed with you before the visit.',
+  receiveTitle: 'What you can expect afterwards',
+  receive: [
+    'A review of the security requirements we assessed',
+    'The coverage or system concerns we identified',
+    'Recommended improvements, in order of priority',
+    'A proposed next-step plan',
+    'A quotation, where equipment or work is recommended',
+  ],
+  formTitle: 'Book a security audit',
+  formIntro: 'Five quick details to start the conversation. We’ll call you to understand the property and agree a visit.',
+  submit: 'Book My Security Audit',
+  secondary: { label: 'Ask About the Assessment', href: '#faq-audit', source: 'audit' } satisfies Cta,
+};
+
+/* ---------- Section 04 — Methodology ---------- */
+export const methodology = {
+  eyebrow: 'The 8PAHAR security architecture',
+  title: 'One Connected Security System. Designed Around Your Property.',
+  lede: 'Eight stages, one connected approach. We don’t start with a product list — we start with your property, and build only what it needs.',
+  stages: [
+    { name: 'Assess', text: 'We study the property, how it is used and where the existing set-up falls short.' },
+    { name: 'Design', text: 'We plan camera positions, recording, access points and integrations around your actual requirements.' },
+    { name: 'Deploy', text: 'Our team installs, configures and tests the agreed equipment with tidy, documented cabling.' },
+    { name: 'Detect', text: 'Cameras and compatible analytics are tuned to pick up the activity that matters at your site.' },
+    { name: 'Monitor', text: 'You get remote viewing and, where agreed, a monitoring arrangement suited to the property.' },
+    { name: 'Respond', text: 'Alerts and escalation steps are set up so the right person knows when something needs attention.' },
+    { name: 'Maintain', text: 'Preventive checks and repairs keep cameras, storage and recorders working as intended.' },
+    { name: 'Protect', text: 'We review and improve the system as your property, people and risks change.' },
+  ],
+  note: 'Every engagement begins with Assess. Which of the other stages apply — including any monitoring or response support — is agreed in your proposal.',
+  primary: { label: 'Build My Security Plan', href: '#enquiry', requirement: 'security-plan', source: 'methodology' } satisfies Cta,
+  secondary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'methodology' } satisfies Cta,
+  link: { label: 'Explore Our Services', href: '#services', source: 'methodology' } satisfies Cta,
+};
+
+/* ---------- Section 05 — Services ---------- */
+export const services = {
+  eyebrow: 'Solutions & services',
+  title: 'The Right Security Solution for Every Requirement.',
+  lede: 'From CCTV installation services to access control and annual maintenance, each solution is specified for the problem it needs to solve — not sold as a standard kit.',
+  imageAlt: 'Two dome and bullet CCTV cameras mounted on a pole against a clear blue sky',
+  items: [
+    {
+      id: 'cctv',
+      glyph: 'camera',
+      title: 'CCTV & IP Camera Systems',
+      text: 'HD and network surveillance cameras planned for identification where it matters and overview where it’s enough — for homes, offices and sites.',
+      cta: { label: 'Explore CCTV Solutions', href: '#enquiry', requirement: 'cctv', source: 'services' },
+    },
+    {
+      id: 'ai',
+      glyph: 'analytics',
+      title: 'AI-Enabled Surveillance',
+      text: 'Compatible video analytics that can flag line crossings, intrusions or loitering, so footage becomes useful before an incident — not only after.',
+      cta: { label: 'Discuss AI Surveillance', href: '#enquiry', requirement: 'ai-surveillance', source: 'services' },
+    },
+    {
+      id: 'access',
+      glyph: 'access',
+      title: 'Access Control Systems',
+      text: 'Card, PIN or biometric entry for doors and gates, giving you control over who enters restricted areas and a record of when.',
+      cta: { label: 'Enquire About Access Control', href: '#enquiry', requirement: 'access-control', source: 'services' },
+    },
+    {
+      id: 'vdp',
+      glyph: 'doorphone',
+      title: 'Video Door Phones',
+      text: 'See and speak to visitors before opening the door — video door phone installation for homes, villas and apartment entrances.',
+      cta: { label: 'Discuss Video Door Phones', href: '#enquiry', requirement: 'video-door-phone', source: 'services' },
+    },
+    {
+      id: 'install',
+      glyph: 'install',
+      title: 'Installation & Integration',
+      text: 'Professional CCTV camera installation, configuration and testing, with cameras, recorders and access points working as one system.',
+      cta: { label: 'Request Installation Support', href: '#enquiry', requirement: 'installation', source: 'services' },
+    },
+    {
+      id: 'monitoring',
+      glyph: 'monitor',
+      title: 'Monitoring Solutions',
+      text: 'Remote viewing on phone or desktop and centralised viewing of compatible cameras across one or more locations.',
+      cta: { label: 'Discuss Monitoring Options', href: '#enquiry', requirement: 'monitoring', source: 'services' },
+    },
+    {
+      id: 'upgrade',
+      glyph: 'upgrade',
+      title: 'Security System Upgrades',
+      text: 'Already have cameras? We assess what can be reused and upgrade the parts that limit image quality, storage or coverage.',
+      cta: { label: 'Plan My System Upgrade', href: '#enquiry', requirement: 'upgrade', source: 'services' },
+    },
+    {
+      id: 'amc',
+      glyph: 'maintain',
+      title: 'Repair & Annual Maintenance',
+      text: 'CCTV repair and maintenance, fault diagnosis and CCTV AMC services that keep recording reliable long after installation.',
+      cta: { label: 'Explore AMC Services', href: '#enquiry', requirement: 'amc', source: 'services' },
+    },
+  ] satisfies { id: string; glyph: string; title: string; text: string; cta: Cta }[],
+};
+
+/* ---------- Section 06 — Industries ---------- */
+export const industries = {
+  eyebrow: 'Industries & properties',
+  title: 'Security Designed for the Way Your Property Works.',
+  lede: 'A villa, a showroom and a warehouse need very different systems. We start with how your property is used day to day.',
+  items: [
+    {
+      id: 'residential',
+      label: 'Residential',
+      title: 'Home security systems for homes and communities',
+      text: 'For independent homes, villas and housing societies.',
+      needs: ['Main entrances and gates', 'Parking and driveways', 'Perimeter walls', 'Common areas and lifts', 'Remote viewing on your phone', 'Visitor and access control'],
+      image: 'residential',
+      imageAlt: 'Modern two-storey house with a timber-clad facade, front lawn and paved path to the entrance',
+      cta: { label: 'Residential Security Audit', href: '#audit', property: 'residential-home', requirement: 'security-audit', source: 'industries' },
+    },
+    {
+      id: 'commercial',
+      label: 'Commercial',
+      title: 'Commercial security systems for offices and retail',
+      text: 'For offices, showrooms, retail spaces and commercial buildings.',
+      needs: ['Office entry and reception', 'Visitor access', 'Retail floors and cash points', 'Reliable recording', 'Operational visibility across floors'],
+      image: 'commercial',
+      imageAlt: 'Open-plan office with rows of desks and computer workstations under industrial ceiling lighting',
+      cta: { label: 'Commercial Security Assessment', href: '#audit', property: 'office-commercial', requirement: 'security-audit', source: 'industries' },
+    },
+    {
+      id: 'industrial',
+      label: 'Industrial',
+      title: 'Industrial security and warehouse surveillance',
+      text: 'For factories, warehouses and operational sites.',
+      needs: ['Perimeter monitoring', 'Warehouse aisle coverage', 'Restricted areas', 'Loading and dispatch zones', 'System reliability across shifts'],
+      image: 'industrial',
+      imageAlt: 'Large warehouse interior with stacked cartons, storage racking and overhead lighting',
+      cta: { label: 'Industrial Security Assessment', href: '#audit', property: 'industrial-warehouse', requirement: 'security-audit', source: 'industries' },
+    },
+    {
+      id: 'construction',
+      label: 'Construction & institutions',
+      title: 'Site security for construction and institutions',
+      text: 'For active construction sites, campuses and other organisations.',
+      needs: ['Site access points', 'Equipment and material protection', 'Entry monitoring', 'Coverage that adapts as the site changes'],
+      image: 'construction',
+      imageAlt: 'Aerial view of a construction site with exposed rebar and a line of workers in safety gear',
+      cta: { label: 'Discuss My Property', href: '#enquiry', source: 'industries' },
+    },
+  ] satisfies { id: string; label: string; title: string; text: string; needs: string[]; image: string; imageAlt: string; cta: Cta }[],
+};
+
+/* ---------- Section 07 — Intelligent surveillance ---------- */
+export const intelligence = {
+  eyebrow: 'Intelligent surveillance',
+  title: 'Go Beyond Recording. Build Better Security Awareness.',
+  lede: 'Recording tells you what happened. A well-configured intelligent system can help you notice what is happening. Here is what compatible equipment can add — and why it matters.',
+  imageAlt: 'Operator at a desk with several computer monitors in a control room with a large wall of screens',
+  flow: [
+    { name: 'Cameras', text: 'Capture the agreed views' },
+    { name: 'Recorder', text: 'Stores footage securely' },
+    { name: 'Analytics', text: 'Compatible rules flag events' },
+    { name: 'Alerts', text: 'Notify the right person' },
+  ],
+  capabilities: [
+    { name: 'Compatible AI video analytics', value: 'Rules such as line-crossing or intrusion zones help separate meaningful activity from routine movement.' },
+    { name: 'Motion & event detection', value: 'Recordings can be tagged by event, so you find the right clip in minutes instead of scrubbing hours of footage.' },
+    { name: 'Configurable alerts', value: 'Notifications for chosen zones and times — for example, the boundary wall after closing hours.' },
+    { name: 'Remote viewing', value: 'Check live and recorded footage from your phone or computer, wherever you are.' },
+    { name: 'Perimeter monitoring', value: 'Boundary-focused camera positions and rules for earlier awareness at the edge of the property.' },
+    { name: 'Access-control integration', value: 'Link door events with camera footage so entries can be reviewed alongside video.' },
+    { name: 'Centralised viewing', value: 'View compatible cameras from multiple buildings or branches in one place.' },
+  ],
+  caveat: 'Availability depends on the cameras, recorder and software proposed for your site. Not every camera supports AI analytics or every integration — we’ll be clear about what your equipment can do before you commit.',
+  primary: { label: 'Discuss My Surveillance Requirements', href: '#enquiry', requirement: 'ai-surveillance', source: 'intelligence' } satisfies Cta,
+  secondary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'intelligence' } satisfies Cta,
+  link: { label: 'Explore Intelligent Security', href: '#service-ai', source: 'intelligence' } satisfies Cta,
+};
+
+/* ---------- Section 08 — How it works ---------- */
+export const howItWorks = {
+  eyebrow: 'How it works',
+  title: 'From Security Gaps to a Clear Action Plan.',
+  steps: [
+    { title: 'Tell Us About Your Property', text: 'Share the property type, location and your main concern through the form, a call or WhatsApp.', you: 'A few minutes to describe what’s worrying you.' },
+    { title: 'Assess Your Requirements', text: 'We discuss the property and, where needed, visit to review coverage, entry points and any existing equipment.', you: 'Walk us through how the property is used.' },
+    { title: 'Receive a Recommended Plan', text: 'You get our recommendations, the proposed scope and a quotation where work or equipment is involved.', you: 'Review, ask questions, and decide — no obligation.' },
+    { title: 'Deploy the Agreed Solution', text: 'Our team installs, configures and tests the system according to the agreed scope, then shows you how to use it.', you: 'Confirm access and timings for the work.' },
+    { title: 'Maintain and Improve the System', text: 'Optional maintenance, repairs and upgrades keep the system performing as your needs change.', you: 'Choose the level of ongoing support you want.' },
+  ],
+  note: 'Proposals, installation, monitoring and maintenance are always agreed in writing for your specific project.',
+  primary: { label: 'Start My Security Assessment', href: '#audit', requirement: 'security-audit', source: 'process' } satisfies Cta,
+  secondary: { label: 'Discuss My Requirements', href: '#enquiry', source: 'process' } satisfies Cta,
+  link: { label: 'Contact Our Team', href: '#contact', source: 'process' } satisfies Cta,
+};
+
+/* ---------- Section 09 — Why 8PAHAR ---------- */
+export const why = {
+  eyebrow: 'Why 8PAHAR',
+  title: 'Security Decisions Based on Your Property, Not Guesswork.',
+  lede: 'Our approach is simple: understand the property first, then recommend only what will make a measurable difference to how it is protected.',
+  imageAlt: 'Person drafting technical drawings at a desk with a ruler, pens and printed plans',
+  caption: 'Every recommendation starts with the property — its layout, use and existing infrastructure.',
+  points: [
+    { title: 'Property-specific assessment', text: 'We look at your layout, entry points and daily use before suggesting any equipment.' },
+    { title: 'Recommendations based on actual requirements', text: 'Each recommendation is tied to a gap we found — not to a package size.' },
+    { title: 'Appropriate equipment selection', text: 'Cameras, recorders and access hardware are chosen for the job each one needs to do.' },
+    { title: 'Clear proposals and scope', text: 'You see what is included, what isn’t and why, before any work begins.' },
+    { title: 'Respect for existing infrastructure', text: 'Where your current cameras or cabling can be reused, we say so.' },
+    { title: 'Installation and integration support', text: 'One team takes the system from plan to a working, tested installation.' },
+    { title: 'Maintenance after deployment', text: 'Repair, AMC and upgrade options are available once your system is live.' },
+  ],
+  primary: { label: 'Discuss My Security Requirements', href: '#enquiry', source: 'why' } satisfies Cta,
+  secondary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'why' } satisfies Cta,
+  link: { label: 'Ask Our Team a Question', href: '#enquiry', requirement: 'question', source: 'why' } satisfies Cta,
+};
+
+/* ---------- Section 10 — AMC ---------- */
+export const amc = {
+  eyebrow: 'Ongoing security & AMC',
+  title: 'Security Doesn’t End After Installation.',
+  lede: 'Cameras drift, lenses gather dust, drives fill up and firmware ages. Regular care keeps the system you invested in working when you need it.',
+  imageAlt: 'Technician in a hard hat and gloves working on wiring inside a wall-mounted electrical panel',
+  groups: [
+    {
+      title: 'Preventive care',
+      items: ['Preventive maintenance visits', 'Equipment inspections', 'Camera and recording-system checks', 'Applicable monitoring support'],
+    },
+    {
+      title: 'Fixes & improvements',
+      items: ['Fault diagnosis', 'Repair support', 'System upgrades', 'Annual Maintenance Contract (AMC) plans'],
+    },
+  ],
+  note: 'Each AMC agreement sets out its visit frequency, inclusions, exclusions and any response commitments in writing. We don’t promise uptime or response times that haven’t been agreed for your site.',
+  primary: { label: 'Request AMC Information', href: '#enquiry', requirement: 'amc', source: 'amc' } satisfies Cta,
+  secondary: { label: 'Get Maintenance Support', href: '#enquiry', requirement: 'repair', source: 'amc' } satisfies Cta,
+  link: { label: 'Explore Maintenance Plans', href: '#faq-amc', source: 'amc' } satisfies Cta,
+};
+
+/* ---------- Section 12 — Final conversion ---------- */
+export const finalCta = {
+  eyebrow: 'Get started',
+  title: 'Let’s Identify Your Security Gaps.',
+  lede: 'Tell us about your property and your security concerns. Our team can understand your requirements and help determine the appropriate next step.',
+  next: [
+    'We review your enquiry.',
+    'A team member contacts you on the number you provide.',
+    'Together we agree the right next step — an audit, a proposal, or simply advice.',
+  ],
+  formTitle: 'Tell us about your property',
+};

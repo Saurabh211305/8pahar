@@ -1,0 +1,29 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  id: string;
+  lede?: string;
+  class?: string;
+  /** Use the large display size (hero only). */
+  as?: 'h1' | 'h2';
+}
+const { eyebrow, title, id, lede, class: className, as: Tag = 'h2' } = Astro.props;
+---
+<header class:list={['section-heading', className]}>
+  <p class="eyebrow">{eyebrow}</p>
+  <Tag id={id} class={Tag === 'h1' ? 'display' : 'h2'}>{title}</Tag>
+  {lede && <p class="lede">{lede}</p>}
+  <slot />
+</header>
+
+<style>
+  .section-heading {
+    display: grid;
+    gap: 18px;
+    max-width: 760px;
+  }
+  .section-heading .lede {
+    margin-top: 4px;
+  }
+</style>

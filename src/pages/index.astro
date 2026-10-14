@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import Problems from '../components/sections/Problems.astro';
+import Audit from '../components/sections/Audit.astro';
+import Methodology from '../components/sections/Methodology.astro';
+import Services from '../components/sections/Services.astro';
+import Industries from '../components/sections/Industries.astro';
+import Intelligence from '../components/sections/Intelligence.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import Why from '../components/sections/Why.astro';
+import Amc from '../components/sections/Amc.astro';
+import Faq from '../components/sections/Faq.astro';
+import FinalCta from '../components/sections/FinalCta.astro';
+import MobileCtaBar from '../components/MobileCtaBar.astro';
+import { buildStructuredData } from '../lib/structured-data';
+import { images, heroImageSizes } from '../content/images';
+
+const title = 'Security Audits, CCTV Installation & Surveillance | 8PAHAR';
+const description =
+  '8PAHAR finds the security gaps in your property, then designs, installs and maintains CCTV, AI surveillance and access control for homes, businesses and industry.';
+
+const hero = images['hero-residence'];
+const preloadImage = {
+  href: `/images/${hero.name}-${hero.widths[1]}.webp`,
+  srcset: hero.widths.map((w) => `/images/${hero.name}-${w}.webp ${w}w`).join(', '),
+  sizes: heroImageSizes,
+};
+---
+<BaseLayout title={title} description={description} structuredData={buildStructuredData(Astro.site, description)} preloadImage={preloadImage}>
+  <Hero />          <!-- 01 The security promise -->
+  <Problems />      <!-- 02 Identify the gaps -->
+  <Audit />         <!-- 03 Security health check -->
+  <Methodology />   <!-- 04 The 8PAHAR security architecture -->
+  <Services />      <!-- 05 Solutions and services -->
+  <Industries />    <!-- 06 Industries and properties -->
+  <Intelligence />  <!-- 07 Intelligent surveillance -->
+  <HowItWorks />    <!-- 08 How it works -->
+  <Why />           <!-- 09 Why 8PAHAR -->
+  <Amc />           <!-- 10 Ongoing security and AMC -->
+  <Faq />           <!-- 11 FAQ -->
+  <FinalCta />      <!-- 12 Final conversion -->
+  <MobileCtaBar slot="after" />
+</BaseLayout>

@@ -1,0 +1,185 @@
+---
+import Logo from './brand/Logo.astro';
+import HindiMark from './brand/HindiMark.astro';
+import Icon from './ui/Icon.astro';
+import { business, telHref, whatsappHref, mailHref } from '../config/business';
+import { services, industries } from '../content/site';
+
+const isHome = Astro.url.pathname === '/';
+const prefix = isHome ? '' : '/';
+const year = new Date().getFullYear();
+const wa = whatsappHref('Hello 8PAHAR, I would like to discuss security for my property.');
+const hasDirectContact = Boolean(telHref || wa || mailHref);
+---
+<footer class="site-footer surface-onyx on-dark">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <Logo tone="dark" />
+        <p class="site-footer__descriptor">{business.descriptor}</p>
+        <HindiMark class="site-footer__hindi" />
+        <p class="site-footer__about">
+          8PAHAR helps homes, businesses and industrial sites find their security gaps, then designs, installs and maintains systems built around how each property actually works.
+        </p>
+        <p class="site-footer__tagline">{business.tagline}</p>
+      </div>
+
+      <nav class="site-footer__col" aria-labelledby="footer-services">
+        <h2 class="site-footer__heading" id="footer-services">Services</h2>
+        <ul role="list">
+          {services.items.map((s) => <li><a href={`${prefix}#service-${s.id}`}>{s.title}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav class="site-footer__col" aria-labelledby="footer-industries">
+        <h2 class="site-footer__heading" id="footer-industries">Industries</h2>
+        <ul role="list">
+          {industries.items.map((i) => <li><a href={`${prefix}#industry-${i.id}`}>{i.label}</a></li>)}
+          <li><a href={`${prefix}#how-it-works`}>How it works</a></li>
+          <li><a href={`${prefix}#faq`}>FAQ</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-footer__col">
+        <h2 class="site-footer__heading">Contact</h2>
+        <ul role="list" class="site-footer__contact">
+          {telHref && <li><a href={telHref} data-contact="phone" data-cta-source="footer"><Icon name="phone" size={16} />{business.phone}</a></li>}
+          {wa && <li><a href={wa} target="_blank" rel="noopener noreferrer" data-contact="whatsapp" data-cta-source="footer"><Icon name="whatsapp" size={16} />WhatsApp</a></li>}
+          {mailHref && <li><a href={mailHref}><Icon name="mail" size={16} />{business.email}</a></li>}
+          {!hasDirectContact && <li><a href={`${prefix}#enquiry`}>Send us an enquiry</a></li>}
+        </ul>
+        {business.address && (
+          <address class="site-footer__address">
+            {business.address.street}<br />{business.address.locality}, {business.address.region} {business.address.postalCode}
+          </address>
+        )}
+        {business.serviceAreas.length > 0 && (
+          <>
+            <h2 class="site-footer__heading site-footer__heading--spaced">Service locations</h2>
+            <p class="site-footer__areas">{business.serviceAreas.join(' · ')}</p>
+          </>
+        )}
+        {business.social.length > 0 && (
+          <ul role="list" class="site-footer__social">
+            {business.social.map((s) => <li><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a></li>)}
+          </ul>
+        )}
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>© {year} 8PAHAR. All rights reserved.</p>
+      <ul role="list">
+        <li><a href="/privacy">Privacy policy</a></li>
+        <li><a href="/terms">Terms &amp; conditions</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(64px, 8vw, 104px) 28px;
+    font-size: var(--fs-small);
+  }
+  .site-footer a {
+    color: var(--on-dark-muted);
+    text-decoration: none;
+    transition: color 0.2s var(--ease);
+  }
+  .site-footer a:hover {
+    color: var(--ivory);
+  }
+  .site-footer__top {
+    display: grid;
+    gap: 48px 32px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .site-footer__top {
+      grid-template-columns: 1fr 1fr;
+    }
+    .site-footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1024px) {
+    .site-footer__top {
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    }
+    .site-footer__brand {
+      grid-column: auto;
+    }
+  }
+  .site-footer__brand {
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+    max-width: 380px;
+  }
+  .site-footer__descriptor {
+    margin-top: 6px;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+  .site-footer__brand :global(.site-footer__hindi) {
+    width: 220px;
+    color: var(--terracotta-light);
+  }
+  .site-footer__about {
+    color: var(--on-dark-muted);
+    line-height: 1.65;
+  }
+  .site-footer__tagline {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--ivory);
+  }
+  .site-footer__heading {
+    margin-bottom: 16px;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ivory);
+  }
+  .site-footer__heading--spaced {
+    margin-top: 28px;
+  }
+  .site-footer__col ul {
+    display: grid;
+    gap: 2px;
+  }
+  .site-footer__col li a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 36px;
+  }
+  .site-footer__address {
+    margin-top: 12px;
+    font-style: normal;
+    color: var(--on-dark-muted);
+  }
+  .site-footer__areas {
+    color: var(--on-dark-muted);
+  }
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin-top: clamp(48px, 6vw, 80px);
+    padding-top: 24px;
+    border-top: 1px solid var(--line-dark);
+    color: var(--on-dark-muted);
+    font-size: var(--fs-xs);
+  }
+  .site-footer__bottom ul {
+    display: flex;
+    gap: 24px;
+  }
+</style>

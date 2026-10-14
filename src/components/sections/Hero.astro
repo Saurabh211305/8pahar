@@ -1,0 +1,207 @@
+---
+import { hero } from '../../content/site';
+import CtaLink from '../ui/CtaLink.astro';
+import Picture from '../ui/Picture.astro';
+import CoveragePlan from '../illustrations/CoveragePlan.astro';
+import { heroImageSizes } from '../../content/images';
+---
+<section class="hero surface-ivory" aria-labelledby="hero-title" data-hero>
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="hero__eyebrow">
+        {hero.eyebrow.map((item, i) => (
+          <>
+            {i > 0 && <span class="hero__dot" aria-hidden="true">·</span>}
+            <span>{item}</span>
+          </>
+        ))}
+      </p>
+      <h1 id="hero-title" class="display hero__title">
+        You Don’t Need More Cameras. <em>You Need Fewer Blind Spots.</em>
+      </h1>
+      <p class="lede hero__lede">{hero.lede}</p>
+      <div class="cta-row hero__ctas">
+        <CtaLink cta={hero.primary} />
+        <CtaLink cta={hero.secondary} variant="secondary" />
+      </div>
+      <p class="hero__descriptor">
+        <span class="hero__rule" aria-hidden="true"></span>
+        Intelligent Security Systems
+      </p>
+    </div>
+
+    <div class="hero__visual">
+      <div class="frame hero__frame">
+        <Picture name="hero-residence" alt={hero.imageAlt} sizes={heroImageSizes} priority />
+      </div>
+      <aside class="hero__panel" aria-label={hero.panel.label}>
+        <p class="hero__panel-label">{hero.panel.label}</p>
+        <CoveragePlan class="hero__plan" />
+        <ul role="list" class="hero__legend">
+          {hero.panel.legend.map((l) => (
+            <li><span class:list={['hero__swatch', `hero__swatch--${l.key}`]} aria-hidden="true"></span>{l.text}</li>
+          ))}
+        </ul>
+        <p class="hero__panel-caption">{hero.panel.caption}</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: clamp(28px, 5vw, 72px) clamp(64px, 8vw, 112px);
+  }
+  .hero__grid {
+    display: grid;
+    gap: clamp(36px, 5vw, 72px);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    }
+  }
+  .hero__copy {
+    display: grid;
+    gap: clamp(18px, 2vw, 26px);
+    justify-items: start;
+  }
+  .hero__eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta-ink);
+  }
+  .hero__dot {
+    color: var(--grey);
+  }
+  .hero__title {
+    max-width: 15ch;
+  }
+  .hero__title em {
+    display: block;
+    font-style: italic;
+    color: var(--green);
+  }
+  .hero__lede {
+    max-width: 52ch;
+  }
+  .hero__ctas {
+    margin-top: 6px;
+  }
+  .hero__descriptor {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 8px;
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .hero__rule {
+    width: 40px;
+    height: 1px;
+    background: var(--terracotta);
+  }
+
+  .hero__visual {
+    position: relative;
+  }
+  .hero__frame {
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-lg);
+  }
+  .hero__frame :global(img) {
+    object-position: 58% 50%;
+  }
+  @media (max-width: 1023px) {
+    .hero__frame {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  @media (max-width: 599px) {
+    .hero__frame {
+      aspect-ratio: 5 / 4;
+    }
+  }
+
+  /* Glass panel: the one place the hero uses translucency — it carries the coverage idea. */
+  .hero__panel {
+    position: absolute;
+    left: clamp(-56px, -4vw, -24px);
+    bottom: clamp(20px, 4vw, 40px);
+    width: min(300px, 70%);
+    display: grid;
+    gap: 10px;
+    padding: 18px 18px 16px;
+    border-radius: var(--radius-lg);
+    background: rgba(244, 239, 231, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    box-shadow: 0 24px 48px -20px rgba(17, 18, 18, 0.45);
+  }
+  .hero__panel-label {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+  .hero__panel :global(.hero__plan) {
+    width: 100%;
+    height: auto;
+  }
+  .hero__legend {
+    display: flex;
+    gap: 16px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .hero__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero__swatch {
+    width: 14px;
+    height: 10px;
+    border-radius: 2px;
+  }
+  .hero__swatch--covered {
+    background: rgba(23, 60, 54, 0.28);
+    border: 1px solid var(--green);
+  }
+  .hero__swatch--gap {
+    background: repeating-linear-gradient(45deg, var(--terracotta) 0 1.5px, transparent 1.5px 4px);
+    border: 1px dashed var(--terracotta);
+  }
+  .hero__panel-caption {
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 1023px) {
+    .hero__panel {
+      left: auto;
+      right: 16px;
+      bottom: 16px;
+    }
+  }
+  @media (max-width: 599px) {
+    .hero__panel {
+      position: relative;
+      inset: auto;
+      width: auto;
+      margin: -48px 12px 0;
+    }
+  }
+</style>

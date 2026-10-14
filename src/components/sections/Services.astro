@@ -1,0 +1,110 @@
+---
+import { services } from '../../content/site';
+import CtaLink from '../ui/CtaLink.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Picture from '../ui/Picture.astro';
+import ServiceGlyph from '../illustrations/ServiceGlyph.astro';
+---
+<section class="section surface-ivory services" id="services" aria-labelledby="services-title">
+  <div class="container">
+    <div class="services__head">
+      <SectionHeading id="services-title" eyebrow={services.eyebrow} title={services.title} lede={services.lede} />
+      <div class="frame services__image">
+        <Picture name="cctv-pole" alt={services.imageAlt} sizes="(min-width: 1024px) 34vw, 100vw" />
+      </div>
+    </div>
+
+    <ul role="list" class="services__grid">
+      {services.items.map((item, i) => (
+        <li class="service" id={`service-${item.id}`}>
+          <div class="service__top">
+            <ServiceGlyph kind={item.glyph} />
+            <span class="service__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          </div>
+          <h3 class="h3 service__title">{item.title}</h3>
+          <p class="service__text">{item.text}</p>
+          <CtaLink cta={item.cta} variant="link" class="service__cta" />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services__head {
+    display: grid;
+    gap: 32px;
+    align-items: end;
+    margin-bottom: clamp(40px, 5vw, 64px);
+  }
+  @media (min-width: 1024px) {
+    .services__head {
+      grid-template-columns: 1.4fr 1fr;
+      gap: 72px;
+    }
+  }
+  .services__image {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-lg);
+  }
+  @media (max-width: 1023px) {
+    .services__image {
+      aspect-ratio: 21 / 9;
+    }
+  }
+  .services__grid {
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  @media (min-width: 600px) {
+    .services__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .services__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .service {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: clamp(24px, 2.4vw, 32px);
+    background: var(--white);
+    transition: background-color 0.25s var(--ease);
+    scroll-margin-top: calc(var(--header-h) + 24px);
+  }
+  .service:hover {
+    background: #fdfcfa;
+  }
+  .service:target {
+    box-shadow: inset 0 0 0 2px var(--terracotta);
+  }
+  .service__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .service__num {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: var(--grey);
+    font-feature-settings: 'lnum';
+  }
+  .service__text {
+    flex: 1;
+    color: var(--ink-soft);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+  .service :global(.service__cta) {
+    margin-top: 6px;
+    align-self: flex-start;
+  }
+</style>

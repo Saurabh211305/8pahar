@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Page not found | 8PAHAR" description="The page you were looking for could not be found." noindex>
+  <section class="section container notfound">
+    <p class="eyebrow">404</p>
+    <h1 class="h2">This page is a blind spot.</h1>
+    <p class="lede">The page you were looking for doesn’t exist or has moved.</p>
+    <div class="cta-row">
+      <a class="btn btn--primary" href="/">Go to the home page</a>
+      <a class="btn btn--secondary" href="/#audit">Book a Security Audit</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+    min-height: 50vh;
+    align-content: center;
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { business } from '../config/business';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+const draft = !business.legalPagesApproved;
+---
+<BaseLayout title={`${title} | 8PAHAR`} description={description} noindex={draft}>
+  <article class="legal container">
+    <p class="eyebrow">Legal</p>
+    <h1 class="h2">{title}</h1>
+    {draft && (
+      <p class="legal__draft" role="note">
+        This page is a draft prepared for review and has not yet been approved. It will be finalised before 8PAHAR begins accepting enquiries through this website.
+      </p>
+    )}
+    <div class="legal__body">
+      <slot />
+    </div>
+    <p><a class="link-arrow" href="/">Back to the home page</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    display: grid;
+    gap: 20px;
+    max-width: calc(760px + var(--gutter) * 2);
+    padding-block: clamp(48px, 7vw, 96px);
+  }
+  .legal__draft {
+    padding: 14px 16px;
+    border-left: 3px solid var(--terracotta);
+    background: var(--sand);
+    font-size: var(--fs-small);
+  }
+  .legal__body {
+    display: grid;
+    gap: 14px;
+    color: var(--ink-soft);
+  }
+  .legal__body :global(h2) {
+    margin-top: 18px;
+    font-size: 1.25rem;
+    color: var(--ink);
+  }
+  .legal__body :global(ul) {
+    padding-left: 1.2em;
+    display: grid;
+    gap: 6px;
+  }
+</style>

@@ -1,0 +1,121 @@
+---
+import { why } from '../../content/site';
+import CtaLink from '../ui/CtaLink.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Picture from '../ui/Picture.astro';
+---
+<section class="section surface-white why" id="why-8pahar" aria-labelledby="why-title">
+  <div class="container why__grid">
+    <figure class="why__figure">
+      <div class="frame why__frame">
+        <Picture name="assessment" alt={why.imageAlt} sizes="(min-width: 1024px) 40vw, 100vw" />
+      </div>
+      <figcaption class="why__caption">{why.caption}</figcaption>
+    </figure>
+
+    <div class="why__content">
+      <SectionHeading id="why-title" eyebrow={why.eyebrow} title={why.title} lede={why.lede} />
+      <ol role="list" class="why__points">
+        {why.points.map((point, i) => (
+          <li class="why__point">
+            <span class="why__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="why__title">{point.title}</h3>
+              <p class="why__text">{point.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="cta-row">
+        <CtaLink cta={why.primary} />
+        <CtaLink cta={why.secondary} variant="secondary" />
+      </div>
+      <CtaLink cta={why.link} variant="link" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .why__grid {
+    display: grid;
+    gap: clamp(40px, 5vw, 80px);
+  }
+  @media (min-width: 1024px) {
+    .why__grid {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      align-items: start;
+    }
+    .why__figure {
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+    }
+  }
+  .why__frame {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-lg);
+  }
+  @media (max-width: 1023px) {
+    .why__frame {
+      aspect-ratio: 16 / 10;
+    }
+  }
+  .why__frame :global(img) {
+    object-position: 62% 50%;
+  }
+  .why__caption {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+  .why__caption::before {
+    content: '';
+    flex: none;
+    width: 28px;
+    height: 1px;
+    margin-top: 0.75em;
+    background: var(--terracotta);
+  }
+  .why__content {
+    display: grid;
+    gap: 32px;
+    justify-items: start;
+  }
+  .why__points {
+    width: 100%;
+    display: grid;
+    border-top: 1px solid var(--line-strong);
+  }
+  @media (min-width: 720px) {
+    .why__points {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 40px;
+    }
+  }
+  .why__point {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 8px;
+    padding-block: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .why__num {
+    font-family: var(--font-serif);
+    color: var(--terracotta-ink);
+    font-feature-settings: 'lnum';
+    line-height: 1.5;
+  }
+  .why__title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+  .why__text {
+    color: var(--ink-soft);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+</style>

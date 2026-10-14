@@ -1,0 +1,32 @@
+---
+/**
+ * Call-to-action link. In-page CTAs carry data attributes that the client
+ * script uses to pre-select the property type / requirement in the target
+ * form and to record analytics. Without JavaScript they remain plain anchors.
+ */
+import Icon from './Icon.astro';
+import type { Cta } from '../../content/site';
+
+interface Props {
+  cta: Cta;
+  variant?: 'primary' | 'secondary' | 'link';
+  block?: boolean;
+  class?: string;
+}
+
+const { cta, variant = 'primary', block = false, class: className } = Astro.props;
+const isAudit = cta.href === '#audit';
+const classes = [variant === 'link' ? 'link-arrow' : `btn btn--${variant}`, block && 'btn--block', className].filter(Boolean).join(' ');
+---
+<a
+  class={classes}
+  href={cta.href}
+  data-cta={isAudit ? 'audit' : cta.property || cta.requirement ? 'service' : 'nav'}
+  data-cta-source={cta.source}
+  data-cta-label={cta.label}
+  data-prefill-property={cta.property}
+  data-prefill-requirement={cta.requirement}
+>
+  <span>{cta.label}</span>
+  <Icon name="arrow" size={variant === 'link' ? 16 : 18} />
+</a>

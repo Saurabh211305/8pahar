@@ -1,0 +1,54 @@
+---
+import Wordmark from './Wordmark.astro';
+
+interface Props {
+  /** "light" for ivory/white backgrounds, "dark" for onyx/green backgrounds. */
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const { tone = 'light', class: className } = Astro.props;
+---
+<span class:list={['logo', `logo--${tone}`, className]}>
+  <span class="logo__mark">
+    <img src="/brand/owl-mark.webp" alt="" width="129" height="176" />
+  </span>
+  <Wordmark class="logo__word" title="8PAHAR" />
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--onyx);
+    line-height: 0;
+  }
+  /* The wordmark SVG is rendered by a child component, so it is styled via :global. */
+  .logo__mark,
+  .logo :global(.logo__word) {
+    flex: none;
+  }
+  .logo__mark img {
+    height: 44px;
+    width: auto;
+  }
+  .logo :global(.logo__word) {
+    width: 112px;
+    height: auto;
+  }
+  /* On dark surfaces the dark owl sits on an ivory tile, as in the master artwork. */
+  .logo--dark {
+    color: var(--ivory);
+  }
+  .logo--dark .logo__mark {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--ivory);
+  }
+  .logo--dark .logo__mark img {
+    height: 40px;
+  }
+</style>

@@ -1,0 +1,138 @@
+---
+import { finalCta } from '../../content/site';
+import { telHref, whatsappHref, business } from '../../config/business';
+import EnquiryForm from '../ui/EnquiryForm.astro';
+import Icon from '../ui/Icon.astro';
+
+const wa = whatsappHref('Hello 8PAHAR, I would like to discuss security for my property.');
+---
+<section class="section surface-green on-dark final" id="contact" aria-labelledby="final-title">
+  <!-- Concentric fields of view radiating from one corner: a quiet nod to coverage. -->
+  <svg class="final__arcs" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="#F4EFE7" stroke-opacity="0.09" stroke-width="1">
+      <path d="M0 600 A600 600 0 0 1 600 0" />
+      <path d="M0 600 A480 480 0 0 1 480 120" />
+      <path d="M0 600 A360 360 0 0 1 360 240" />
+      <path d="M0 600 A240 240 0 0 1 240 360" />
+      <path d="M0 600 L600 0 M0 600 L600 330" stroke-dasharray="3 6" />
+    </g>
+    <circle cx="420" cy="180" r="5" fill="#9B6558" />
+  </svg>
+
+  <div class="container final__grid">
+    <div class="final__copy">
+      <p class="eyebrow">{finalCta.eyebrow}</p>
+      <h2 id="final-title" class="h2">{finalCta.title}</h2>
+      <p class="lede">{finalCta.lede}</p>
+
+      <ol role="list" class="final__next" aria-label="What happens next">
+        {finalCta.next.map((step, i) => (
+          <li><span aria-hidden="true">{i + 1}</span>{step}</li>
+        ))}
+      </ol>
+
+      {(telHref || wa) && (
+        <div class="final__direct">
+          <p class="final__direct-label">Prefer to talk now?</p>
+          <div class="cta-row">
+            {telHref && (
+              <a class="btn btn--secondary" href={telHref} data-contact="phone" data-cta-source="final">
+                <Icon name="phone" /><span>Call Us</span>
+              </a>
+            )}
+            {wa && (
+              <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" data-contact="whatsapp" data-cta-source="final">
+                <Icon name="whatsapp" /><span>WhatsApp Us</span>
+              </a>
+            )}
+          </div>
+          {business.phone && <p class="final__phone">{business.phone}</p>}
+        </div>
+      )}
+    </div>
+
+    <div class="final__form" id="enquiry">
+      <EnquiryForm
+        id="enquiry"
+        title={finalCta.formTitle}
+        submitLabel="Book a Security Audit"
+        altSubmitLabel="Send My Enquiry"
+        showDetails
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .final {
+    overflow: hidden;
+  }
+  .final__arcs {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: min(720px, 90vw);
+    height: auto;
+    pointer-events: none;
+  }
+  .final__grid {
+    position: relative;
+    display: grid;
+    gap: clamp(40px, 5vw, 80px);
+  }
+  @media (min-width: 1024px) {
+    .final__grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: start;
+    }
+  }
+  .final__copy {
+    display: grid;
+    gap: 22px;
+    align-content: start;
+  }
+  .final__next {
+    display: grid;
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .final__next li {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    color: var(--ivory);
+  }
+  .final__next span {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid rgba(244, 239, 231, 0.45);
+    font-size: 0.75rem;
+    font-weight: 700;
+    transform: translateY(-1px);
+  }
+  .final__direct {
+    display: grid;
+    gap: 14px;
+    margin-top: 12px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line-dark);
+  }
+  .final__direct-label {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--terracotta-light);
+  }
+  .final__phone {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+  }
+  .final__form {
+    scroll-margin-top: calc(var(--header-h) + 16px);
+  }
+</style>

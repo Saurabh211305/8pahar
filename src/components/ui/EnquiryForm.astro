@@ -1,0 +1,260 @@
+---
+/**
+ * Lead form. Works as a plain POST without JavaScript (when an endpoint is
+ * configured); the client script adds inline validation, CTA pre-selection,
+ * attribution, analytics and an in-place confirmation.
+ * Method is always POST so personal data never lands in a URL.
+ */
+import { business, telHref, whatsappHref } from '../../config/business';
+import { PROPERTY_TYPES, REQUIREMENTS, LIMITS } from '../../lib/lead-schema';
+import Icon from './Icon.astro';
+
+interface Props {
+  id: 'audit' | 'enquiry';
+  title: string;
+  intro?: string;
+  submitLabel: string;
+  /** Submit label used when a non-audit requirement is chosen (full form only). */
+  altSubmitLabel?: string;
+  showDetails?: boolean;
+  /** Pre-selected requirement. */
+  defaultRequirement?: string;
+}
+
+const { id, title, intro, submitLabel, altSubmitLabel, showDetails = false, defaultRequirement } = Astro.props;
+const f = (name: string) => `${id}-${name}`;
+const wa = whatsappHref('Hello 8PAHAR, I would like to discuss security for my property.');
+---
+<div class="lead on-light" data-lead-root={id}>
+  <form
+    class="lead__form"
+    id={`${id}-form`}
+    data-lead-form={id}
+    data-endpoint={business.leadEndpoint ?? ''}
+    data-submit-label={submitLabel}
+    data-alt-submit-label={altSubmitLabel}
+    action={business.leadEndpoint ?? undefined}
+    method="post"
+    aria-labelledby={f('title')}
+  >
+    <div class="lead__head">
+      <h3 class="lead__title" id={f('title')}>{title}</h3>
+      {intro && <p class="lead__intro">{intro}</p>}
+    </div>
+
+    <div class="lead__grid">
+      <div class="field">
+        <label for={f('name')}>Full name</label>
+        <input class="input" id={f('name')} name="name" type="text" autocomplete="name" required minlength="2" maxlength={LIMITS.name} aria-describedby={f('name-error')} />
+        <p class="field-error" id={f('name-error')} aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for={f('phone')}>Phone number</label>
+        <input class="input" id={f('phone')} name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="98XXX XXXXX" maxlength="18" aria-describedby={f('phone-error')} />
+        <p class="field-error" id={f('phone-error')} aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for={f('propertyType')}>Property type</label>
+        <select class="input" id={f('propertyType')} name="propertyType" required aria-describedby={f('propertyType-error')}>
+          <option value="" selected disabled>Select property type</option>
+          {PROPERTY_TYPES.map((p) => <option value={p.value}>{p.label}</option>)}
+        </select>
+        <p class="field-error" id={f('propertyType-error')} aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for={f('location')}>City or service location</label>
+        <input class="input" id={f('location')} name="location" type="text" autocomplete="address-level2" required minlength="2" maxlength={LIMITS.location} placeholder="City / area" aria-describedby={f('location-error')} />
+        <p class="field-error" id={f('location-error')} aria-live="polite"></p>
+      </div>
+      <div class="field field--wide">
+        <label for={f('requirement')}>{id === 'audit' ? 'Primary security requirement' : 'What do you need help with?'}</label>
+        <select class="input" id={f('requirement')} name="requirement" required aria-describedby={f('requirement-error')}>
+          <option value="" selected={!defaultRequirement} disabled>Select a requirement</option>
+          {REQUIREMENTS.map((r) => <option value={r.value} selected={r.value === defaultRequirement}>{r.label}</option>)}
+        </select>
+        <p class="field-error" id={f('requirement-error')} aria-live="polite"></p>
+      </div>
+      {showDetails && (
+        <div class="field field--wide">
+          <label for={f('details')}>Additional details <span class="optional">(optional)</span></label>
+          <textarea class="input" id={f('details')} name="details" rows="3" maxlength={LIMITS.details} placeholder="e.g. number of entrances, existing cameras, what prompted your enquiry" aria-describedby={f('details-error')}></textarea>
+          <p class="field-error" id={f('details-error')} aria-live="polite"></p>
+        </div>
+      )}
+    </div>
+
+    <!-- Spam trap: hidden from people and assistive tech. -->
+    <div class="lead__trap" aria-hidden="true">
+      <label for={f('website')}>Leave this field empty</label>
+      <input id={f('website')} name="_hp" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="formId" value={id} />
+    <input type="hidden" name="ctaSource" value="" data-cta-source-field />
+
+    <div class="lead__consent">
+      <input id={f('consent')} name="consent" type="checkbox" required aria-describedby={f('consent-error')} />
+      <label for={f('consent')}>
+        I agree that 8PAHAR may contact me by phone or WhatsApp about this enquiry, and I have read the <a href="/privacy">privacy notice</a>.
+      </label>
+      <p class="field-error" id={f('consent-error')} aria-live="polite"></p>
+    </div>
+
+    <button class="btn btn--primary btn--block lead__submit" type="submit">
+      <span data-submit-text>{submitLabel}</span>
+      <Icon name="arrow" />
+    </button>
+
+    <div class="lead__status" role="alert" data-lead-status hidden>
+      <Icon name="alert" size={20} />
+      <div>
+        <p data-lead-status-text>We couldn’t send your enquiry just now. Please try again in a moment.</p>
+        {(telHref || wa) && (
+          <p class="lead__alt">
+            You can also reach us directly:
+            {telHref && <a href={telHref} data-contact="phone" data-cta-source={`${id}-form-error`}>call us</a>}
+            {telHref && wa && ' or '}
+            {wa && <a href={wa} target="_blank" rel="noopener noreferrer" data-contact="whatsapp" data-cta-source={`${id}-form-error`}>message us on WhatsApp</a>}.
+          </p>
+        )}
+      </div>
+    </div>
+  </form>
+
+  <div class="lead__success" data-lead-success tabindex="-1" hidden>
+    <span class="lead__success-icon"><Icon name="check" size={22} /></span>
+    <h3 class="lead__title">Thank you — your enquiry has been received.</h3>
+    <p>
+      A member of the 8PAHAR team will contact you on the number you provided to understand your property and agree the right next step.
+    </p>
+    <p class="lead__success-note">If anything changes in the meantime, simply submit a new enquiry with the updated details.</p>
+  </div>
+</div>
+
+<style>
+  .lead {
+    position: relative;
+    background: var(--white);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-panel);
+    padding: clamp(22px, 3vw, 36px);
+    transition: box-shadow 0.3s var(--ease);
+  }
+  .lead.is-highlighted {
+    box-shadow:
+      0 0 0 3px rgba(155, 101, 88, 0.35),
+      var(--shadow-panel);
+  }
+  .lead__form {
+    display: grid;
+    gap: 22px;
+  }
+  .lead__form[hidden] {
+    display: none;
+  }
+  .lead__head {
+    display: grid;
+    gap: 6px;
+  }
+  .lead__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.45rem, 1.2rem + 0.8vw, 1.8rem);
+    font-weight: 450;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .lead__intro {
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+  .lead__grid {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 560px) {
+    .lead__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .field--wide {
+      grid-column: 1 / -1;
+    }
+  }
+  .lead__trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .lead__consent {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+    align-items: start;
+    font-size: var(--fs-xs);
+    line-height: 1.55;
+    color: var(--ink-muted);
+  }
+  .lead__consent input {
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    accent-color: var(--green);
+  }
+  .lead__consent a {
+    color: var(--ink);
+    text-underline-offset: 3px;
+  }
+  .lead__consent .field-error {
+    grid-column: 2;
+  }
+  .lead__status {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    background: #f8ece8;
+    color: #6e2c20;
+    font-size: var(--fs-small);
+    line-height: 1.5;
+  }
+  .lead__status[hidden] {
+    display: none;
+  }
+  .lead__alt {
+    margin-top: 6px;
+  }
+  .lead__alt a {
+    color: inherit;
+    font-weight: 650;
+  }
+  .lead__success {
+    display: grid;
+    gap: 14px;
+    padding-block: 12px;
+    outline: none;
+  }
+  .lead__success[hidden] {
+    display: none;
+  }
+  .lead__success p {
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .lead__success-note {
+    font-size: var(--fs-small);
+    color: var(--ink-muted) !important;
+  }
+  .lead__success-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--ivory);
+  }
+</style>

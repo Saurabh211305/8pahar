@@ -1,0 +1,123 @@
+---
+import { amc } from '../../content/site';
+import CtaLink from '../ui/CtaLink.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Picture from '../ui/Picture.astro';
+import ServiceGlyph from '../illustrations/ServiceGlyph.astro';
+---
+<section class="section surface-onyx on-dark amc" id="maintenance" aria-labelledby="amc-title">
+  <div class="container amc__grid">
+    <div class="amc__content">
+      <SectionHeading id="amc-title" eyebrow={amc.eyebrow} title={amc.title} lede={amc.lede} />
+
+      <div class="amc__groups">
+        {amc.groups.map((group) => (
+          <div class="amc__group">
+            <h3 class="amc__group-title">{group.title}</h3>
+            <ul role="list">
+              {group.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <p class="note amc__note">{amc.note}</p>
+
+      <div class="cta-row">
+        <CtaLink cta={amc.primary} />
+        <CtaLink cta={amc.secondary} variant="secondary" />
+      </div>
+      <CtaLink cta={amc.link} variant="link" />
+    </div>
+
+    <figure class="amc__figure">
+      <div class="frame amc__frame">
+        <Picture name="technician" alt={amc.imageAlt} sizes="(min-width: 1024px) 42vw, 100vw" />
+      </div>
+      <figcaption class="amc__cycle">
+        <span class="amc__cycle-icon"><ServiceGlyph kind="maintain" /></span>
+        <span>Inspect · Clean · Test · Repair · Review — on a schedule agreed in your AMC.</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .amc__grid {
+    display: grid;
+    gap: clamp(40px, 5vw, 80px);
+  }
+  @media (min-width: 1024px) {
+    .amc__grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      align-items: center;
+    }
+  }
+  .amc__content {
+    display: grid;
+    gap: 32px;
+    justify-items: start;
+  }
+  .amc__groups {
+    display: grid;
+    gap: 28px;
+    width: 100%;
+  }
+  @media (min-width: 640px) {
+    .amc__groups {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+  }
+  .amc__group-title {
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--line-dark);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta-light);
+  }
+  .amc__group li {
+    padding-block: 11px;
+    border-bottom: 1px solid var(--line-dark);
+    font-weight: 550;
+  }
+  .amc__note {
+    padding-left: 16px;
+    border-left: 2px solid var(--terracotta);
+  }
+  .amc__figure {
+    display: grid;
+    gap: 0;
+  }
+  .amc__frame {
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  @media (max-width: 1023px) {
+    .amc__frame {
+      aspect-ratio: 16 / 10;
+    }
+  }
+  .amc__cycle {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    background: var(--ivory);
+    color: var(--ink);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    line-height: 1.45;
+  }
+  .amc__cycle-icon {
+    flex: none;
+  }
+  .amc__cycle-icon :global(svg) {
+    width: 44px;
+    height: 44px;
+  }
+</style>

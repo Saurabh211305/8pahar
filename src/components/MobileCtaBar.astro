@@ -1,0 +1,68 @@
+---
+/**
+ * Persistent mobile CTA. Hidden while the hero CTA or a lead form is on
+ * screen, so it never covers form fields (see scripts/main.ts).
+ */
+import CtaLink from './ui/CtaLink.astro';
+import Icon from './ui/Icon.astro';
+import { telHref, whatsappHref } from '../config/business';
+
+const wa = whatsappHref('Hello 8PAHAR, I would like to discuss security for my property.');
+---
+<div class="mobile-cta" data-mobile-cta aria-hidden="true" inert>
+  <CtaLink cta={{ label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'mobile-bar' }} class="mobile-cta__primary" />
+  {telHref && (
+    <a class="mobile-cta__icon" href={telHref} data-contact="phone" data-cta-source="mobile-bar">
+      <Icon name="phone" size={20} label="Call 8PAHAR" />
+    </a>
+  )}
+  {wa && (
+    <a class="mobile-cta__icon" href={wa} target="_blank" rel="noopener noreferrer" data-contact="whatsapp" data-cta-source="mobile-bar">
+      <Icon name="whatsapp" size={20} label="Message 8PAHAR on WhatsApp" />
+    </a>
+  )}
+</div>
+
+<style>
+  .mobile-cta {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .mobile-cta {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      z-index: 40;
+      display: flex;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 12px;
+      background: rgba(17, 18, 18, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 16px 40px -12px rgba(17, 18, 18, 0.5);
+      transform: translateY(calc(100% + 24px));
+      transition: transform 0.3s var(--ease);
+    }
+    .mobile-cta.is-visible {
+      transform: none;
+    }
+    .mobile-cta :global(.mobile-cta__primary) {
+      flex: 1;
+      min-height: 48px;
+      --btn-bg: var(--ivory);
+      --btn-fg: var(--onyx);
+      --btn-border: var(--ivory);
+    }
+    .mobile-cta__icon {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      flex: none;
+      border-radius: var(--radius);
+      border: 1px solid rgba(244, 239, 231, 0.3);
+      color: var(--ivory);
+    }
+  }
+</style>

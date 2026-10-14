@@ -1,0 +1,103 @@
+---
+/**
+ * Diagrams for the six problem areas. Shared visual grammar:
+ * onyx line = structure, green field = effective coverage,
+ * terracotta hatch/dash = the gap. Decorative (text carries meaning).
+ */
+interface Props {
+  kind: 'blind-spots' | 'wrong-placement' | 'limited-awareness' | 'unmanaged-access' | 'system-downtime' | 'missed-maintenance';
+  class?: string;
+}
+const { kind, class: className } = Astro.props;
+const hatchId = `hatch-${kind}`;
+const large = kind === 'blind-spots';
+---
+<svg class={className} viewBox={large ? '0 0 360 220' : '0 0 160 100'} xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <defs>
+    <pattern id={hatchId} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#9B6558" stroke-width="1.4" />
+    </pattern>
+  </defs>
+
+  {kind === 'blind-spots' && (
+    <g>
+      <path d="M96 34 L270 34 L214 196 L152 196 Z" fill={`url(#${hatchId})`} opacity="0.5" />
+      <path d="M96 34 L270 34 L214 196 L152 196 Z" stroke="#9B6558" stroke-width="1.2" stroke-dasharray="4 4" />
+      <path d="M90 34 L18 196 L152 196 Z" fill="#173C36" fill-opacity="0.14" stroke="#173C36" stroke-opacity="0.75" stroke-width="1.2" />
+      <path d="M276 34 L214 196 L346 196 Z" fill="#173C36" fill-opacity="0.14" stroke="#173C36" stroke-opacity="0.75" stroke-width="1.2" />
+      <path d="M10 22 H350" stroke="#111212" stroke-width="2.5" />
+      <path d="M10 204 H350" stroke="#111212" stroke-opacity="0.25" stroke-width="1" />
+      <rect x="80" y="22" width="20" height="13" rx="2.5" fill="#111212" />
+      <rect x="266" y="22" width="20" height="13" rx="2.5" fill="#111212" />
+      <circle cx="183" cy="110" r="15" fill="#F4EFE7" stroke="#9B6558" stroke-width="1.6" />
+      <path d="M183 102v9.5M183 116.5v.5" stroke="#9B6558" stroke-width="2.2" />
+    </g>
+  )}
+
+  {kind === 'wrong-placement' && (
+    <g stroke-width="1.5">
+      <path d="M8 90 H152" stroke="#111212" stroke-opacity="0.25" stroke-width="1" />
+      <rect x="18" y="38" width="30" height="52" stroke="#111212" />
+      <circle cx="42" cy="66" r="1.6" fill="#111212" stroke="none" />
+      <path d="M128 18 L154 4 L154 44 Z" fill="#173C36" fill-opacity="0.14" stroke="#173C36" stroke-opacity="0.75" stroke-width="1.2" />
+      <rect x="116" y="12" width="16" height="11" rx="2" fill="#111212" stroke="none" />
+      <path d="M118 26 C100 46 70 52 54 60" stroke="#9B6558" stroke-dasharray="3 4" />
+      <path d="M58 54 L52 61 L61 63" stroke="#9B6558" />
+    </g>
+  )}
+
+  {kind === 'limited-awareness' && (
+    <g stroke-width="1.5">
+      <path d="M8 62 H34 L40 56 L46 66 L52 62 H86 L92 30 L99 82 L105 62 H152" stroke="#111212" />
+      <circle cx="96" cy="58" r="18" stroke="#9B6558" stroke-dasharray="3 4" />
+      <path d="M128 12 c-6 0 -9 4 -9 10 v7 l-3 4 h24 l-3 -4 v-7 c0 -6 -3 -10 -9 -10z M125 36 a3 3 0 0 0 6 0" stroke="#111212" stroke-opacity="0.45" />
+      <path d="M114 10 L142 38" stroke="#9B6558" />
+    </g>
+  )}
+
+  {kind === 'unmanaged-access' && (
+    <g stroke-width="1.5">
+      <path d="M8 90 H152" stroke="#111212" stroke-opacity="0.25" stroke-width="1" />
+      <path d="M48 90 V18 H96 V90" stroke="#111212" />
+      <path d="M48 18 L72 26 V84 L48 90" fill="#173C36" fill-opacity="0.1" stroke="#173C36" />
+      <rect x="106" y="42" width="16" height="24" rx="2" stroke="#9B6558" stroke-dasharray="3 3" />
+      <path d="M14 70 h12 M22 64 l6 6 -6 6" stroke="#111212" stroke-opacity="0.6" />
+      <path d="M128 70 h14 M136 64 l6 6 -6 6" stroke="#111212" stroke-opacity="0.6" />
+    </g>
+  )}
+
+  {kind === 'system-downtime' && (
+    <g stroke-width="1.5">
+      <rect x="10" y="44" width="140" height="18" rx="2" stroke="#111212" />
+      <rect x="11" y="45" width="70" height="16" fill="#173C36" fill-opacity="0.22" stroke="none" />
+      <rect x="81" y="45" width="34" height="16" fill={`url(#${hatchId})`} opacity="0.7" stroke="none" />
+      <rect x="115" y="45" width="34" height="16" fill="#173C36" fill-opacity="0.22" stroke="none" />
+      <path d="M81 38 V68 M115 38 V68" stroke="#9B6558" stroke-dasharray="2 3" />
+      <path d="M10 78 H150" stroke="#111212" stroke-opacity="0.25" stroke-width="1" />
+      <path d="M10 74 v8 M45 74 v8 M80 74 v8 M115 74 v8 M150 74 v8" stroke="#111212" stroke-opacity="0.35" stroke-width="1" />
+      <circle cx="16" cy="24" r="4" fill="#9B6558" stroke="none" />
+      <path d="M26 24 H60" stroke="#111212" stroke-opacity="0.35" />
+    </g>
+  )}
+
+  {kind === 'missed-maintenance' && (
+    <g stroke-width="1.5">
+      {Array.from({ length: 12 }, (_, i) => {
+        const col = i % 6;
+        const row = Math.floor(i / 6);
+        const x = 12 + col * 23;
+        const y = 22 + row * 34;
+        const missed = i >= 7 && i <= 9;
+        return missed ? (
+          <rect x={x} y={y} width="18" height="26" rx="2" stroke="#9B6558" stroke-dasharray="3 3" />
+        ) : (
+          <g>
+            <rect x={x} y={y} width="18" height="26" rx="2" fill="#173C36" fill-opacity={i < 7 ? 0.18 : 0} stroke="#111212" stroke-opacity="0.45" />
+            {i < 7 && <path d={`M${x + 5} ${y + 13} l3 3 6 -6`} stroke="#173C36" />}
+          </g>
+        );
+      })}
+      <path d="M12 12 H150" stroke="#111212" stroke-width="2" />
+    </g>
+  )}
+</svg>

@@ -1,0 +1,177 @@
+---
+import { problems } from '../../content/site';
+import CtaLink from '../ui/CtaLink.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import ProblemGlyph from '../illustrations/ProblemGlyph.astro';
+
+const [feature, ...rest] = problems.items;
+---
+<section class="section surface-white problems" id="problems" aria-labelledby="problems-title">
+  <div class="container">
+    <div class="problems__head">
+      <SectionHeading id="problems-title" eyebrow={problems.eyebrow} title={problems.title} />
+      <p class="lede problems__lede">{problems.lede}</p>
+    </div>
+
+    <ol role="list" class="problems__grid">
+      <li class="problem problem--feature">
+        <div class="problem__visual problem__visual--feature">
+          <ProblemGlyph kind={feature.id as 'blind-spots'} />
+        </div>
+        <div class="problem__body">
+          <span class="problem__num" aria-hidden="true">01</span>
+          <h3 class="h3 problem__title">{feature.title}</h3>
+          <p class="problem__text">{feature.text}</p>
+          {feature.detail && <p class="problem__detail">{feature.detail}</p>}
+        </div>
+      </li>
+      {rest.map((item, i) => (
+        <li class="problem">
+          <div class="problem__visual">
+            <ProblemGlyph kind={item.id as 'wrong-placement'} />
+          </div>
+          <span class="problem__num" aria-hidden="true">{String(i + 2).padStart(2, '0')}</span>
+          <h3 class="h3 problem__title">{item.title}</h3>
+          <p class="problem__text">{item.text}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="problems__foot">
+      <p class="problems__foot-text">Not sure which of these applies to you? That’s what an audit is for.</p>
+      <div class="cta-row">
+        <CtaLink cta={problems.primary} />
+        <CtaLink cta={problems.secondary} variant="secondary" />
+        <CtaLink cta={problems.link} variant="link" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .problems__head {
+    display: grid;
+    gap: 24px;
+    align-items: end;
+    margin-bottom: clamp(40px, 5vw, 64px);
+  }
+  @media (min-width: 960px) {
+    .problems__head {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 64px;
+    }
+  }
+  .problems__grid {
+    display: grid;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  @media (min-width: 640px) {
+    .problems__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  /* 3 columns: the feature fills a 2×2 block, the five other cards complete the 3×3 grid. */
+  @media (min-width: 1100px) {
+    .problems__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .problem--feature {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+  .problem {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: clamp(22px, 2.4vw, 32px);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: background-color 0.25s var(--ease);
+  }
+  .problem:hover {
+    background: #fbf9f6;
+  }
+  .problem__visual {
+    margin-bottom: 14px;
+    padding: 14px;
+    background: var(--ivory);
+    border-radius: var(--radius);
+  }
+  .problem__visual :global(svg) {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    margin-inline: auto;
+  }
+  .problem--feature {
+    background: var(--ivory);
+    gap: 0;
+  }
+  .problem--feature:hover {
+    background: var(--ivory);
+  }
+  @media (min-width: 640px) and (max-width: 1099px) {
+    .problem--feature {
+      grid-column: 1 / -1;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+  }
+  .problem__visual--feature {
+    background: var(--white);
+    padding: clamp(16px, 2vw, 28px);
+    margin-bottom: 24px;
+  }
+  .problem__visual--feature :global(svg) {
+    max-width: 440px;
+  }
+  .problem__body {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+  }
+  .problem__num {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--terracotta-ink);
+    font-feature-settings: 'lnum';
+  }
+  .problem--feature .problem__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+    font-weight: 450;
+  }
+  .problem__text {
+    color: var(--ink-soft);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+  .problem--feature .problem__text {
+    font-size: var(--fs-body);
+  }
+  .problem__detail {
+    color: var(--ink-muted);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+  .problems__foot {
+    display: grid;
+    gap: 20px;
+    align-items: center;
+    margin-top: clamp(36px, 4vw, 56px);
+  }
+  @media (min-width: 1024px) {
+    .problems__foot {
+      grid-template-columns: 1fr auto;
+    }
+  }
+  .problems__foot-text {
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    line-height: 1.3;
+    max-width: 32ch;
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { business } from '../config/business';
+---
+<LegalLayout title="Privacy Notice" description="How 8PAHAR handles the information you share through enquiry forms on this website.">
+  <p>This notice explains what information this website collects when you send an enquiry to 8PAHAR, why we collect it and how you can contact us about it.</p>
+
+  <h2>What we collect</h2>
+  <p>When you submit an enquiry or audit request, we collect only what you enter:</p>
+  <ul>
+    <li>your name and phone number;</li>
+    <li>your property type, city or location, and the security requirement you select;</li>
+    <li>any additional details you choose to provide.</li>
+  </ul>
+  <p>We also record, without identifying you, which page and button led to the enquiry and any campaign parameters in the link you followed (for example <code>utm_source</code>), so we understand which channels help people find us.</p>
+
+  <h2>Why we use it</h2>
+  <p>We use your details to contact you about your enquiry — by phone or WhatsApp — to understand your requirements, arrange any assessment and send a proposal you have asked for. We do not sell your information.</p>
+
+  <h2>Consent and your choices</h2>
+  <p>We ask for your consent before you submit a form. You can withdraw consent, ask what information we hold about you, or ask us to correct or delete it, by contacting us{business.email ? <> at <a href={`mailto:${business.email}`}>{business.email}</a></> : ' using the details published on this website'}.</p>
+
+  <h2>Storage and retention</h2>
+  <p>Enquiries are stored in the customer-management system used by our team. Details of where data is stored, who processes it on our behalf and how long it is retained will be added here before launch.</p>
+
+  <h2>Analytics</h2>
+  <p>If analytics is enabled on this website, it records how pages are used (for example, which buttons are clicked). Analytics events do not include your name, phone number or the text you type into forms.</p>
+</LegalLayout>

@@ -1,0 +1,30 @@
+---
+import { images, type ImageName } from '../../content/images';
+
+interface Props {
+  name: ImageName;
+  alt: string;
+  /** Responsive `sizes` attribute describing the rendered width. */
+  sizes: string;
+  /** Above-the-fold images load eagerly with high priority. */
+  priority?: boolean;
+  class?: string;
+}
+
+const { name, alt, sizes, priority = false, class: className } = Astro.props;
+const source = images[name];
+const srcset = source.widths.map((w) => `/images/${source.name}-${w}.webp ${w}w`).join(', ');
+const fallback = `/images/${source.name}-${source.widths[Math.min(1, source.widths.length - 1)]}.webp`;
+---
+<img
+  class={className}
+  src={fallback}
+  srcset={srcset}
+  sizes={sizes}
+  alt={alt}
+  width={source.width}
+  height={source.height}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? 'sync' : 'async'}
+  fetchpriority={priority ? 'high' : undefined}
+/>
