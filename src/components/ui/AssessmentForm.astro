@@ -1,0 +1,435 @@
+---
+/**
+ * Section 03 booking form (approved reference design). Uses the same
+ * data-lead-* hooks as EnquiryForm, so validation, attribution, analytics
+ * and submission are handled by scripts/main.ts and the configured
+ * PUBLIC_LEAD_ENDPOINT. Method is POST so personal data never enters a URL.
+ */
+import { business, telHref, whatsappHref } from '../../config/business';
+import { ASSESSMENT_PROPERTY_TYPES, ASSESSMENT_REQUIREMENTS, ASSESSMENT_PREFILL_ALIASES, LIMITS } from '../../lib/lead-schema';
+import { audit } from '../../content/site';
+import Icon from './Icon.astro';
+
+const id = 'audit';
+const f = (name: string) => `${id}-${name}`;
+const wa = whatsappHref('Hello 8PAHAR, I would like to book a security assessment.');
+const propertyIcons = { residential: 'home', commercial: 'building', industrial: 'factory', 'other-institutional': 'grid' } as const;
+---
+<div class="af" data-lead-root={id}>
+  <form
+    class="af__form"
+    id={`${id}-form`}
+    data-lead-form={id}
+    data-endpoint={business.leadEndpoint ?? ''}
+    data-submit-label={audit.form.submit}
+    data-prefill-aliases={JSON.stringify(ASSESSMENT_PREFILL_ALIASES)}
+    action={business.leadEndpoint ?? undefined}
+    method="post"
+    aria-labelledby={f('title')}
+  >
+    <div class="af__head">
+      <h3 class="af__title" id={f('title')}>{audit.form.title}</h3>
+      <p class="af__intro">{audit.form.intro}</p>
+    </div>
+
+    <div class="af__field">
+      <label for={f('name')}>Full name <span class="af__req" aria-hidden="true">*</span></label>
+      <div class="af__control">
+        <Icon name="user" size={18} class="af__icon" />
+        <input id={f('name')} name="name" type="text" autocomplete="name" required minlength="2" maxlength={LIMITS.name} placeholder="Enter your full name" aria-describedby={f('name-error')} />
+      </div>
+      <p class="field-error" id={f('name-error')} aria-live="polite"></p>
+    </div>
+
+    <div class="af__field">
+      <label for={f('phone')}>Phone number <span class="af__req" aria-hidden="true">*</span></label>
+      <div class="af__control">
+        <Icon name="phone" size={18} class="af__icon" />
+        <input id={f('phone')} name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="18" placeholder="Enter your contact number" aria-describedby={f('phone-error')} />
+      </div>
+      <p class="field-error" id={f('phone-error')} aria-live="polite"></p>
+    </div>
+
+    <fieldset class="af__field af__group" data-field-group="propertyType" aria-describedby={f('propertyType-error')}>
+      <legend>Property type <span class="af__req" aria-hidden="true">*</span></legend>
+      <div class="af__chips">
+        {ASSESSMENT_PROPERTY_TYPES.map((p) => (
+          <label class="af__chip">
+            <input type="radio" name="propertyType" value={p.value} required />
+            <Icon name={propertyIcons[p.value]} size={18} />
+            {p.value === 'other-institutional' ? <span>Other<span class="visually-hidden"> / Institutional</span></span> : <span>{p.label}</span>}
+          </label>
+        ))}
+      </div>
+      <p class="field-error" id={f('propertyType-error')} aria-live="polite"></p>
+    </fieldset>
+
+    <div class="af__field">
+      <label for={f('requirement')}>What do you need help with? <span class="af__req" aria-hidden="true">*</span></label>
+      <div class="af__control af__control--select">
+        <Icon name="list" size={18} class="af__icon" />
+        <select id={f('requirement')} name="requirement" required aria-describedby={f('requirement-error')}>
+          <option value="" selected disabled>Select an option</option>
+          {ASSESSMENT_REQUIREMENTS.map((r) => <option value={r.value}>{r.label}</option>)}
+        </select>
+      </div>
+      <p class="field-error" id={f('requirement-error')} aria-live="polite"></p>
+    </div>
+
+    <div class="af__field">
+      <label for={f('location')}>Property city or location <span class="af__req" aria-hidden="true">*</span></label>
+      <div class="af__control">
+        <Icon name="pin" size={18} class="af__icon" />
+        <input id={f('location')} name="location" type="text" autocomplete="address-level2" required minlength="2" maxlength={LIMITS.location} placeholder="Enter city or area" aria-describedby={f('location-error')} />
+      </div>
+      <p class="field-error" id={f('location-error')} aria-live="polite"></p>
+    </div>
+
+    <div class="af__field">
+      <label for={f('details')}>Anything else we should know? <span class="af__optional">(Optional)</span></label>
+      <div class="af__control af__control--area">
+        <Icon name="note" size={18} class="af__icon" />
+        <textarea id={f('details')} name="details" rows="3" maxlength={LIMITS.details} placeholder="Briefly describe your security concern" aria-describedby={f('details-error')}></textarea>
+      </div>
+      <p class="field-error" id={f('details-error')} aria-live="polite"></p>
+    </div>
+
+    <!-- Spam trap: hidden from people and assistive tech. -->
+    <div class="af__trap" aria-hidden="true">
+      <label for={f('website')}>Leave this field empty</label>
+      <input id={f('website')} name="_hp" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="formId" value={id} />
+    <input type="hidden" name="ctaSource" value="" data-cta-source-field />
+
+    <div class="af__consent">
+      <input id={f('consent')} name="consent" type="checkbox" required aria-describedby={f('consent-error')} />
+      <label for={f('consent')}>I agree that 8PAHAR may contact me by phone or WhatsApp about this enquiry, and I have read the <a href="/privacy">privacy notice</a>.</label>
+      <p class="field-error" id={f('consent-error')} aria-live="polite"></p>
+    </div>
+
+    <button class="af__submit" type="submit">
+      <span data-submit-text>{audit.form.submit}</span>
+      <Icon name="arrow" size={20} />
+    </button>
+
+    <p class="af__privacy"><Icon name="lock" size={15} strokeWidth={2} />{audit.form.privacy}</p>
+
+    <div class="af__status" role="alert" data-lead-status hidden>
+      <Icon name="alert" size={20} />
+      <div>
+        <p data-lead-status-text>We couldn’t send your enquiry just now. Please try again in a moment.</p>
+        {(telHref || wa) && (
+          <p class="af__alt">
+            You can also reach us directly:
+            {telHref && <a href={telHref} data-contact="phone" data-cta-source="audit-form-error">call us</a>}
+            {telHref && wa && ' or '}
+            {wa && <a href={wa} target="_blank" rel="noopener noreferrer" data-contact="whatsapp" data-cta-source="audit-form-error">message us on WhatsApp</a>}.
+          </p>
+        )}
+      </div>
+    </div>
+  </form>
+
+  <div class="af__success" data-lead-success tabindex="-1" hidden>
+    <span class="af__success-icon"><Icon name="check" size={22} /></span>
+    <h3 class="af__title">Thank you — your enquiry has been received.</h3>
+    <p>A member of the 8PAHAR team will contact you on the number you provided to understand your property and agree the right next step.</p>
+  </div>
+</div>
+
+<style>
+  .af {
+    --af-green: #173c36;
+    --af-line: #ddd7cc;
+    position: relative;
+    padding: 32px 34px 24px;
+    border: 1px solid rgba(17, 18, 18, 0.07);
+    border-radius: 24px;
+    background: #fcfaf6;
+    box-shadow: 0 30px 60px -36px rgba(17, 18, 18, 0.28);
+    color: var(--onyx);
+    transition: box-shadow 0.3s var(--ease);
+  }
+  .af.is-highlighted {
+    box-shadow:
+      0 0 0 3px rgba(155, 101, 88, 0.35),
+      0 30px 60px -36px rgba(17, 18, 18, 0.28);
+  }
+  .af__form {
+    display: grid;
+    gap: 12px;
+  }
+  .af__form[hidden] {
+    display: none;
+  }
+  .af__head {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .af__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 1.15rem + 1vw, 2.2rem);
+    font-weight: 500;
+    font-variation-settings: 'opsz' 48;
+    line-height: 1.1;
+    letter-spacing: -0.012em;
+  }
+  .af__intro {
+    font-size: 1.0625rem;
+    color: #3c3f3d;
+  }
+  .af__field {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .af__field > label,
+  .af__group legend {
+    padding: 0;
+    font-size: 0.97rem;
+    font-weight: 600;
+  }
+  .af__group legend {
+    margin-bottom: 7px;
+  }
+  .af__req {
+    color: #b0473a;
+  }
+  .af__optional {
+    font-weight: 600;
+  }
+  .af__control {
+    position: relative;
+  }
+  .af__control :global(.af__icon) {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4d504e;
+    pointer-events: none;
+  }
+  .af__control--area :global(.af__icon) {
+    top: 20px;
+    transform: none;
+  }
+  .af__control input,
+  .af__control select,
+  .af__control textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 14px 9px 46px;
+    border: 1px solid var(--af-line);
+    border-radius: 7px;
+    background: #fffdf9;
+    font-size: 1rem;
+    color: var(--onyx);
+    transition:
+      border-color 0.15s var(--ease),
+      box-shadow 0.15s var(--ease);
+  }
+  .af__control textarea {
+    min-height: 80px;
+    padding-top: 11px;
+    resize: vertical;
+  }
+  .af__control select {
+    appearance: none;
+    padding-right: 42px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%23111212' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+  }
+  .af__control select:invalid {
+    color: #77746d;
+  }
+  .af__control input::placeholder,
+  .af__control textarea::placeholder {
+    color: #8a877f;
+  }
+  .af__control input:hover,
+  .af__control select:hover,
+  .af__control textarea:hover {
+    border-color: #c7c0b4;
+  }
+  .af__control input:focus,
+  .af__control select:focus,
+  .af__control textarea:focus {
+    outline: none;
+    border-color: var(--af-green);
+    box-shadow: 0 0 0 3px rgba(23, 60, 54, 0.16);
+  }
+  .af__control [aria-invalid='true'],
+  .af__group[aria-invalid='true'] .af__chip {
+    border-color: #a3402f;
+  }
+  :global(.af .is-prefilled) {
+    border-color: var(--af-green) !important;
+  }
+
+  /* Property type: radio chips */
+  .af__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .af__chip {
+    position: relative;
+    display: inline-flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--af-line);
+    border-radius: 9px;
+    background: #fffdf9;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.15s var(--ease),
+      border-color 0.15s var(--ease);
+  }
+  .af__chip:hover {
+    border-color: #c7c0b4;
+  }
+  .af__chip input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .af__chip:has(input:checked) {
+    border-color: rgba(23, 60, 54, 0.45);
+    background: #e4e9de;
+  }
+  .af__chip:has(input:focus-visible) {
+    outline: 2px solid var(--terracotta-ink);
+    outline-offset: 2px;
+  }
+
+  .af__trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .af__consent {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2px 10px;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: #55534e;
+  }
+  .af__consent input {
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    accent-color: var(--af-green);
+  }
+  .af__consent a {
+    color: var(--onyx);
+    text-underline-offset: 3px;
+  }
+  .af__consent .field-error {
+    grid-column: 2;
+  }
+  .af__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 62px;
+    border: 0;
+    border-radius: 7px;
+    background: var(--af-green);
+    color: var(--white);
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease);
+  }
+  .af__submit:hover {
+    background: #0f2a25;
+  }
+  .af__submit :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+  .af__submit:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  .af__submit[aria-disabled='true'] {
+    opacity: 0.65;
+    cursor: progress;
+  }
+  .af__privacy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8125rem;
+    color: #3c3f3d;
+  }
+  .af__privacy :global(svg) {
+    flex: none;
+  }
+  .af__status {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: #f8ece8;
+    color: #6e2c20;
+    font-size: var(--fs-small);
+    line-height: 1.5;
+  }
+  .af__status[hidden] {
+    display: none;
+  }
+  .af__alt a {
+    color: inherit;
+    font-weight: 650;
+  }
+  .af__success {
+    display: grid;
+    gap: 14px;
+    outline: none;
+  }
+  .af__success[hidden] {
+    display: none;
+  }
+  .af__success p {
+    color: #3c3f3d;
+    line-height: 1.6;
+  }
+  .af__success-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--af-green);
+    color: var(--ivory);
+  }
+  @media (max-width: 480px) {
+    .af {
+      padding: 26px 20px 22px;
+      border-radius: 18px;
+    }
+    .af__chips {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

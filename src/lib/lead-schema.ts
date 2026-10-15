@@ -30,8 +30,41 @@ export const REQUIREMENTS = [
   { value: 'not-sure', label: 'Not sure yet' },
 ] as const;
 
-export type PropertyType = (typeof PROPERTY_TYPES)[number]['value'];
-export type Requirement = (typeof REQUIREMENTS)[number]['value'];
+/** Section 03 (security health check) uses its own, shorter option sets. */
+export const ASSESSMENT_PROPERTY_TYPES = [
+  { value: 'residential', label: 'Residential' },
+  { value: 'commercial', label: 'Commercial' },
+  { value: 'industrial', label: 'Industrial' },
+  { value: 'other-institutional', label: 'Other / Institutional' },
+] as const;
+
+export const ASSESSMENT_REQUIREMENTS = [
+  { value: 'assess-existing', label: 'Assess my existing security system' },
+  { value: 'install-new', label: 'Install a new security system' },
+  { value: 'upgrade-cameras-access', label: 'Upgrade cameras or access control' },
+  { value: 'repair-maintain', label: 'Repair or maintain my existing system' },
+  { value: 'monitoring-alerts', label: 'Discuss monitoring and security alerts' },
+] as const;
+
+/**
+ * How pre-selections from CTAs elsewhere on the page (which use the general
+ * option values) map onto the Section 03 options. A value mapped to '' is
+ * left for the visitor to choose.
+ */
+export const ASSESSMENT_PREFILL_ALIASES: Record<string, string> = {
+  'residential-home': 'residential',
+  'housing-society': 'residential',
+  'office-commercial': 'commercial',
+  retail: 'commercial',
+  'industrial-warehouse': 'industrial',
+  'construction-site': 'other-institutional',
+  institution: 'other-institutional',
+  other: 'other-institutional',
+  'security-audit': '',
+};
+
+export type PropertyType = (typeof PROPERTY_TYPES)[number]['value'] | (typeof ASSESSMENT_PROPERTY_TYPES)[number]['value'];
+export type Requirement = (typeof REQUIREMENTS)[number]['value'] | (typeof ASSESSMENT_REQUIREMENTS)[number]['value'];
 
 export interface LeadAttribution {
   utm_source?: string;
@@ -64,8 +97,8 @@ export type FieldErrors = Partial<Record<'name' | 'phone' | 'propertyType' | 'lo
 
 export const LIMITS = { name: 80, location: 80, details: 1000, attribution: 150 } as const;
 
-const propertyValues = new Set<string>(PROPERTY_TYPES.map((p) => p.value));
-const requirementValues = new Set<string>(REQUIREMENTS.map((r) => r.value));
+const propertyValues = new Set<string>([...PROPERTY_TYPES, ...ASSESSMENT_PROPERTY_TYPES].map((p) => p.value));
+const requirementValues = new Set<string>([...REQUIREMENTS, ...ASSESSMENT_REQUIREMENTS].map((r) => r.value));
 
 /**
  * Normalises Indian phone input to 10 digits. Accepts spaces, dashes,

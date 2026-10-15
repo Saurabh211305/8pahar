@@ -85,35 +85,29 @@ export const problems = {
   secondary: { label: 'Explore Our Security Assessment', href: '#faq-audit', source: 'problems' } satisfies Cta,
 };
 
-/* ---------- Section 03 — Security health check ---------- */
+/* ---------- Section 03 — Security health check (approved reference design) ---------- */
 export const audit = {
+  number: '03',
   eyebrow: 'Security health check',
-  title: 'Know Your Security Gaps Before They Become Problems.',
-  lede: 'A security audit is the starting point for every 8PAHAR engagement. We review your property and how it is used, so recommendations are based on evidence rather than a standard camera package.',
-  coverTitle: 'What the assessment may cover',
-  cover: [
-    'Camera placement and viewing coverage',
-    'Entry and exit points',
-    'Perimeter and vulnerable areas',
-    'Existing equipment condition',
-    'Recording and storage requirements',
-    'Access-control requirements',
-    'Monitoring and alerting needs',
-    'Maintenance requirements',
-  ],
-  scopeNote: 'The actual scope depends on your property and the service agreed with you before the visit.',
-  receiveTitle: 'What you can expect afterwards',
-  receive: [
-    'A review of the security requirements we assessed',
-    'The coverage or system concerns we identified',
-    'Recommended improvements, in order of priority',
-    'A proposed next-step plan',
-    'A quotation, where equipment or work is recommended',
-  ],
-  formTitle: 'Book a security audit',
-  formIntro: 'Five quick details to start the conversation. We’ll call you to understand the property and agree a visit.',
-  submit: 'Book My Security Audit',
-  secondary: { label: 'Ask About the Assessment', href: '#faq-audit', source: 'audit' } satisfies Cta,
+  title: 'Know Where Your Security Stands.',
+  lede: 'Tell us about your property and security needs. We’ll help you understand the next steps towards a more reliable security setup.',
+  categories: [
+    { icon: 'eye', title: 'Camera coverage', text: 'Visibility, coverage gaps, viewing angles and important areas.' },
+    { icon: 'door', title: 'Entry and exit points', text: 'Doors, gates, entrances and other critical access routes.' },
+    { icon: 'gear', title: 'Equipment condition', text: 'Existing cameras, recording equipment, connectivity and system health.' },
+    { icon: 'key', title: 'Access control', text: 'How access is managed and where improvements may be needed.' },
+    { icon: 'bell', title: 'Monitoring and alerts', text: 'Visibility, event alerts and monitoring arrangements, where applicable.' },
+    { icon: 'wrench', title: 'Maintenance needs', text: 'Servicing, repairs, upgrades and ongoing support requirements.' },
+  ] as const,
+  annotation: 'A comprehensive look at what matters.',
+  imageAlt:
+    'Illustration of a security consultant holding a tablet with a floor plan, looking at a contemporary glass-and-stone residence; circular icons for a camera, key, door, alert bell, visibility and maintenance mark the areas a security assessment reviews.',
+  form: {
+    title: 'Book Your Security Assessment',
+    intro: 'A few details about your property.',
+    submit: 'Book My Security Audit',
+    privacy: 'Your information is kept confidential and used only to discuss your enquiry.',
+  },
 };
 
 /* ---------- Section 04 — Methodology ---------- */

@@ -99,10 +99,24 @@ function readFields(form: LeadForm): RawLeadFields {
   };
 }
 
+/** Element that carries a field's invalid state: the control, or the fieldset of a radio group. */
+function fieldTarget(form: LeadForm, name: string): HTMLElement | null {
+  const item = form.elements.namedItem(name);
+  if (item instanceof RadioNodeList) return form.querySelector<HTMLElement>(`[data-field-group="${name}"]`);
+  return item as HTMLElement | null;
+}
+
+/** Element to focus for a field (first radio of a group). */
+function focusTarget(form: LeadForm, name: string): HTMLElement | null {
+  const item = form.elements.namedItem(name);
+  if (item instanceof RadioNodeList) return (item[0] as HTMLElement | undefined) ?? null;
+  return item as HTMLElement | null;
+}
+
 function showErrors(form: LeadForm, errors: FieldErrors, only?: string): void {
   for (const name of FIELD_NAMES) {
     if (only && name !== only) continue;
-    const input = form.elements.namedItem(name) as HTMLInputElement | null;
+    const input = fieldTarget(form, name);
     const errorEl = form.querySelector<HTMLElement>(`#${form.dataset.leadForm}-${name}-error`);
     if (!input || !errorEl) continue;
     const message = errors[name] ?? '';
@@ -191,7 +205,7 @@ function initLeadForm(form: LeadForm): void {
     showErrors(form, errors);
     const firstInvalid = FIELD_NAMES.find((n) => errors[n]);
     if (firstInvalid) {
-      (form.elements.namedItem(firstInvalid) as HTMLElement | null)?.focus();
+      focusTarget(form, firstInvalid)?.focus();
       return;
     }
 
@@ -253,13 +267,28 @@ function initLeadForm(form: LeadForm): void {
 /* -------------------------------------------------------------- CTA links */
 
 function prefillForm(form: LeadForm, property?: string, requirement?: string, source?: string): void {
-  const apply = (name: string, value?: string) => {
+  // A form can translate general CTA values to its own options (see ASSESSMENT_PREFILL_ALIASES).
+  let aliases: Record<string, string> = {};
+  try {
+    aliases = JSON.parse(form.dataset.prefillAliases ?? '{}') as Record<string, string>;
+  } catch {
+    /* no aliases */
+  }
+  const apply = (name: string, raw?: string) => {
+    const value = raw && raw in aliases ? aliases[raw] : raw;
     if (!value) return;
-    const select = form.elements.namedItem(name) as HTMLSelectElement | null;
-    if (!select || ![...select.options].some((o) => o.value === value)) return;
-    select.value = value;
-    select.classList.add('is-prefilled');
-    select.removeAttribute('aria-invalid');
+    const item = form.elements.namedItem(name);
+    if (item instanceof RadioNodeList) {
+      const radio = [...item].find((r) => (r as HTMLInputElement).value === value) as HTMLInputElement | undefined;
+      if (!radio) return;
+      radio.checked = true;
+    } else {
+      const select = item as HTMLSelectElement | null;
+      if (!select || !select.options || ![...select.options].some((o) => o.value === value)) return;
+      select.value = value;
+      select.classList.add('is-prefilled');
+    }
+    fieldTarget(form, name)?.removeAttribute('aria-invalid');
     const err = form.querySelector<HTMLElement>(`#${form.dataset.leadForm}-${name}-error`);
     if (err) err.textContent = '';
   };
@@ -272,9 +301,10 @@ function prefillForm(form: LeadForm, property?: string, requirement?: string, so
 
 function focusForm(root: HTMLElement, form: LeadForm): void {
   root.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
-  const firstEmpty = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input.input, select.input')].find((el) => !el.value);
+  const fields = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[type="text"], input[type="tel"], select')].filter((el) => el.tabIndex !== -1);
+  const firstEmpty = fields.find((el) => !el.value);
   // Focus after the scroll settles so the browser doesn't jump.
-  window.setTimeout(() => (firstEmpty ?? form.querySelector<HTMLElement>('.input'))?.focus({ preventScroll: true }), reducedMotion() ? 0 : 450);
+  window.setTimeout(() => (firstEmpty ?? fields[0])?.focus({ preventScroll: true }), reducedMotion() ? 0 : 450);
   root.classList.add('is-highlighted');
   window.setTimeout(() => root.classList.remove('is-highlighted'), 1800);
 }

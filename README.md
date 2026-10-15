@@ -58,6 +58,14 @@ positioned in image coordinates (`problems.gaps[].at` in `src/content/site.ts`)
 so they stay on the photograph's connector lines. Keep the script's box list
 and those positions in sync if the image changes.
 
+## Section 03 (approved reference design)
+
+The illustration is the supplied artwork (`brand-source/health-check-illustration.webp`,
+from "SECTION 3 VECTOR IMAGE.png"), resized only. The booking form
+(`src/components/ui/AssessmentForm.astro`) uses the Section 03 option sets in
+`src/lib/lead-schema.ts`; CTAs elsewhere that pre-select general values are
+translated through `ASSESSMENT_PREFILL_ALIASES`.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is

@@ -1,152 +1,325 @@
 ---
+/**
+ * Section 03 — Security health check (approved reference design).
+ * Desktop: editorial copy + assessment categories on the left, the approved
+ * illustration in the centre (used unaltered), booking form card on the right.
+ */
 import { audit } from '../../content/site';
-import { business } from '../../config/business';
-import CtaLink from '../ui/CtaLink.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
-import EnquiryForm from '../ui/EnquiryForm.astro';
+import { images } from '../../content/images';
 import Icon from '../ui/Icon.astro';
+import AssessmentForm from '../ui/AssessmentForm.astro';
 
-const pricing = business.auditPricing;
-const pricingText =
-  pricing?.type === 'free'
-    ? 'The initial security audit is free of charge.'
-    : pricing?.type === 'paid'
-      ? pricing.note
-      : 'Any assessment fee and its scope are confirmed with you before the audit is booked.';
+const art = images['health-check'];
+const srcset = art.widths.map((w) => `/images/${art.name}-${w}.webp ${w}w`).join(', ');
 ---
-<section class="section surface-sand audit" id="audit" aria-labelledby="audit-title">
-  <div class="container audit__grid">
-    <SectionHeading id="audit-title" eyebrow={audit.eyebrow} title={audit.title} lede={audit.lede} class="audit__heading" />
-
-    <div class="audit__content">
-
-      <div class="audit__block">
-        <h3 class="audit__subhead">{audit.coverTitle}</h3>
-        <ol role="list" class="audit__checklist">
-          {audit.cover.map((item, i) => (
-            <li>
-              <span class="audit__index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ol>
-        <p class="note audit__scope">{audit.scopeNote}</p>
-      </div>
-
-      <div class="audit__block">
-        <h3 class="audit__subhead">{audit.receiveTitle}</h3>
-        <ul role="list" class="audit__receive">
-          {audit.receive.map((item) => (
-            <li><Icon name="check" size={18} class="audit__tick" />{item}</li>
-          ))}
-        </ul>
-      </div>
+<section class="hc" id="audit" aria-labelledby="audit-title">
+  <div class="hc__inner">
+    <div class="hc__copy">
+      <p class="hc__eyebrow">
+        <span class="hc__rule" aria-hidden="true"></span>
+        <span>{audit.number} / {audit.eyebrow}</span>
+      </p>
+      <h2 id="audit-title" class="hc__title">
+        <span class="hc__line">Know Where Your</span> <span class="hc__line">Security Stands.</span>
+      </h2>
+      <svg class="hc__stroke" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path d="M4 17.5C52 12 118 8.6 190 8.2c38-.2 72 .8 104 2.6-31 .6-70 1.8-108 3.7-58 2.9-112 6.8-176 10.4-4 .2-8-2.6-6-7.4Z" fill="currentColor" />
+      </svg>
+      <p class="hc__lede">{audit.lede}</p>
     </div>
 
-    <div class="audit__aside">
-      <div class="audit__sticky">
-        <EnquiryForm id="audit" title={audit.formTitle} intro={audit.formIntro} submitLabel={audit.submit} defaultRequirement="security-audit" />
-        <p class="audit__pricing">{pricingText}</p>
-        <CtaLink cta={audit.secondary} variant="link" />
-      </div>
+    <ul class="hc__cats" role="list" aria-label="What the assessment looks at">
+      {audit.categories.map((c) => (
+        <li class="hc__cat">
+          <span class="hc__tile" aria-hidden="true"><Icon name={c.icon} size={30} strokeWidth={1.8} /></span>
+          <span>
+            <span class="hc__cat-title">{c.title}</span>
+            <span class="hc__cat-text">{c.text}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+
+    <figure class="hc__art">
+      <img
+        src={`/images/${art.name}-1400.webp`}
+        srcset={srcset}
+        sizes="(min-width: 1441px) 66vw, (min-width: 1181px) 46vw, 100vw"
+        alt={audit.imageAlt}
+        width={art.width}
+        height={art.height}
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption class="hc__note">
+        <svg class="hc__note-arrow" viewBox="0 0 60 70" aria-hidden="true" focusable="false">
+          <path d="M44 66C20 60 6 44 8 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M2 22 8 12l7 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>{audit.annotation}</span>
+      </figcaption>
+    </figure>
+
+    <div class="hc__form">
+      <AssessmentForm />
     </div>
   </div>
 </section>
 
 <style>
-  .audit__grid {
+  .hc {
+    --hc-pad: max(clamp(16px, 4.4vw, 72px), calc((100% - 1648px) / 2 + 72px));
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    /* picks up from Section 02's strip tone, then settles to the section ivory */
+    background: linear-gradient(180deg, #fcf9f3 0, #f8f4ee 160px);
+    color: var(--onyx);
+    scroll-margin-top: var(--header-h);
+  }
+  .hc__inner {
     display: grid;
-    gap: clamp(36px, 4vw, 56px);
-    grid-template-areas: 'heading' 'form' 'content';
+    grid-template-columns: minmax(0, 580px) minmax(0, 1fr) minmax(0, 574px);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'copy . form'
+      'cats . form';
+    column-gap: 24px;
+    padding: 34px clamp(16px, 3.4vw, 56px) 40px calc(var(--hc-pad) + 14px);
   }
-  .audit__grid > :global(.audit__heading) {
-    grid-area: heading;
+
+  /* ---------- Copy ---------- */
+  .hc__copy {
+    grid-area: copy;
+    position: relative;
+    z-index: 2;
   }
-  .audit__content {
-    grid-area: content;
+  .hc__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-left: -14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
-  .audit__aside {
+  .hc__rule {
+    width: 46px;
+    height: 1.5px;
+    background: var(--onyx);
+  }
+  .hc__title {
+    margin-top: 26px;
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 1.75rem + 2.68vw, 4.55rem);
+    font-weight: 530;
+    font-variation-settings: 'opsz' 72;
+    line-height: 0.95;
+    letter-spacing: -0.016em;
+    color: #0a1410;
+    text-wrap: initial;
+  }
+  .hc__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .hc__stroke {
+    display: block;
+    width: clamp(160px, 15vw, 248px);
+    height: clamp(8px, 0.75vw, 12px);
+    margin-top: 10px;
+    color: #9b6558;
+  }
+  .hc__lede {
+    max-width: 548px;
+    margin-top: 26px;
+    font-size: clamp(1.0625rem, 0.96rem + 0.2vw, 1.17rem);
+    line-height: 1.32;
+    color: #1d201f;
+  }
+
+  /* ---------- Assessment categories ---------- */
+  .hc__cats {
+    grid-area: cats;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hc__cat {
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    gap: 30px;
+    align-items: center;
+  }
+  .hc__tile {
+    display: grid;
+    place-items: center;
+    width: 62px;
+    height: 62px;
+    border-radius: 12px;
+    background: #efebe2;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 1px 2px rgba(17, 18, 18, 0.05);
+    color: #1d2a26;
+  }
+  .hc__cat-title {
+    display: block;
+    font-size: 1.03rem;
+    font-weight: 650;
+    line-height: 1.3;
+  }
+  .hc__cat-text {
+    display: block;
+    max-width: 280px;
+    margin-top: 4px;
+    font-size: 0.92rem;
+    line-height: 1.42;
+    color: #3a3d3b;
+  }
+
+  /* ---------- Illustration (approved artwork, unaltered) ---------- */
+  .hc__art {
+    position: absolute;
+    z-index: 1;
+    left: max(6.5%, calc((100% - 1648px) / 2 + 107px));
+    top: clamp(120px, 10.6vw, 175px);
+    width: min(66%, 1088px);
+    margin: 0;
+    pointer-events: none;
+  }
+  .hc__art img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* The artwork's left third is open ivory with faint foliage; let it sit back behind the copy. */
+    /* left: the open ivory third sits back behind the copy; bottom: soft foot so no edge shows */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, transparent 14%, #000 32%), linear-gradient(0deg, transparent 0, #000 9%);
+    -webkit-mask-composite: source-in, source-over;
+    mask-image: linear-gradient(90deg, transparent 0, transparent 14%, #000 32%), linear-gradient(0deg, transparent 0, #000 9%);
+    mask-composite: intersect, add;
+  }
+  .hc__note {
+    position: absolute;
+    left: 49%;
+    top: 96%;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    color: #9b6558;
+    transform: rotate(-11deg);
+    transform-origin: left top;
+  }
+  .hc__note-arrow {
+    flex: none;
+    width: 30px;
+    height: 36px;
+    margin-top: -26px;
+  }
+  .hc__note span {
+    max-width: 10.5em;
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 0.7rem + 0.6vw, 1.4rem);
+    font-style: italic;
+    line-height: 1.25;
+  }
+
+  /* ---------- Form ---------- */
+  .hc__form {
     grid-area: form;
+    position: relative;
+    z-index: 3;
+    align-self: start;
+    padding-top: 12px;
+    scroll-margin-top: calc(var(--header-h) + 12px);
   }
-  @media (min-width: 1024px) {
-    .audit__grid {
-      grid-template-columns: minmax(0, 1fr) minmax(400px, 0.9fr);
-      grid-template-rows: auto 1fr;
-      grid-template-areas: 'heading form' 'content form';
-      column-gap: clamp(48px, 6vw, 96px);
+
+  /* ---------- Laptop: copy column | form; artwork in the copy column ---------- */
+  @media (max-width: 1440px) {
+    .hc__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(400px, 500px);
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas:
+        'copy form'
+        'art form'
+        'cats form';
+      column-gap: clamp(32px, 4vw, 56px);
+      padding-left: calc(var(--hc-pad) + 14px);
+      padding-right: var(--hc-pad);
+    }
+    .hc__art {
+      grid-area: art;
+      position: relative;
+      left: auto;
+      top: auto;
+      width: 100%;
+      margin-top: 20px;
+    }
+    .hc__art img {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20%), linear-gradient(0deg, transparent 0, #000 9%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 20%), linear-gradient(0deg, transparent 0, #000 9%);
+    }
+    .hc__note {
+      left: 48%;
+      top: 90%;
+    }
+    .hc__cats {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 28px;
+      margin-top: 8px;
+    }
+    .hc__cat {
+      gap: 18px;
       align-items: start;
     }
   }
-  .audit__content {
-    display: grid;
-    gap: clamp(32px, 4vw, 48px);
-  }
-  .audit__subhead {
-    margin-bottom: 18px;
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--green);
-  }
-  .audit__checklist {
-    display: grid;
-    border-top: 1px solid var(--line-strong);
-  }
-  @media (min-width: 640px) {
-    .audit__checklist {
-      grid-template-columns: 1fr 1fr;
-      column-gap: 32px;
+
+  /* ---------- Tablet & mobile: stacked ---------- */
+  @media (max-width: 1180px) {
+    .hc__inner {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'copy' 'art' 'form' 'cats';
+      padding: 48px var(--gutter) 48px;
+    }
+    .hc__eyebrow {
+      margin-left: 0;
+    }
+    /* the annotation would sit on the artwork once it is scaled down */
+    .hc__note {
+      display: none;
+    }
+    .hc__form {
+      max-width: 640px;
+      padding-top: 8px;
+    }
+    .hc__cats {
+      margin-top: 40px;
     }
   }
-  .audit__checklist li {
-    display: flex;
-    gap: 16px;
-    align-items: baseline;
-    padding-block: 14px;
-    border-bottom: 1px solid var(--line);
-    font-weight: 550;
-  }
-  .audit__index {
-    font-family: var(--font-serif);
-    font-size: 0.95rem;
-    color: var(--terracotta-ink);
-    font-feature-settings: 'lnum';
-  }
-  .audit__scope {
-    margin-top: 14px;
-  }
-  .audit__receive {
-    display: grid;
-    gap: 10px;
-  }
-  .audit__receive li {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    color: var(--ink-soft);
-  }
-  .audit__receive :global(.audit__tick) {
-    flex: none;
-    margin-top: 4px;
-    color: var(--green);
-  }
-  .audit__sticky {
-    display: grid;
-    gap: 14px;
-    justify-items: start;
-  }
-  .audit__sticky > :global(.lead) {
-    width: 100%;
-  }
-  @media (min-width: 1024px) {
-    .audit__sticky {
-      position: sticky;
-      top: calc(var(--header-h) + 24px);
+  @media (max-width: 700px) {
+    .hc__line {
+      white-space: normal;
     }
-  }
-  .audit__pricing {
-    font-size: var(--fs-small);
-    color: var(--ink-muted);
+    .hc__art {
+      width: 150%;
+      margin-left: -46%;
+    }
+    .hc__art img {
+      -webkit-mask-image: linear-gradient(90deg, transparent 22%, #000 36%), linear-gradient(0deg, transparent 0, #000 9%);
+      mask-image: linear-gradient(90deg, transparent 22%, #000 36%), linear-gradient(0deg, transparent 0, #000 9%);
+    }
+    .hc__note {
+      left: 60%;
+      top: 82%;
+    }
+    .hc__cats {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

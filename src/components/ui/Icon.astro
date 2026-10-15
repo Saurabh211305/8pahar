@@ -1,7 +1,7 @@
 ---
 /** Small interface icons (1.5px line, 24px grid). Decorative unless `label` is set. */
 interface Props {
-  name: 'arrow' | 'phone' | 'whatsapp' | 'menu' | 'close' | 'plus' | 'check' | 'mail' | 'alert' | 'chevron' | 'headset' | 'calendar' | 'chat' | 'eye' | 'lock' | 'chart' | 'wrench' | 'camera' | 'bell' | 'key' | 'power';
+  name: 'arrow' | 'phone' | 'whatsapp' | 'menu' | 'close' | 'plus' | 'check' | 'mail' | 'alert' | 'chevron' | 'headset' | 'calendar' | 'chat' | 'eye' | 'lock' | 'chart' | 'wrench' | 'camera' | 'bell' | 'key' | 'power' | 'door' | 'gear' | 'user' | 'list' | 'pin' | 'note' | 'home' | 'building' | 'factory' | 'grid';
   strokeWidth?: number;
   size?: number;
   label?: string;
@@ -49,5 +49,15 @@ const { name, size = 18, label, class: className, strokeWidth = 1.6 } = Astro.pr
   {name === 'bell' && <><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15Z" /><path d="M10 21a2.2 2.2 0 0 0 4 0" /></>}
   {name === 'key' && <><circle cx="8" cy="15" r="4.5" /><path d="m11.2 11.8 8.3-8.3M16.5 6.5l2.5 2.5M14 9l2 2" /></>}
   {name === 'power' && <><path d="M12 3v9" /><path d="M7.2 6.4a7.5 7.5 0 1 0 9.6 0" /></>}
+  {name === 'door' && <><rect x="5.5" y="3" width="13" height="18" rx="1" /><path d="M9 3v18M14.5 11.5v1.5" /></>}
+  {name === 'gear' && <><circle cx="12" cy="12" r="3" /><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5" /><circle cx="12" cy="12" r="6.3" /></>}
+  {name === 'user' && <><circle cx="12" cy="8" r="3.8" /><path d="M4.5 20.5c.8-4 3.8-6 7.5-6s6.7 2 7.5 6" /></>}
+  {name === 'list' && <path d="M9 6.5h11M9 12h11M9 17.5h11M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01" />}
+  {name === 'pin' && <><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11Z" /><circle cx="12" cy="10" r="2.4" /></>}
+  {name === 'note' && <><path d="M6 3h8.5L19 7.5V21H6Z" /><path d="M14 3v5h5M9 12.5h6.5M9 16h6.5" /></>}
+  {name === 'home' && <><path d="M4 10.5 12 4l8 6.5V20H4Z" /><path d="M10 20v-5.5h4V20" /></>}
+  {name === 'building' && <><rect x="5" y="3.5" width="14" height="17" rx="1" /><path d="M9 7.5h1.5M13.5 7.5H15M9 11h1.5M13.5 11H15M9 14.5h1.5M13.5 14.5H15M10.5 20.5V18h3v2.5" /></>}
+  {name === 'factory' && <><path d="M3.5 20.5V11l5 3V11l5 3V7h4l1 13.5Z" /><path d="M7 17.5h2M11.5 17.5h2" /></>}
+  {name === 'grid' && <><rect x="4" y="4" width="6.5" height="6.5" rx="1" /><rect x="13.5" y="4" width="6.5" height="6.5" rx="1" /><rect x="4" y="13.5" width="6.5" height="6.5" rx="1" /><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1" /></>}
   {name === 'alert' && <><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5v5.5M12 16.2v.3" /></>}
 </svg>
