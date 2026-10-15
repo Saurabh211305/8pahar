@@ -66,6 +66,14 @@ from "SECTION 3 VECTOR IMAGE.png"), resized only. The booking form
 `src/lib/lead-schema.ts`; CTAs elsewhere that pre-select general values are
 translated through `ASSESSMENT_PREFILL_ALIASES`.
 
+## Section 04 (approved reference design)
+
+The illustration is the supplied artwork (`brand-source/security-architecture-illustration.webp`,
+from "section 4 vector image.png"), resized only; its eight icon nodes are part
+of the image. The stage labels are HTML, pinned to the nodes via
+`methodology.stages[].at` (percent of the 1672×941 artwork) in `src/content/site.ts`.
+Node centres were measured from the image; update `at` if the artwork changes.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is

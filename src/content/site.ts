@@ -110,25 +110,36 @@ export const audit = {
   },
 };
 
-/* ---------- Section 04 — Methodology ---------- */
+/* ---------- Section 04 — The 8PAHAR security architecture (approved reference design) ---------- */
+export interface Stage {
+  name: string;
+  text: string;
+  /** Label's top-left corner on the illustration, as % of the 1672×941 artwork, beside its icon node. */
+  at: [number, number];
+  tone: 'green' | 'terracotta';
+}
+
 export const methodology = {
+  number: '04',
   eyebrow: 'The 8PAHAR security architecture',
-  title: 'One Connected Security System. Designed Around Your Property.',
-  lede: 'Eight stages, one connected approach. We don’t start with a product list — we start with your property, and build only what it needs.',
+  title: { lines: ['Eight Stages.', 'One More Considered'], last: 'Approach to', accent: 'Security.' },
+  lede: 'From understanding your property’s risks to maintaining the system over time, our eight-stage framework connects the decisions that make security work together.',
+  cta: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'architecture' } satisfies Cta,
+  statement: 'Let’s build a security approach around your property.',
+  tagline: ['A connected', 'approach to a', 'safer tomorrow'],
+  imageAlt:
+    'Illustration of a contemporary villa with landscaped grounds, encircled by a pathway of eight icons — assess, design, deploy, detect, monitor, respond, maintain and protect — representing the stages of the 8PAHAR security framework.',
+  // Positions derive from the icon-node centres in the artwork (see README → Section 04).
   stages: [
-    { name: 'Assess', text: 'We study the property, how it is used and where the existing set-up falls short.' },
-    { name: 'Design', text: 'We plan camera positions, recording, access points and integrations around your actual requirements.' },
-    { name: 'Deploy', text: 'Our team installs, configures and tests the agreed equipment with tidy, documented cabling.' },
-    { name: 'Detect', text: 'Cameras and compatible analytics are tuned to pick up the activity that matters at your site.' },
-    { name: 'Monitor', text: 'You get remote viewing and, where agreed, a monitoring arrangement suited to the property.' },
-    { name: 'Respond', text: 'Alerts and escalation steps are set up so the right person knows when something needs attention.' },
-    { name: 'Maintain', text: 'Preventive checks and repairs keep cameras, storage and recorders working as intended.' },
-    { name: 'Protect', text: 'We review and improve the system as your property, people and risks change.' },
-  ],
-  note: 'Every engagement begins with Assess. Which of the other stages apply — including any monitoring or response support — is agreed in your proposal.',
-  primary: { label: 'Build My Security Plan', href: '#enquiry', requirement: 'security-plan', source: 'methodology' } satisfies Cta,
-  secondary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'methodology' } satisfies Cta,
-  link: { label: 'Explore Our Services', href: '#services', source: 'methodology' } satisfies Cta,
+    { name: 'Assess', text: 'Understand your property, requirements and vulnerabilities.', at: [57.5, 5.7], tone: 'green' },
+    { name: 'Design', text: 'Plan the right combination of security components for your property.', at: [81.9, 9.7], tone: 'terracotta' },
+    { name: 'Deploy', text: 'Install, configure and integrate the agreed systems.', at: [90.6, 33.0], tone: 'green' },
+    { name: 'Detect', text: 'Identify relevant activity using cameras, sensors and analytics.', at: [91.3, 59.4], tone: 'terracotta' },
+    { name: 'Monitor', text: 'Enable live viewing, recording review or monitoring arrangements.', at: [72.9, 79.8], tone: 'green' },
+    { name: 'Respond', text: 'Define how alerts and events should be reviewed or acted upon.', at: [49.9, 78.3], tone: 'terracotta' },
+    { name: 'Maintain', text: 'Support ongoing reliability through servicing and updates.', at: [42.5, 59.9], tone: 'green' },
+    { name: 'Protect', text: 'Adapt to changing needs and continuously improve your setup.', at: [42.5, 33.7], tone: 'terracotta' },
+  ] satisfies Stage[],
 };
 
 /* ---------- Section 05 — Services ---------- */

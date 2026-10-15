@@ -1,144 +1,386 @@
 ---
-import { methodology } from '../../content/site';
-import CtaLink from '../ui/CtaLink.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
-import MethodologyEight from '../illustrations/MethodologyEight.astro';
+/**
+ * Section 04 — The 8PAHAR security architecture (approved reference design).
+ * The supplied illustration (villa, circular pathway, eight icon nodes) is used
+ * unaltered. The eight stage labels are one HTML ordered list: on desktop each
+ * item is pinned to its icon node in artwork coordinates; on smaller screens
+ * the same list becomes a compact sequence below the illustration.
+ */
+import { methodology as m } from '../../content/site';
+import { images } from '../../content/images';
+import Icon from '../ui/Icon.astro';
+
+const art = images.architecture;
+const srcset = art.widths.map((w) => `/images/${art.name}-${w}.webp ${w}w`).join(', ');
+const num = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<section class="section surface-onyx on-dark method" id="approach" aria-labelledby="method-title">
-  <div class="container">
-    <div class="method__head">
-      <SectionHeading id="method-title" eyebrow={methodology.eyebrow} title={methodology.title} />
-      <p class="lede">{methodology.lede}</p>
+<section class="arch" id="approach" aria-labelledby="method-title">
+  <div class="arch__stage">
+    <div class="arch__copy">
+      <p class="arch__eyebrow">
+        <span class="arch__rule" aria-hidden="true"></span>
+        <span>{m.number} / {m.eyebrow}</span>
+      </p>
+      <h2 id="method-title" class="arch__title">
+        {m.title.lines.map((line) => <><span class="arch__line">{line}</span>{' '}</>)}
+        <span class="arch__line">{m.title.last} <span class="arch__accent">{m.title.accent}<svg class="arch__stroke" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M4 17.5C52 12 118 8.6 190 8.2c38-.2 72 .8 104 2.6-31 .6-70 1.8-108 3.7-58 2.9-112 6.8-176 10.4-4 .2-8-2.6-6-7.4Z" fill="currentColor" /></svg></span></span>
+      </h2>
+      <p class="arch__lede">{m.lede}</p>
+      <a
+        class="arch__cta"
+        href={m.cta.href}
+        data-cta="audit"
+        data-cta-source={m.cta.source}
+        data-cta-label={m.cta.label}
+        data-prefill-requirement={m.cta.requirement}
+      >
+        {m.cta.label}<Icon name="arrow" size={20} />
+      </a>
+      <p class="arch__statement">{m.statement}</p>
+      <p class="arch__tagline">{m.tagline.map((l) => <span>{l}</span>)}</p>
     </div>
 
-    <div class="method__body">
-      <figure class="method__figure">
-        <MethodologyEight class="method__eight" stages={methodology.stages.map((s) => s.name)} />
-        <figcaption class="method__caption">Assess → Design → Deploy → Detect → Monitor → Respond → Maintain → Protect</figcaption>
-      </figure>
-
-      <ol role="list" class="method__list">
-        {methodology.stages.map((stage, i) => (
-          <li class="method__stage">
-            <span class="method__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="method__name">{stage.name}</h3>
-            <p class="method__text">{stage.text}</p>
+    <figure class="arch__art">
+      <img src={`/images/${art.name}-1400.webp`} srcset={srcset} sizes="(min-width: 1181px) 94vw, 100vw" alt={m.imageAlt} width={art.width} height={art.height} loading="lazy" decoding="async" />
+      <ol class="arch__stages" role="list" aria-label="The eight stages">
+        {m.stages.map((s, i) => (
+          <li class:list={['arch__stagelabel', `arch__stagelabel--${s.tone}`]} style={`--x:${s.at[0]}%;--y:${s.at[1]}%${s.name === 'Protect' || s.name === 'Maintain' ? ';--w:10.3cqi' : ''}`}>
+            <span class="arch__num">{num(i)}</span>
+            <h3 class="arch__name">{s.name}</h3>
+            <p class="arch__text">{s.text}</p>
           </li>
         ))}
       </ol>
-    </div>
-
-    <div class="method__foot">
-      <p class="note">{methodology.note}</p>
-      <div class="cta-row">
-        <CtaLink cta={methodology.primary} />
-        <CtaLink cta={methodology.secondary} variant="secondary" />
-        <CtaLink cta={methodology.link} variant="link" />
-      </div>
-    </div>
+    </figure>
   </div>
 </section>
 
 <style>
-  .method {
+  .arch {
+    position: relative;
     overflow: hidden;
+    /* continues from Section 03's ivory into the artwork's own tone */
+    background: linear-gradient(180deg, #f8f4ee 0, #fcf4ed 120px);
+    color: var(--onyx);
   }
-  .method__head {
-    display: grid;
-    gap: 24px;
-    align-items: end;
-    margin-bottom: clamp(48px, 6vw, 80px);
+
+  /* Desktop stage keeps the reference's 1672 × 941 proportions; 1cqi = 1% of its width. */
+  .arch__stage {
+    position: relative;
+    max-width: 1920px;
+    margin-inline: auto;
+    aspect-ratio: 1672 / 941;
+    container-type: inline-size;
   }
-  @media (min-width: 960px) {
-    .method__head {
-      grid-template-columns: 1.3fr 1fr;
-      gap: 64px;
-    }
+
+  /* ---------- Copy ---------- */
+  .arch__copy {
+    position: absolute;
+    z-index: 2;
+    left: 5.4cqi;
+    top: 2.6cqi;
+    width: 36cqi;
   }
-  .method__body {
-    display: grid;
-    gap: clamp(32px, 5vw, 72px);
+  .arch__eyebrow {
+    display: flex;
     align-items: center;
+    gap: 1.25cqi;
+    margin-left: -0.75cqi;
+    font-size: max(11px, 0.8cqi);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
-  @media (min-width: 1024px) {
-    .method__body {
-      grid-template-columns: minmax(300px, 0.75fr) minmax(0, 1.5fr);
-    }
+  .arch__rule {
+    width: 2.8cqi;
+    height: 1.5px;
+    background: var(--onyx);
   }
-  .method__figure {
-    display: grid;
-    justify-items: center;
-    gap: 16px;
-    color: var(--ivory);
+  .arch__title {
+    margin-top: 2.3cqi;
+    font-family: var(--font-serif);
+    font-size: max(34px, 3.6cqi);
+    font-weight: 530;
+    font-variation-settings: 'opsz' 72;
+    line-height: 0.94;
+    letter-spacing: -0.016em;
+    color: #0a1410;
+    text-wrap: initial;
   }
-  .method__figure :global(.method__eight) {
+  .arch__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .arch__accent {
+    position: relative;
+    display: inline-block;
+    font-weight: 470;
+    color: #995739;
+  }
+  .arch__stroke {
+    position: absolute;
+    left: 0;
+    bottom: -0.24em;
     width: 100%;
-    max-width: 380px;
+    height: 0.2em;
+    color: #995739;
+  }
+  .arch__lede {
+    max-width: 28cqi;
+    margin-top: 2.6cqi;
+    font-size: max(15px, 1.03cqi);
+    line-height: 1.42;
+    color: #1d201f;
+  }
+  .arch__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 18.6cqi;
+    min-width: 230px;
+    min-height: max(50px, 3.5cqi);
+    margin-top: 1.8cqi;
+    border-radius: 6px;
+    background: var(--green);
+    color: var(--white);
+    font-size: max(16px, 1.16cqi);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease);
+  }
+  .arch__cta:hover {
+    background: #0f2a25;
+  }
+  .arch__cta :global(svg) {
+    flex: none;
+    transition: transform 0.2s var(--ease);
+  }
+  .arch__cta:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  .arch__statement {
+    margin-top: 1.3cqi;
+    font-size: max(13px, 0.92cqi);
+    color: #3a3d3b;
+  }
+  .arch__tagline {
+    display: grid;
+    gap: 0.35cqi;
+    margin: 3.6cqi 0 0 3.8cqi;
+    padding: 0.4cqi 0 0.4cqi 2cqi;
+    border-left: 1.5px solid var(--green);
+    font-size: max(10px, 0.74cqi);
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #3a3d3b;
+  }
+  .arch :focus-visible {
+    outline: 2px solid #995739;
+    outline-offset: 3px;
+  }
+
+  /* ---------- Illustration + pinned stage labels ---------- */
+  .arch__art {
+    position: absolute;
+    z-index: 1;
+    left: 1.9%;
+    top: 2.9%;
+    width: 94%;
+    margin: 0;
+    container-type: inline-size;
+  }
+  .arch__art img {
+    display: block;
+    width: 100%;
     height: auto;
+    /* feather the artwork's edges into the section background (no visible frame) */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%), linear-gradient(0deg, transparent 0, #000 8%);
+    -webkit-mask-composite: source-in, source-over;
+    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%), linear-gradient(0deg, transparent 0, #000 8%);
+    mask-composite: intersect, add;
   }
-  @media (max-width: 639px) {
-    .method__figure :global(.method__eight) {
-      max-width: 300px;
+  .arch__stages {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .arch__stagelabel {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: max(140px, var(--w, 11.6cqi));
+    /* soft ivory halo keeps the copy legible where it crosses foliage */
+    text-shadow: 0 0 6px rgba(252, 244, 237, 0.95), 0 0 2px rgba(252, 244, 237, 0.9);
+  }
+  .arch__num {
+    display: block;
+    font-size: max(15px, 1.42cqi);
+    line-height: 1.15;
+    font-feature-settings: 'lnum', 'tnum';
+  }
+  .arch__stagelabel--green .arch__num {
+    color: var(--green);
+  }
+  .arch__stagelabel--terracotta .arch__num {
+    color: #995739;
+  }
+  .arch__name {
+    margin-top: 0.25cqi;
+    font-size: max(14px, 1.22cqi);
+    font-weight: 650;
+    line-height: 1.25;
+  }
+  .arch__text {
+    margin-top: 0.5cqi;
+    font-size: max(12px, 0.93cqi);
+    line-height: 1.38;
+    color: #3a3d3b;
+  }
+
+  /* ---------- Laptop: copy above, illustration with pinned labels below ---------- */
+  @media (max-width: 1440px) {
+    .arch__stage {
+      aspect-ratio: auto;
+      padding: 48px 0 24px;
+    }
+    .arch__copy {
+      position: relative;
+      left: auto;
+      top: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      grid-template-areas:
+        'eyebrow eyebrow'
+        'title lede'
+        'title cta'
+        'title statement';
+      column-gap: 48px;
+      align-items: end;
+      width: auto;
+      padding-inline: calc(var(--gutter) + 14px) var(--gutter);
+    }
+    .arch__eyebrow {
+      grid-area: eyebrow;
+      margin-left: -14px;
+    }
+    .arch__title {
+      grid-area: title;
+      font-size: clamp(38px, 3.6vw, 52px);
+    }
+    .arch__lede {
+      grid-area: lede;
+      max-width: none;
+      font-size: 1.0625rem;
+    }
+    .arch__cta {
+      grid-area: cta;
+      width: fit-content;
+      padding-inline: 28px;
+      margin-top: 20px;
+    }
+    .arch__statement {
+      grid-area: statement;
+      margin-top: 12px;
+      font-size: 0.875rem;
+    }
+    .arch__tagline {
+      display: none;
+    }
+    .arch__art {
+      position: relative;
+      left: auto;
+      top: auto;
+      width: 94%;
+      margin: 8px 0 0 1%;
     }
   }
-  .method__caption {
-    max-width: 30ch;
-    font-size: var(--fs-xs);
-    letter-spacing: 0.04em;
-    text-align: center;
-    color: var(--on-dark-muted);
-  }
-  .method__list {
-    display: grid;
-    border-top: 1px solid var(--line-dark);
-  }
-  @media (min-width: 640px) {
-    .method__list {
-      grid-template-columns: 1fr 1fr;
-      column-gap: clamp(24px, 3vw, 48px);
-      grid-auto-flow: column;
-      grid-template-rows: repeat(4, auto);
+
+  /* ---------- Tablet & mobile: compact sequence below the illustration ---------- */
+  @media (max-width: 1180px) {
+    .arch__stage {
+      padding: 56px 0 48px;
+    }
+    .arch__copy {
+      display: block;
+      padding-inline: var(--gutter);
+    }
+    .arch__eyebrow {
+      margin-left: 0;
+      gap: 14px;
+    }
+    .arch__title {
+      margin-top: 22px;
+    }
+    .arch__lede {
+      margin-top: 22px;
+      max-width: 620px;
+    }
+    .arch__statement {
+      margin-top: 12px;
+    }
+    .arch__art {
+      width: 100%;
+      margin: 24px 0 0;
+      container-type: normal;
+    }
+    .arch__stages {
+      position: static;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px 32px;
+      margin-top: 8px;
+      padding-inline: var(--gutter);
+    }
+    .arch__stagelabel {
+      position: static;
+      width: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .arch__num {
+      font-size: 1rem;
+    }
+    .arch__name {
+      margin-top: 2px;
+      font-size: 1.0625rem;
+    }
+    .arch__text {
+      margin-top: 4px;
+      font-size: 0.9375rem;
     }
   }
-  .method__stage {
-    display: grid;
-    grid-template-columns: 44px 1fr;
-    column-gap: 12px;
-    row-gap: 4px;
-    padding-block: 20px;
-    border-bottom: 1px solid var(--line-dark);
-  }
-  .method__num {
-    grid-row: span 2;
-    font-family: var(--font-serif);
-    font-size: 1.05rem;
-    color: var(--terracotta-light);
-    font-feature-settings: 'lnum';
-    padding-top: 2px;
-  }
-  .method__name {
-    font-family: var(--font-serif);
-    font-size: clamp(1.35rem, 1.2rem + 0.5vw, 1.6rem);
-    font-weight: 430;
-    line-height: 1.2;
-  }
-  .method__text {
-    color: var(--on-dark-muted);
-    font-size: var(--fs-small);
-    line-height: 1.6;
-  }
-  .method__foot {
-    display: grid;
-    gap: 24px;
-    margin-top: clamp(40px, 5vw, 64px);
-    padding-top: 32px;
-    border-top: 1px solid var(--line-dark);
-  }
-  @media (min-width: 1024px) {
-    .method__foot {
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 48px;
+  @media (max-width: 560px) {
+    .arch__line {
+      white-space: normal;
+    }
+    .arch__cta {
+      width: 100%;
+    }
+    .arch__art img {
+      width: 128%;
+      max-width: none;
+      margin-left: -21%;
+    }
+    .arch__art {
+      overflow: hidden;
+    }
+    .arch__stages {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .arch__stagelabel {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      column-gap: 8px;
+      padding-block: 14px;
+    }
+    .arch__num {
+      grid-row: span 2;
+      padding-top: 2px;
     }
   }
 </style>
