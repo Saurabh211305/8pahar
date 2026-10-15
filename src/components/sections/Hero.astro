@@ -124,7 +124,10 @@ const srcset = photo.widths.map((w) => `/images/${photo.name}-${w}.webp ${w}w`).
     grid-template-rows: 1fr auto;
     min-height: max(760px, calc(100svh - var(--header-h)));
     padding: clamp(40px, 9.6vh, 90px) var(--hero-pad) clamp(28px, 4.6vh, 42px);
-    background: var(--hero-ivory);
+    /* Ends on the same ivory Section 02 begins with, so the boundary has no tone step. */
+    --seam-ivory: #f4efe7;
+    --seam-fade: clamp(64px, 10vw, 170px);
+    background: linear-gradient(180deg, var(--hero-ivory) 0, var(--hero-ivory) calc(100% - var(--seam-fade)), var(--seam-ivory) 100%);
     color: var(--onyx);
   }
 
@@ -288,7 +291,10 @@ const srcset = photo.widths.map((w) => `/images/${photo.name}-${w}.webp ${w}w`).
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: radial-gradient(ellipse 34% 52% at 30% 0%, rgba(248, 243, 236, 0.78), rgba(248, 243, 236, 0));
+    background:
+      /* soft ending: the photograph dissolves into the shared seam ivory */
+      linear-gradient(0deg, var(--seam-ivory) 0, rgba(244, 239, 231, 0.6) calc(var(--seam-fade) * 0.4), rgba(244, 239, 231, 0) var(--seam-fade)),
+      radial-gradient(ellipse 34% 52% at 30% 0%, rgba(248, 243, 236, 0.78), rgba(248, 243, 236, 0));
     pointer-events: none;
   }
   .hero__photo::after {
@@ -560,16 +566,7 @@ const srcset = photo.widths.map((w) => `/images/${photo.name}-${w}.webp ${w}w`).
       -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 48%);
       mask-image: linear-gradient(90deg, transparent 30%, #000 48%);
     }
-    .hero__photo::before {
-    /* hazy wash over the upper-left sky, as in the reference */
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: radial-gradient(ellipse 34% 52% at 30% 0%, rgba(248, 243, 236, 0.78), rgba(248, 243, 236, 0));
-    pointer-events: none;
-  }
-  .hero__photo::after {
+    .hero__photo::after {
       display: none;
     }
     .hero__tag {

@@ -94,18 +94,12 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    background: var(--gaps-bg);
+    /* Begins on the ivory the hero ends with (seamless boundary), then settles to the section tone. */
+    --seam-ivory: #f4efe7;
+    --seam-fade: clamp(56px, 9vw, 150px);
+    background: linear-gradient(180deg, var(--seam-ivory) 0, var(--gaps-bg) clamp(160px, 18vw, 300px)) var(--gaps-bg);
     color: var(--onyx);
     scroll-margin-top: var(--header-h);
-  }
-
-  /* Separation from Section 01: at desktop widths both photographs reach their
-     section edges, so without this band the two images butt into one block.
-     Applied to .gaps (not the stage) so Section 02's internal layout is unchanged. */
-  @media (min-width: 1181px) {
-    .gaps {
-      padding-top: clamp(40px, 3.4vw, 56px);
-    }
   }
 
   /* ---------- Stage: copy + photograph ---------- */
@@ -252,6 +246,8 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     position: absolute;
     inset: 0;
     background:
+      /* the property emerges from the ivory carried over from the hero */
+      linear-gradient(180deg, var(--seam-ivory) 0, rgba(244, 239, 231, 0.55) calc(var(--seam-fade) * 0.45), rgba(244, 239, 231, 0) var(--seam-fade)),
       radial-gradient(ellipse 42% 50% at 14% 6%, rgba(252, 249, 243, 0.88), rgba(252, 249, 243, 0) 70%),
       linear-gradient(0deg, rgba(252, 249, 243, 0.35), rgba(252, 249, 243, 0) 18%);
     pointer-events: none;
