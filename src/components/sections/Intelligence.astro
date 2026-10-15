@@ -1,188 +1,429 @@
 ---
-import { intelligence } from '../../content/site';
-import CtaLink from '../ui/CtaLink.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
-import Picture from '../ui/Picture.astro';
+/**
+ * Section 07 — Intelligent surveillance (approved reference design).
+ * Left: copy, three capability rows and the CTA. Right: the supplied
+ * illustration (unaltered) with the reference's example event cards as HTML,
+ * pinned in illustration coordinates. The cards are illustrative only.
+ */
+import { intelligence as s } from '../../content/site';
+import { images } from '../../content/images';
+import Icon from '../ui/Icon.astro';
+
+const art = images.surveillance;
+const srcset = art.widths.map((w) => `/images/${art.name}-${w}.webp ${w}w`).join(', ');
+const num = (i: number) => String(i + 1).padStart(2, '0');
+const pos = (a: readonly number[]) => `left:${a[0]}%;top:${a[1]}%;width:${a[2]}%`;
 ---
-<section class="section surface-green on-dark intel" id="intelligent-surveillance" aria-labelledby="intel-title">
-  <div class="container">
-    <SectionHeading id="intel-title" eyebrow={intelligence.eyebrow} title={intelligence.title} lede={intelligence.lede} class="intel__heading" />
-
-    <div class="intel__grid">
-      <figure class="intel__visual">
-        <div class="frame intel__frame">
-          <Picture name="monitoring-room" alt={intelligence.imageAlt} sizes="(min-width: 1024px) 52vw, 100vw" />
+<section class="intel" id="intelligent-surveillance" aria-labelledby="intel-title">
+  <div class="intel__stage">
+    <figure class="intel__art">
+      <img src={`/images/${art.name}-1400.webp`} srcset={srcset} sizes="(min-width: 1181px) 83vw, 130vw" alt={s.imageAlt} width={art.width} height={art.height} loading="lazy" decoding="async" />
+      <div class="intel__events" aria-hidden="true">
+        <div class="intel__chip" style={pos(s.chip.at)}>
+          <span class="intel__chip-icon"><Icon name={s.chip.icon} size={22} strokeWidth={1.6} /></span>
+          <span><strong>{s.chip.title}</strong><span>{s.chip.meta}</span></span>
         </div>
-        <!-- Glass panel: explains how the parts connect, over the operating environment it describes. -->
-        <figcaption class="intel__flow">
-          <p class="intel__flow-label">How the parts work together</p>
-          <ol role="list" class="intel__flow-list">
-            {intelligence.flow.map((step, i) => (
-              <li>
-                <span class="intel__flow-num" aria-hidden="true">{i + 1}</span>
-                <span class="intel__flow-name">{step.name}</span>
-                <span class="intel__flow-text">{step.text}</span>
-              </li>
-            ))}
-          </ol>
-        </figcaption>
-      </figure>
-
-      <div class="intel__content">
-        <dl class="intel__caps">
-          {intelligence.capabilities.map((cap) => (
-            <div class="intel__cap">
-              <dt>{cap.name}</dt>
-              <dd>{cap.value}</dd>
-            </div>
-          ))}
-        </dl>
-        <p class="note intel__caveat">{intelligence.caveat}</p>
-        <div class="cta-row">
-          <CtaLink cta={intelligence.primary} />
-          <CtaLink cta={intelligence.secondary} variant="secondary" />
-        </div>
-        <CtaLink cta={intelligence.link} variant="link" />
+        {s.events.map((e) => (
+          <div class:list={['intel__event', e.active && 'intel__event--active']} style={pos(e.at)}>
+            <span class="intel__event-icon"><Icon name={e.icon} size={20} strokeWidth={1.6} /></span>
+            <img src={`/images/${e.thumb}.webp`} alt="" width="74" height="86" loading="lazy" decoding="async" />
+            <span class="intel__event-text"><strong>{e.title}</strong><span>{e.place}</span><span>{e.time}</span></span>
+          </div>
+        ))}
       </div>
+      <figcaption class="visually-hidden">Illustration with example detection notifications; not a live camera feed.</figcaption>
+    </figure>
+
+    <div class="intel__copy">
+      <p class="intel__eyebrow">
+        <span>{s.number}</span><span>/</span><span>{s.eyebrow}</span>
+        <span class="intel__rule" aria-hidden="true"></span>
+      </p>
+      <h2 id="intel-title" class="intel__title">
+        <span class="intel__line">{s.title.line}</span>{' '}
+        <span class="intel__line intel__accent">{s.title.accent}</span>
+      </h2>
+      <p class="intel__lede">{s.lede}</p>
+
+      <ol class="intel__caps" role="list">
+        {s.capabilities.map((c, i) => (
+          <li class="intel__cap">
+            <span class="intel__cap-icon" aria-hidden="true"><Icon name={c.icon} size={32} strokeWidth={1.5} /></span>
+            <div class="intel__cap-body">
+              <h3 class="intel__cap-title"><span class="intel__cap-num">{num(i)}.</span> {c.title}</h3>
+              <p class="intel__cap-text">{c.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <a class="intel__cta" href={s.cta.href} data-cta="audit" data-cta-source={s.cta.source} data-cta-label={s.cta.label} data-prefill-requirement={s.cta.requirement}>
+        {s.cta.label}<Icon name="arrow" size={22} />
+      </a>
     </div>
   </div>
 </section>
 
 <style>
-  .intel :global(.intel__heading) {
-    margin-bottom: clamp(40px, 5vw, 64px);
-  }
-  .intel__grid {
-    display: grid;
-    gap: clamp(40px, 5vw, 72px);
-  }
-  @media (min-width: 1024px) {
-    .intel__grid {
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-      align-items: start;
-    }
-    .intel__visual {
-      position: sticky;
-      top: calc(var(--header-h) + 24px);
-    }
-  }
-  .intel__visual {
+  .intel {
     position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f6f1ea 0, #f5eee4 140px);
+    color: var(--onyx);
   }
-  .intel__frame {
-    aspect-ratio: 4 / 3;
-    border-radius: var(--radius-lg);
-    background: var(--green-deep);
-  }
-  .intel__flow {
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-    padding: 16px 18px;
-    border-radius: var(--radius-lg);
-    background: rgba(15, 42, 37, 0.72);
-    border: 1px solid rgba(244, 239, 231, 0.18);
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-  }
-  .intel__flow-label {
-    margin-bottom: 12px;
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--terracotta-light);
-  }
-  .intel__flow-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    counter-reset: flow;
-  }
-  .intel__flow-list li {
+  /* Desktop stage keeps the reference's 1672 × 941 proportions; 1cqi = 1% of its width. */
+  .intel__stage {
     position: relative;
-    display: grid;
-    gap: 2px;
-    align-content: start;
-    padding-right: 10px;
+    max-width: 1920px;
+    margin-inline: auto;
+    aspect-ratio: 1672 / 941;
+    container-type: inline-size;
   }
-  .intel__flow-list li:not(:last-child)::after {
-    content: '';
+
+  /* ---------- Illustration ---------- */
+  .intel__art {
     position: absolute;
-    top: 11px;
-    left: 30px;
-    right: 4px;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(244, 239, 231, 0.5) 50%, transparent 0) 0 0 / 6px 1px repeat-x;
+    z-index: 0;
+    left: 16.9%;
+    top: 0.6%;
+    width: 82.7%;
+    margin: 0;
+    container-type: inline-size;
   }
-  .intel__flow-num {
+  .intel__art > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* the artwork's left third sits back behind the copy; soft foot */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, transparent 29%, #000 41%), linear-gradient(0deg, transparent 0, #000 6%);
+    -webkit-mask-composite: source-in, source-over;
+    mask-image: linear-gradient(90deg, transparent 0, transparent 29%, #000 41%), linear-gradient(0deg, transparent 0, #000 6%);
+    mask-composite: intersect, add;
+  }
+  .intel__events {
+    position: absolute;
+    inset: 0;
+  }
+  .intel__chip,
+  .intel__event {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    border-radius: 0.55cqi;
+    background: rgba(255, 253, 249, 0.96);
+    box-shadow: 0 0.6cqi 1.8cqi -0.8cqi rgba(17, 18, 18, 0.4);
+    color: var(--onyx);
+    line-height: 1.3;
+  }
+  .intel__chip {
+    gap: 1.1cqi;
+    padding: 0.85cqi 1.1cqi;
+    font-size: max(10px, 1cqi);
+    white-space: nowrap;
+  }
+  .intel__chip strong,
+  .intel__event strong {
+    display: block;
+    font-weight: 600;
+  }
+  .intel__chip span span,
+  .intel__event-text span {
+    display: block;
+    color: #4a4c4a;
+  }
+  .intel__chip-icon {
     display: grid;
     place-items: center;
-    width: 22px;
-    height: 22px;
-    margin-bottom: 6px;
+    flex: none;
+    width: 3.3cqi;
+    height: 3.3cqi;
     border-radius: 50%;
-    border: 1px solid rgba(244, 239, 231, 0.6);
-    font-size: 0.6875rem;
-    font-weight: 700;
+    background: #173c36;
+    color: #fff;
   }
-  .intel__flow-name {
-    font-size: var(--fs-small);
-    font-weight: 700;
+  .intel__event {
+    gap: 0.8cqi;
+    padding: 0.7cqi 0.8cqi 0.7cqi 1cqi;
+    font-size: max(9px, 0.92cqi);
+    white-space: nowrap;
+    letter-spacing: -0.01em;
   }
-  .intel__flow-text {
-    font-size: var(--fs-xs);
-    line-height: 1.4;
-    color: var(--on-dark-muted);
+  .intel__event--active {
+    outline: 2px solid #4caf74;
+    outline-offset: -1px;
   }
-  @media (max-width: 599px) {
-    .intel__flow {
-      position: relative;
-      inset: auto;
-      margin: -32px 10px 0;
-    }
-    .intel__flow-list {
-      grid-template-columns: 1fr 1fr;
-      row-gap: 14px;
-    }
-    .intel__flow-list li::after {
-      display: none;
-    }
-  }
-  .intel__content {
+  .intel__event-icon {
     display: grid;
-    gap: 28px;
-    justify-items: start;
+    place-items: center;
+    flex: none;
+    width: 3cqi;
+    height: 3cqi;
+    border: 1px solid rgba(17, 18, 18, 0.18);
+    border-radius: 50%;
+    color: #173c36;
+  }
+  .intel__event-icon :global(svg),
+  .intel__chip-icon :global(svg) {
+    width: 55%;
+    height: 55%;
+  }
+  .intel__event img {
+    flex: none;
+    width: 5.6cqi;
+    height: auto;
+    border-radius: 0.3cqi;
+  }
+  .intel__event-text span {
+    margin-top: 0.4cqi;
+    font-size: 0.9em;
+  }
+  .intel__event-text span + span {
+    margin-top: 0.15cqi;
+  }
+
+  /* ---------- Copy ---------- */
+  .intel__copy {
+    position: absolute;
+    z-index: 2;
+    left: 5.8cqi;
+    top: 5.2cqi;
+    width: 37cqi;
+  }
+  .intel__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75cqi;
+    font-size: max(11px, 0.95cqi);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #173c36;
+  }
+  .intel__rule {
+    width: 16cqi;
+    height: 1px;
+    margin-left: 2cqi;
+    background: rgba(23, 60, 54, 0.6);
+  }
+  .intel__title {
+    margin-top: 2.4cqi;
+    font-family: var(--font-serif);
+    font-size: max(34px, 4.6cqi);
+    font-weight: 500;
+    font-variation-settings: 'opsz' 72;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: #111212;
+    text-wrap: initial;
+  }
+  .intel__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .intel__accent {
+    color: #9b5a3e;
+  }
+  .intel__lede {
+    max-width: 35cqi;
+    margin-top: 1.3cqi;
+    font-size: max(15px, 1.16cqi);
+    line-height: 1.45;
+    letter-spacing: 0.005em;
+    color: #3a3d3b;
   }
   .intel__caps {
-    display: grid;
-    width: 100%;
-    border-top: 1px solid var(--line-dark);
+    margin: 1.7cqi 0 0;
+    padding: 0;
+    list-style: none;
   }
   .intel__cap {
     display: grid;
-    gap: 4px;
-    padding-block: 18px;
-    border-bottom: 1px solid var(--line-dark);
+    grid-template-columns: 4.6cqi 1fr;
+    column-gap: 3.6cqi;
+    align-items: center;
+    padding-block: 1.05cqi;
+    position: relative;
   }
-  @media (min-width: 640px) {
+  .intel__cap + .intel__cap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 8.2cqi;
+    right: 0;
+    height: 1px;
+    background: rgba(17, 18, 18, 0.12);
+  }
+  .intel__cap-icon {
+    display: grid;
+    place-items: center;
+    width: 4.6cqi;
+    height: 4.6cqi;
+    border-radius: 50%;
+    background: #e5e4d7;
+    color: #173c36;
+    position: relative;
+  }
+  .intel__cap-icon::after {
+    content: '';
+    position: absolute;
+    right: -1.6cqi;
+    top: 18%;
+    bottom: 18%;
+    width: 1px;
+    background: rgba(17, 18, 18, 0.14);
+  }
+  .intel__cap-icon :global(svg) {
+    width: 52%;
+    height: 52%;
+  }
+  .intel__cap-title {
+    font-family: var(--font-serif);
+    font-size: max(18px, 1.5cqi);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .intel__cap-num {
+    color: #9b5a3e;
+  }
+  .intel__cap-text {
+    margin-top: 0.45cqi;
+    max-width: 25.5cqi;
+    font-size: max(13px, 1.0cqi);
+    line-height: 1.42;
+    color: #4a4c4a;
+  }
+  .intel__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.9cqi;
+    width: 24.6cqi;
+    min-width: 260px;
+    min-height: max(52px, 3.75cqi);
+    margin-top: 1.8cqi;
+    border-radius: 6px;
+    background: #173c36;
+    color: #fff;
+    font-size: max(16px, 1.27cqi);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease);
+  }
+  .intel__cta:hover {
+    background: #0f2a25;
+  }
+  .intel__cta :global(svg) {
+    flex: none;
+    transition: transform 0.2s var(--ease);
+  }
+  .intel__cta:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  .intel :focus-visible {
+    outline: 2px solid #9b6558;
+    outline-offset: 3px;
+  }
+
+  /* ---------- Laptop / tablet / mobile: copy, then the illustration ---------- */
+  @media (max-width: 1180px) {
+    .intel__stage {
+      aspect-ratio: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 56px 0 40px;
+    }
+    .intel__copy {
+      position: static;
+      transform: none;
+      margin: 0;
+      width: auto;
+      max-width: 720px;
+      padding-inline: var(--gutter);
+    }
+    .intel__eyebrow {
+      font-size: 0.8125rem;
+      gap: 10px;
+    }
+    .intel__rule {
+      flex: 1;
+      max-width: 200px;
+      margin-left: 16px;
+    }
+    .intel__title {
+      margin-top: 22px;
+      font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem);
+    }
+    .intel__lede {
+      max-width: none;
+      margin-top: 16px;
+      font-size: 1.0625rem;
+    }
+    .intel__caps {
+      margin-top: 24px;
+    }
     .intel__cap {
-      grid-template-columns: minmax(180px, 0.8fr) 1.4fr;
-      gap: 24px;
+      grid-template-columns: 60px 1fr;
+      column-gap: 36px;
+      padding-block: 16px;
+    }
+    .intel__cap + .intel__cap::before {
+      left: 96px;
+    }
+    .intel__cap-icon {
+      width: 60px;
+      height: 60px;
+    }
+    .intel__cap-icon::after {
+      right: -18px;
+    }
+    .intel__cap-title {
+      font-size: 1.25rem;
+    }
+    .intel__cap-text {
+      max-width: none;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+    .intel__cta {
+      width: fit-content;
+      padding-inline: 32px;
+      margin-top: 24px;
+      gap: 18px;
+    }
+    .intel__art {
+      position: relative;
+      order: 2;
+      left: auto;
+      top: auto;
+      width: 140%;
+      margin: 24px 0 0 -40%;
     }
   }
-  .intel__cap dt {
-    font-weight: 700;
-    line-height: 1.4;
-  }
-  .intel__cap dd {
-    color: var(--on-dark-muted);
-    font-size: var(--fs-small);
-    line-height: 1.6;
-  }
-  .intel__caveat {
-    padding-left: 16px;
-    border-left: 2px solid var(--terracotta);
+  @media (max-width: 700px) {
+    .intel__line {
+      white-space: normal;
+    }
+    .intel__cta {
+      width: 100%;
+    }
+    .intel__cap {
+      grid-template-columns: 48px 1fr;
+      column-gap: 20px;
+      align-items: start;
+    }
+    .intel__cap + .intel__cap::before {
+      left: 68px;
+    }
+    .intel__cap-icon {
+      width: 48px;
+      height: 48px;
+    }
+    .intel__cap-icon::after {
+      display: none;
+    }
+    /* event cards would be too small to read here */
+    .intel__events {
+      display: none;
+    }
   }
 </style>

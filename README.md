@@ -89,6 +89,14 @@ Photography is the supplied set ("section 6*.png"), resized only. Cards open
 the Section 03 form with the property type pre-selected; the arcs on the left
 are part of the supplied background photograph.
 
+## Section 07 (approved reference design)
+
+The illustration is the supplied artwork ("section7-vector image.png"), resized
+only. The four example event cards are HTML, pinned in illustration
+coordinates (`intelligence.chip/events[].at`); they are illustrative, not a
+live feed. **Temporary assets:** `public/images/evt-{person,vehicle,delivery}.webp`
+are thumbnail crops from the approved mock-up — replace with supplied images.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is

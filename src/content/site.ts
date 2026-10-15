@@ -310,31 +310,31 @@ export const industries = {
   },
 };
 
-/* ---------- Section 07 — Intelligent surveillance ---------- */
+/* ---------- Section 07 — Intelligent surveillance (approved reference design) ---------- */
 export const intelligence = {
+  number: '07',
   eyebrow: 'Intelligent surveillance',
-  title: 'Go Beyond Recording. Build Better Security Awareness.',
-  lede: 'Recording tells you what happened. A well-configured intelligent system can help you notice what is happening. Here is what compatible equipment can add — and why it matters.',
-  imageAlt: 'Operator at a desk with several computer monitors in a control room with a large wall of screens',
-  flow: [
-    { name: 'Cameras', text: 'Capture the agreed views' },
-    { name: 'Recorder', text: 'Stores footage securely' },
-    { name: 'Analytics', text: 'Compatible rules flag events' },
-    { name: 'Alerts', text: 'Notify the right person' },
-  ],
+  title: { line: 'See More Than', accent: 'Just the Footage.' },
+  lede: 'Compatible intelligent surveillance can help identify relevant activity, surface selected events and provide alerts—so you can review what matters without relying only on continuous manual viewing.',
   capabilities: [
-    { name: 'Compatible AI video analytics', value: 'Rules such as line-crossing or intrusion zones help separate meaningful activity from routine movement.' },
-    { name: 'Motion & event detection', value: 'Recordings can be tagged by event, so you find the right clip in minutes instead of scrubbing hours of footage.' },
-    { name: 'Configurable alerts', value: 'Notifications for chosen zones and times — for example, the boundary wall after closing hours.' },
-    { name: 'Remote viewing', value: 'Check live and recorded footage from your phone or computer, wherever you are.' },
-    { name: 'Perimeter monitoring', value: 'Boundary-focused camera positions and rules for earlier awareness at the edge of the property.' },
-    { name: 'Access-control integration', value: 'Link door events with camera footage so entries can be reviewed alongside video.' },
-    { name: 'Centralised viewing', value: 'View compatible cameras from multiple buildings or branches in one place.' },
+    { icon: 'run' as const, title: 'Detect Relevant Activity', text: 'Identify supported events such as movement in configured areas or activity in designated zones.' },
+    { icon: 'bell', title: 'Receive Relevant Alerts', text: 'Configure notifications for supported events so the right people can review activity when needed.' },
+    { icon: 'monitor', title: 'Review From One Place', text: 'Access compatible live feeds, recordings and event information through supported devices or software.' },
+  ] as const,
+  cta: { label: 'Discuss Your Security Needs', href: '#audit', requirement: 'monitoring-alerts', source: 'intelligence' } satisfies Cta,
+  imageAlt:
+    'Illustration of a building entrance with a ceiling-mounted dome camera, a detection boundary around a car at a barrier gate, and landscaped planting.',
+  /**
+   * Example event cards from the approved design — illustrative only, not a live
+   * feed. Positions are % of the 1536×1024 illustration: [left, top, width].
+   * Thumbnails are TEMPORARY crops from the approved mock-up (see README).
+   */
+  chip: { icon: 'car' as const, title: 'Vehicle Detected', meta: 'Main Entrance · 10:24 AM', at: [32.3, 56.6, 17.6] },
+  events: [
+    { icon: 'run' as const, title: 'Person Detected', place: 'Entrance', time: '10:21:36 AM', thumb: 'evt-person', at: [78.6, 31.6, 19.4], active: false },
+    { icon: 'car' as const, title: 'Vehicle Detected', place: 'Main Entrance', time: '10:24:10 AM', thumb: 'evt-vehicle', at: [78.6, 44.9, 19.4], active: true },
+    { icon: 'box' as const, title: 'Delivery Detected', place: 'Service Gate', time: '10:26:14 AM', thumb: 'evt-delivery', at: [78.6, 58.1, 19.4], active: false },
   ],
-  caveat: 'Availability depends on the cameras, recorder and software proposed for your site. Not every camera supports AI analytics or every integration — we’ll be clear about what your equipment can do before you commit.',
-  primary: { label: 'Discuss My Surveillance Requirements', href: '#enquiry', requirement: 'ai-surveillance', source: 'intelligence' } satisfies Cta,
-  secondary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'intelligence' } satisfies Cta,
-  link: { label: 'Explore Intelligent Security', href: '#service-ai', source: 'intelligence' } satisfies Cta,
 };
 
 /* ---------- Section 08 — How it works ---------- */

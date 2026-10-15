@@ -15,6 +15,8 @@ export interface ImageSource {
 const img = (name: string, widths: number[], width: number, height: number): ImageSource => ({ name, widths, width, height });
 
 export const images = {
+  // Approved Section 07 illustration (supplied asset, used unaltered).
+  surveillance: img('surveillance', [960, 1400, 1536], 1536, 1024),
   // Approved Section 06 photography (supplied assets, resized only).
   'ind-bg': img('ind-bg', [960, 1400], 1672, 941),
   'ind-residential': img('ind-residential', [560, 900], 1672, 941),
