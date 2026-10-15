@@ -83,6 +83,12 @@ zoom/focal points (`services.items[].crop`) reproduce the reference crops.
 approved mock-up (no text) — replace it with the original and update the
 `svc-vdp-temp` entry in `src/content/images.ts`.
 
+## Section 06 (approved reference design)
+
+Photography is the supplied set ("section 6*.png"), resized only. Cards open
+the Section 03 form with the property type pre-selected; the arcs on the left
+are part of the supplied background photograph.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is

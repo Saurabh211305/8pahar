@@ -239,53 +239,75 @@ export const services = {
   },
 };
 
-/* ---------- Section 06 — Industries ---------- */
+/* ---------- Section 06 — Industries & properties (approved reference design) ---------- */
+export interface Industry {
+  /** Anchor id (industry-<id>) — linked from the header and footer menus. */
+  id: string;
+  /** Category name. */
+  label: string;
+  icon: 'home' | 'building' | 'factory' | 'campus';
+  title: string;
+  text: string;
+  image: string;
+  imageAlt: string;
+  /** Pre-selects this property type in the Section 03 form. */
+  property: string;
+}
+
 export const industries = {
+  number: '06',
   eyebrow: 'Industries & properties',
-  title: 'Security Designed for the Way Your Property Works.',
-  lede: 'A villa, a showroom and a warehouse need very different systems. We start with how your property is used day to day.',
+  title: { lines: ['Every Property Has', 'Its Own'], accent: ['Security', 'Needs.'] },
+  lede: 'From the place you call home to the spaces where business happens, we help shape security solutions around the property, its people and the way it operates.',
   items: [
     {
       id: 'residential',
       label: 'Residential',
-      title: 'Home security systems for homes and communities',
-      text: 'For independent homes, villas and housing societies.',
-      needs: ['Main entrances and gates', 'Parking and driveways', 'Perimeter walls', 'Common areas and lifts', 'Remote viewing on your phone', 'Visitor and access control'],
-      image: 'residential',
-      imageAlt: 'Modern two-storey house with a timber-clad facade, front lawn and paved path to the entrance',
-      cta: { label: 'Residential Security Audit', href: '#audit', property: 'residential-home', requirement: 'security-audit', source: 'industries' },
+      icon: 'home',
+      title: 'Homes & Communities',
+      text: 'Security designed around everyday living.',
+      image: 'ind-residential',
+      imageAlt: 'Contemporary stone and timber residence with a landscaped forecourt at sunset',
+      property: 'residential',
     },
     {
       id: 'commercial',
       label: 'Commercial',
-      title: 'Commercial security systems for offices and retail',
-      text: 'For offices, showrooms, retail spaces and commercial buildings.',
-      needs: ['Office entry and reception', 'Visitor access', 'Retail floors and cash points', 'Reliable recording', 'Operational visibility across floors'],
-      image: 'commercial',
-      imageAlt: 'Open-plan office with rows of desks and computer workstations under industrial ceiling lighting',
-      cta: { label: 'Commercial Security Assessment', href: '#audit', property: 'office-commercial', requirement: 'security-audit', source: 'industries' },
+      icon: 'building',
+      title: 'Business & Retail',
+      text: 'Visibility and access across business spaces.',
+      image: 'ind-commercial',
+      imageAlt: 'Glass-fronted commercial building with a canopied entrance and lit lobby at dusk',
+      property: 'commercial',
     },
     {
       id: 'industrial',
       label: 'Industrial',
-      title: 'Industrial security and warehouse surveillance',
-      text: 'For factories, warehouses and operational sites.',
-      needs: ['Perimeter monitoring', 'Warehouse aisle coverage', 'Restricted areas', 'Loading and dispatch zones', 'System reliability across shifts'],
-      image: 'industrial',
-      imageAlt: 'Large warehouse interior with stacked cartons, storage racking and overhead lighting',
-      cta: { label: 'Industrial Security Assessment', href: '#audit', property: 'industrial-warehouse', requirement: 'security-audit', source: 'industries' },
+      icon: 'factory',
+      title: 'Factories & Warehouses',
+      text: 'Security for operational environments.',
+      image: 'ind-industrial',
+      imageAlt: 'Large warehouse with loading bays and parked lorries at sunset',
+      property: 'industrial',
     },
     {
-      id: 'construction',
-      label: 'Construction & institutions',
-      title: 'Site security for construction and institutions',
-      text: 'For active construction sites, campuses and other organisations.',
-      needs: ['Site access points', 'Equipment and material protection', 'Entry monitoring', 'Coverage that adapts as the site changes'],
-      image: 'construction',
-      imageAlt: 'Aerial view of a construction site with exposed rebar and a line of workers in safety gear',
-      cta: { label: 'Discuss My Property', href: '#enquiry', source: 'industries' },
+      id: 'institutions',
+      label: 'Institutions',
+      icon: 'campus',
+      title: 'Campuses & Facilities',
+      text: 'Coordinated security across shared spaces.',
+      image: 'ind-institutions',
+      imageAlt: 'Multi-storey campus building with landscaped walkways and a drop-off forecourt at sunset',
+      property: 'other-institutional',
     },
-  ] satisfies { id: string; label: string; title: string; text: string; needs: string[]; image: string; imageAlt: string; cta: Cta }[],
+  ] satisfies Industry[],
+  cta: {
+    kicker: 'Let’s secure what matters to you.',
+    label: 'Discuss Your Property’s Security',
+    lines: ['Discuss Your Property’s', 'Security.'],
+    href: '#audit',
+    source: 'industries',
+  },
 };
 
 /* ---------- Section 07 — Intelligent surveillance ---------- */
