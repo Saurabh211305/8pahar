@@ -374,6 +374,23 @@ const expert = telHref
       display: none;
     }
   }
+  /* Narrow laptops: tighten spacing so the full bar fits before the menu collapses. */
+  @media (max-width: 1260px) {
+    .hdr {
+      gap: 16px;
+    }
+    .hdr__menus {
+      gap: 14px;
+    }
+    .hdr__btn {
+      padding-inline: 16px;
+      gap: 10px;
+    }
+    .hdr__btn--expert,
+    .hdr__btn--audit {
+      width: auto;
+    }
+  }
   @media (max-width: 1180px) {
     .site-header {
       border-bottom-right-radius: 0;

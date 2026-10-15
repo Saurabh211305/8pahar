@@ -47,47 +47,42 @@ export const hero = {
   },
 };
 
-/* ---------- Section 02 — Problems ---------- */
+/* ---------- Section 02 — The problem (approved reference design) ---------- */
+export type GapIcon = 'eye' | 'camera' | 'bell' | 'key' | 'power' | 'wrench';
+
+export interface Gap {
+  id: string;
+  label: string;
+  icon: GapIcon;
+  /**
+   * Callout card position on the diagnostic photograph, as percentages of the
+   * 1536×1024 source: [left, top, width, height]. These match the baked
+   * connector lines in the image and the boxes removed by
+   * scripts/clean-gaps-labels.py — change them together.
+   */
+  at: [number, number, number, number];
+}
+
 export const problems = {
-  eyebrow: 'Identify the gaps',
-  title: 'Your Property May Be Covered. But Is It Actually Secure?',
-  lede: 'A camera alone does not guarantee effective security. Placement, coverage, equipment condition, access management, monitoring, and maintenance all influence how well a system serves a property.',
-  items: [
-    {
-      id: 'blind-spots',
-      title: 'Blind Spots',
-      text: 'Areas outside effective camera coverage — often side passages, rear boundaries, stairwells and the edges of parking areas.',
-      detail: 'Coverage gaps are rarely obvious from the recorder screen. They show up when you walk the property against what each camera actually sees.',
-    },
-    {
-      id: 'wrong-placement',
-      title: 'Wrong Placement',
-      text: 'Equipment positioned without considering the required view — too high to identify a face, or facing glare instead of the gate.',
-    },
-    {
-      id: 'limited-awareness',
-      title: 'Limited Awareness',
-      text: 'Events may go unnoticed when suitable monitoring or alerting is absent and footage is only reviewed after something happens.',
-    },
-    {
-      id: 'unmanaged-access',
-      title: 'Unmanaged Access',
-      text: 'Entry points may lack appropriate access-control measures, so there is no clear record of who came in, and when.',
-    },
-    {
-      id: 'system-downtime',
-      title: 'System Downtime',
-      text: 'Cameras, storage or recorders may become unavailable — and the gap is often discovered only when footage is needed.',
-    },
-    {
-      id: 'missed-maintenance',
-      title: 'Missed Maintenance',
-      text: 'Small technical issues — a loose connector, a dirty lens, a full drive — can remain unresolved for months.',
-    },
-  ],
-  primary: { label: 'Find My Security Gaps', href: '#audit', requirement: 'security-audit', source: 'problems' } satisfies Cta,
-  secondary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'problems' } satisfies Cta,
-  link: { label: 'Explore Security Solutions', href: '#services', source: 'problems' } satisfies Cta,
+  number: '02',
+  eyebrow: 'The problem',
+  eyebrowAccent: 'Identify the gaps',
+  titleLines: ['Your Property', 'May Be Covered.'],
+  titleAccentLines: ['But Is It Actually', 'Secure?'],
+  lede: 'Security gaps aren’t always obvious. Poor camera placement, uncontrolled access, system downtime and missed maintenance can leave weaknesses in an otherwise well-equipped property.',
+  imageAlt:
+    'Illustrative diagram on a contemporary stone, glass and timber residence at dusk: a ceiling-mounted camera’s field of view is shaded green, an uncovered side area is shaded terracotta, and six numbered callouts mark common security gaps.',
+  gaps: [
+    { id: 'blind-spots', label: 'Blind Spots', icon: 'eye', at: [85.5, 29.69, 13.3, 7.52] },
+    { id: 'camera-placement', label: 'Poor Camera Placement', icon: 'camera', at: [62.7, 8.5, 14.0, 8.4] },
+    { id: 'missed-events', label: 'Missed Events', icon: 'bell', at: [24.8, 22.36, 14.91, 7.71] },
+    { id: 'unmanaged-access', label: 'Unmanaged Access', icon: 'key', at: [20.51, 57.71, 13.09, 7.91] },
+    { id: 'system-downtime', label: 'System Downtime', icon: 'power', at: [44.34, 70.41, 13.02, 7.91] },
+    { id: 'missed-maintenance', label: 'Missed Maintenance', icon: 'wrench', at: [83.79, 55.76, 13.87, 7.91] },
+  ] satisfies Gap[],
+  primary: { label: 'Identify My Security Gaps', href: '#audit', requirement: 'security-audit', source: 'problems' } satisfies Cta,
+  // The FAQ answer that explains what a security assessment covers (opens the accordion item).
+  secondary: { label: 'Explore Our Security Assessment', href: '#faq-audit', source: 'problems' } satisfies Cta,
 };
 
 /* ---------- Section 03 — Security health check ---------- */

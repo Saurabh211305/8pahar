@@ -15,6 +15,8 @@ export interface ImageSource {
 const img = (name: string, widths: number[], width: number, height: number): ImageSource => ({ name, widths, width, height });
 
 export const images = {
+  // Approved Section 02 diagnostic image (supplied; baked callout boxes removed by scripts/clean-gaps-labels.py).
+  'gaps-property': img('gaps-property', [768, 1200, 1536], 1536, 1024),
   // Approved hero photograph (supplied asset; baked-in labels removed by scripts/clean-hero-labels.py).
   'hero-architecture': img('hero-architecture', [960, 1280, 1672], 1672, 941),
   'hero-residence': img('hero-residence', [640, 960, 1280, 1800], 1800, 1200),

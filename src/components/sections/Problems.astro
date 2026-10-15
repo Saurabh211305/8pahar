@@ -1,177 +1,460 @@
 ---
+/**
+ * Section 02 — The problem: identify the gaps. Recreated from the approved
+ * reference. The diagnostic photograph is the supplied asset with its baked
+ * callout boxes removed; the six callouts are HTML, pinned to image
+ * coordinates so they stay aligned with the photograph's connector lines.
+ */
 import { problems } from '../../content/site';
-import CtaLink from '../ui/CtaLink.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
-import ProblemGlyph from '../illustrations/ProblemGlyph.astro';
+import { images } from '../../content/images';
+import Icon from '../ui/Icon.astro';
 
-const [feature, ...rest] = problems.items;
+const photo = images['gaps-property'];
+const srcset = photo.widths.map((w) => `/images/${photo.name}-${w}.webp ${w}w`).join(', ');
+const num = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<section class="section surface-white problems" id="problems" aria-labelledby="problems-title">
-  <div class="container">
-    <div class="problems__head">
-      <SectionHeading id="problems-title" eyebrow={problems.eyebrow} title={problems.title} />
-      <p class="lede problems__lede">{problems.lede}</p>
+<section class="gaps" id="problems" aria-labelledby="problems-title">
+  <div class="gaps__stage">
+    <svg class="gaps__arcs" viewBox="0 0 1648 780" preserveAspectRatio="xMinYMin slice" aria-hidden="true" focusable="false">
+      <g fill="none" stroke="#995739" stroke-width="1.1" stroke-opacity="0.45">
+        <path d="M0 414 C 34 396 64 384 92 376" vector-effect="non-scaling-stroke" />
+        <path d="M790 196 C 840 140 900 104 968 80" vector-effect="non-scaling-stroke" />
+      </g>
+    </svg>
+
+    <div class="gaps__copy">
+      <p class="gaps__eyebrow">
+        <span class="gaps__rule" aria-hidden="true"></span>
+        <span>{problems.number} / {problems.eyebrow}</span>
+        <span class="gaps__eyebrow-accent">— {problems.eyebrowAccent}</span>
+      </p>
+
+      <h2 id="problems-title" class="gaps__title">
+        {problems.titleLines.map((line) => <><span class="gaps__line">{line}</span>{' '}</>)}
+        {problems.titleAccentLines.map((line) => <><span class="gaps__line gaps__line--accent">{line}</span>{' '}</>)}
+      </h2>
+      <svg class="gaps__stroke" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path d="M4 17.5C52 12 118 8.6 190 8.2c38-.2 72 .8 104 2.6-31 .6-70 1.8-108 3.7-58 2.9-112 6.8-176 10.4-4 .2-8-2.6-6-7.4Z" fill="currentColor" />
+      </svg>
+
+      <p class="gaps__lede">{problems.lede}</p>
+
+      <a
+        class="gaps__cta"
+        href={problems.primary.href}
+        data-cta="audit"
+        data-cta-source={problems.primary.source}
+        data-cta-label={problems.primary.label}
+        data-prefill-requirement={problems.primary.requirement}
+      >
+        {problems.primary.label}<Icon name="arrow" size={20} />
+      </a>
+      <a class="gaps__link" href={problems.secondary.href} data-cta="nav" data-cta-source={problems.secondary.source} data-cta-label={problems.secondary.label}>
+        {problems.secondary.label}<Icon name="arrow" size={18} />
+      </a>
     </div>
 
-    <ol role="list" class="problems__grid">
-      <li class="problem problem--feature">
-        <div class="problem__visual problem__visual--feature">
-          <ProblemGlyph kind={feature.id as 'blind-spots'} />
-        </div>
-        <div class="problem__body">
-          <span class="problem__num" aria-hidden="true">01</span>
-          <h3 class="h3 problem__title">{feature.title}</h3>
-          <p class="problem__text">{feature.text}</p>
-          {feature.detail && <p class="problem__detail">{feature.detail}</p>}
-        </div>
-      </li>
-      {rest.map((item, i) => (
-        <li class="problem">
-          <div class="problem__visual">
-            <ProblemGlyph kind={item.id as 'wrong-placement'} />
-          </div>
-          <span class="problem__num" aria-hidden="true">{String(i + 2).padStart(2, '0')}</span>
-          <h3 class="h3 problem__title">{item.title}</h3>
-          <p class="problem__text">{item.text}</p>
-        </li>
-      ))}
-    </ol>
-
-    <div class="problems__foot">
-      <p class="problems__foot-text">Not sure which of these applies to you? That’s what an audit is for.</p>
-      <div class="cta-row">
-        <CtaLink cta={problems.primary} />
-        <CtaLink cta={problems.secondary} variant="secondary" />
-        <CtaLink cta={problems.link} variant="link" />
+    <figure class="gaps__media">
+      <div class="gaps__photo">
+        <img src={`/images/${photo.name}-1200.webp`} srcset={srcset} sizes="(min-width: 1181px) 72vw, 100vw" alt={problems.imageAlt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
       </div>
-    </div>
+      <!-- Visual callouts; the same six gaps are listed accessibly in the strip below. -->
+      <ol class="gaps__callouts" role="list" aria-hidden="true">
+        {problems.gaps.map((gap, i) => (
+          <li class="gaps__callout" style={`left:${gap.at[0]}%;top:${gap.at[1]}%;min-width:${gap.at[2]}%;min-height:${gap.at[3]}%`}>
+            <span class="gaps__badge">{num(i)}</span>
+            <Icon name={gap.icon} size={32} strokeWidth={1.8} class="gaps__callout-icon" />
+            <span class="gaps__callout-label">{gap.label}</span>
+          </li>
+        ))}
+      </ol>
+      <figcaption class="visually-hidden">Illustrative example only — not an inspection of a real property.</figcaption>
+    </figure>
   </div>
+
+  <ol class="gaps__strip" role="list" aria-label="Six common security gaps">
+    {problems.gaps.map((gap, i) => (
+      <li class="gaps__item">
+        <span class="gaps__badge gaps__badge--strip" aria-hidden="true">{num(i)}</span>
+        <span class="gaps__item-body">
+          <Icon name={gap.icon} size={34} strokeWidth={1.7} />
+          <span class="gaps__item-label"><span class="visually-hidden">{num(i)} — </span>{gap.label}</span>
+        </span>
+      </li>
+    ))}
+  </ol>
 </section>
 
 <style>
-  .problems__head {
-    display: grid;
-    gap: 24px;
-    align-items: end;
-    margin-bottom: clamp(40px, 5vw, 64px);
+  .gaps {
+    --gaps-bg: #fcf9f3;
+    --gaps-terracotta: #995739;
+    --gaps-green: #0b2b25;
+    --gaps-pad: max(clamp(16px, 4.4vw, 72px), calc((100% - 1648px) / 2 + 72px));
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--gaps-bg);
+    color: var(--onyx);
+    scroll-margin-top: var(--header-h);
   }
-  @media (min-width: 960px) {
-    .problems__head {
-      grid-template-columns: 1.2fr 1fr;
-      gap: 64px;
-    }
+
+  /* ---------- Stage: copy + photograph ---------- */
+  .gaps__stage {
+    position: relative;
+    min-height: clamp(700px, 47.4vw, 820px);
+    padding: clamp(44px, 4vw, 66px) var(--gaps-pad) 30px calc(var(--gaps-pad) + 24px);
   }
-  .problems__grid {
-    display: grid;
-    border-top: 1px solid var(--line);
-    border-left: 1px solid var(--line);
-  }
-  @media (min-width: 640px) {
-    .problems__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  /* 3 columns: the feature fills a 2×2 block, the five other cards complete the 3×3 grid. */
-  @media (min-width: 1100px) {
-    .problems__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .problem--feature {
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-  }
-  .problem {
-    display: grid;
-    align-content: start;
-    gap: 10px;
-    padding: clamp(22px, 2.4vw, 32px);
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    transition: background-color 0.25s var(--ease);
-  }
-  .problem:hover {
-    background: #fbf9f6;
-  }
-  .problem__visual {
-    margin-bottom: 14px;
-    padding: 14px;
-    background: var(--ivory);
-    border-radius: var(--radius);
-  }
-  .problem__visual :global(svg) {
+  .gaps__arcs {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
     width: 100%;
-    max-width: 200px;
-    height: auto;
-    margin-inline: auto;
+    height: 100%;
+    pointer-events: none;
   }
-  .problem--feature {
-    background: var(--ivory);
-    gap: 0;
+  .gaps__copy {
+    position: relative;
+    z-index: 2;
+    max-width: 610px;
   }
-  .problem--feature:hover {
-    background: var(--ivory);
+  .gaps__eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
-  @media (min-width: 640px) and (max-width: 1099px) {
-    .problem--feature {
-      grid-column: 1 / -1;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 32px;
-      align-items: center;
-    }
+  .gaps__rule {
+    width: 44px;
+    height: 1.5px;
+    margin-right: 4px;
+    background: var(--onyx);
   }
-  .problem__visual--feature {
-    background: var(--white);
-    padding: clamp(16px, 2vw, 28px);
-    margin-bottom: 24px;
+  .gaps__eyebrow-accent {
+    margin-left: -6px;
+    font-weight: 500;
+    color: #2a5a51;
   }
-  .problem__visual--feature :global(svg) {
-    max-width: 440px;
+  .gaps__title {
+    margin-top: 34px;
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 1.75rem + 2.9vw, 4.9rem);
+    font-weight: 530;
+    font-variation-settings: 'opsz' 72;
+    line-height: 1.02;
+    letter-spacing: -0.014em;
+    color: #0a1410;
+    text-wrap: initial;
   }
-  .problem__body {
+  .gaps__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .gaps__line--accent {
+    font-weight: 470;
+    letter-spacing: -0.022em;
+    color: var(--gaps-terracotta);
+  }
+  .gaps__stroke {
+    display: block;
+    width: clamp(160px, 16.4vw, 272px);
+    height: clamp(9px, 0.85vw, 14px);
+    margin-top: 14px;
+    color: var(--gaps-terracotta);
+  }
+  .gaps__lede {
+    max-width: 482px;
+    margin-top: 32px;
+    font-size: clamp(1.0625rem, 0.95rem + 0.32vw, 1.27rem);
+    font-weight: 450;
+    line-height: 1.36;
+    color: #161918;
+  }
+  .gaps__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: min(380px, 100%);
+    min-height: 66px;
+    margin-top: 24px;
+    border-radius: 7px;
+    background: var(--gaps-green);
+    color: var(--ivory);
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease);
+  }
+  .gaps__cta:hover {
+    background: #06201b;
+  }
+  .gaps__link {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--onyx);
+    font-size: 0.96rem;
+    font-weight: 500;
+    color: var(--onyx);
+    text-decoration: none;
+  }
+  .gaps__cta :global(svg),
+  .gaps__link :global(svg) {
+    flex: none;
+    transition: transform 0.2s var(--ease);
+  }
+  .gaps__cta:hover :global(svg),
+  .gaps__link:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  .gaps :focus-visible {
+    outline: 2px solid var(--gaps-terracotta);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Photograph ---------- */
+  .gaps__media {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    height: calc(100% + 40px); /* runs under the strip's rounded corner */
+    aspect-ratio: 1536 / 1024;
+    margin: 0;
+    container-type: inline-size;
+  }
+  .gaps__photo {
+    position: absolute;
+    inset: 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 9%, rgba(0, 0, 0, 0.45) 17%, #000 27%);
+    mask-image: linear-gradient(90deg, transparent 0%, transparent 9%, rgba(0, 0, 0, 0.45) 17%, #000 27%);
+  }
+  .gaps__photo::after {
+    /* light haze over the upper-left sky, as in the reference */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 42% 50% at 14% 6%, rgba(252, 249, 243, 0.88), rgba(252, 249, 243, 0) 70%),
+      linear-gradient(0deg, rgba(252, 249, 243, 0.35), rgba(252, 249, 243, 0) 18%);
+    pointer-events: none;
+  }
+  .gaps__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Callouts: all sizes in cqi (1cqi = 1% of the photograph's width). */
+  .gaps__callouts {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .gaps__callout {
+    position: absolute;
+    width: max-content;
+    display: flex;
+    align-items: center;
+    gap: 1.25cqi;
+    padding: 0 1cqi 0 2.15cqi;
+    border-radius: 0.6cqi;
+    background: rgba(251, 249, 245, 0.96);
+    box-shadow: 0 0.5cqi 1.6cqi -0.6cqi rgba(17, 18, 18, 0.45);
+    color: var(--onyx);
+  }
+  .gaps__callout :global(.gaps__callout-icon) {
+    flex: none;
+    width: 2.35cqi;
+    height: 2.35cqi;
+  }
+  .gaps__callout-label {
+    max-width: 7.9em;
+    padding-right: 0.7em;
+    text-wrap: balance;
+    font-size: clamp(9px, 1.18cqi, 18px);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  .gaps__badge {
     display: grid;
-    gap: 10px;
+    place-items: center;
+    flex: none;
+    border-radius: 50%;
+    background: var(--gaps-green);
+    color: var(--ivory);
+    font-weight: 600;
+    font-feature-settings: 'tnum';
+  }
+  .gaps__callout .gaps__badge {
+    position: absolute;
+    left: 0.39cqi;
+    top: 0.59cqi;
+    width: max(20px, 2.5cqi);
+    height: max(20px, 2.5cqi);
+    transform: translate(-50%, -50%);
+    border: 0.15cqi solid rgba(251, 249, 245, 0.95);
+    font-size: max(9px, 1.05cqi);
+  }
+
+  /* ---------- Six-item index strip ---------- */
+  .gaps__strip {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin: 0;
+    padding: 26px var(--gaps-pad) 30px calc(var(--gaps-pad) + 4px);
+    border-top-right-radius: 44px;
+    background: var(--gaps-bg);
+    list-style: none;
+  }
+  .gaps__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 26px;
+    padding: 6px 24px;
+  }
+  .gaps__item:first-child {
+    padding-left: 0;
+  }
+  .gaps__item + .gaps__item {
+    border-left: 1px solid rgba(17, 18, 18, 0.18);
+  }
+  .gaps__badge--strip {
+    width: 28px;
+    height: 28px;
+    margin-top: 22px;
+    font-size: 0.72rem;
+  }
+  .gaps__item-body {
+    display: grid;
+    gap: 8px;
     justify-items: start;
   }
-  .problem__num {
-    font-family: var(--font-serif);
-    font-size: 1rem;
-    color: var(--terracotta-ink);
-    font-feature-settings: 'lnum';
-  }
-  .problem--feature .problem__title {
-    font-family: var(--font-serif);
-    font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+  .gaps__item-label {
+    max-width: 8em;
+    font-size: 0.96rem;
     font-weight: 450;
+    line-height: 1.3;
   }
-  .problem__text {
-    color: var(--ink-soft);
-    font-size: var(--fs-small);
-    line-height: 1.6;
-  }
-  .problem--feature .problem__text {
-    font-size: var(--fs-body);
-  }
-  .problem__detail {
-    color: var(--ink-muted);
-    font-size: var(--fs-small);
-    line-height: 1.6;
-  }
-  .problems__foot {
-    display: grid;
-    gap: 20px;
-    align-items: center;
-    margin-top: clamp(36px, 4vw, 56px);
-  }
-  @media (min-width: 1024px) {
-    .problems__foot {
-      grid-template-columns: 1fr auto;
+
+  /* ---------- Laptop (1181–1440px): photo starts after the copy column ---------- */
+  @media (max-width: 1440px) {
+    .gaps__media {
+      top: 50%;
+      width: calc(100% - 560px);
+      height: auto;
+      transform: translateY(-50%);
+    }
+    .gaps__photo {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 9%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 9%);
+    }
+    .gaps__photo img {
+      height: auto;
+    }
+    .gaps__arcs {
+      display: none;
+    }
+    .gaps__callout-label {
+      font-size: clamp(10px, 1.18cqi, 18px);
+    }
+    .gaps__item {
+      gap: 16px;
+      padding-inline: 16px;
     }
   }
-  .problems__foot-text {
-    font-family: var(--font-serif);
-    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-    line-height: 1.3;
-    max-width: 32ch;
+
+  /* ---------- Tablet & mobile: stacked ---------- */
+  @media (max-width: 1180px) {
+    .gaps__stage {
+      min-height: 0;
+      padding: 56px 0 0;
+    }
+    .gaps__copy {
+      max-width: none;
+      padding-inline: var(--gutter);
+    }
+    .gaps__media {
+      position: relative;
+      right: auto;
+      width: 100%;
+      height: auto;
+      margin-top: 40px;
+    }
+    .gaps__photo {
+      position: relative;
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%);
+      mask-image: linear-gradient(180deg, transparent 0%, #000 12%);
+    }
+    .gaps__photo img {
+      height: auto;
+    }
+    .gaps__strip {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      row-gap: 18px;
+      margin-top: -28px;
+      padding: 24px var(--gutter) 32px;
+      border-radius: 28px 28px 0 0;
+    }
+    .gaps__item:nth-child(4) {
+      border-left: 0;
+      padding-left: 0;
+    }
+  }
+  @media (max-width: 700px) {
+    .gaps__line {
+      white-space: normal;
+    }
+    .gaps__cta {
+      width: 100%;
+    }
+    /* Too small for labels: keep the numbered markers; the strip is the legend. */
+    .gaps__callout {
+      padding: 0;
+      background: none;
+      box-shadow: none;
+    }
+    .gaps__callout :global(.gaps__callout-icon),
+    .gaps__callout-label {
+      display: none;
+    }
+    .gaps__callout .gaps__badge {
+      left: 50%;
+      top: 50%;
+      width: 26px;
+      height: 26px;
+      font-size: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
+    .gaps__strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .gaps__item:nth-child(4) {
+      border-left: 1px solid rgba(17, 18, 18, 0.18);
+      padding-left: 16px;
+    }
+    .gaps__item:nth-child(odd) {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .gaps__item {
+      gap: 12px;
+      padding-inline: 14px 0;
+    }
+    .gaps__badge--strip {
+      margin-top: 0;
+    }
   }
 </style>

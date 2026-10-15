@@ -49,6 +49,15 @@ as HTML. The "See how a security audit helps" callout links to the How it works
 section because no video exists yet — point `hero.callout.href` in
 `src/content/site.ts` at a real video when one is produced.
 
+## Section 02 (approved reference design)
+
+The diagnostic photograph is the supplied asset
+(`brand-source/gaps-property-reference.webp`). Its six baked callout boxes were
+removed with `scripts/clean-gaps-labels.py` and re-created as HTML callouts,
+positioned in image coordinates (`problems.gaps[].at` in `src/content/site.ts`)
+so they stay on the photograph's connector lines. Keep the script's box list
+and those positions in sync if the image changes.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is
