@@ -99,6 +99,15 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     scroll-margin-top: var(--header-h);
   }
 
+  /* Separation from Section 01: at desktop widths both photographs reach their
+     section edges, so without this band the two images butt into one block.
+     Applied to .gaps (not the stage) so Section 02's internal layout is unchanged. */
+  @media (min-width: 1181px) {
+    .gaps {
+      padding-top: clamp(40px, 3.4vw, 56px);
+    }
+  }
+
   /* ---------- Stage: copy + photograph ---------- */
   .gaps__stage {
     position: relative;
