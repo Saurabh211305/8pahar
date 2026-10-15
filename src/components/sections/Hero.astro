@@ -126,6 +126,7 @@ const srcset = photo.widths.map((w) => `/images/${photo.name}-${w}.webp ${w}w`).
     padding: clamp(40px, 9.6vh, 90px) var(--hero-pad) clamp(28px, 4.6vh, 42px);
     /* Ends on the same ivory Section 02 begins with, so the boundary has no tone step. */
     --seam-ivory: #f4efe7;
+    --seam-solid: clamp(12px, 1.8vw, 30px);
     --seam-fade: clamp(64px, 10vw, 170px);
     background: linear-gradient(180deg, var(--hero-ivory) 0, var(--hero-ivory) calc(100% - var(--seam-fade)), var(--seam-ivory) 100%);
     color: var(--onyx);
@@ -293,7 +294,7 @@ const srcset = photo.widths.map((w) => `/images/${photo.name}-${w}.webp ${w}w`).
     z-index: 1;
     background:
       /* soft ending: the photograph dissolves into the shared seam ivory */
-      linear-gradient(0deg, var(--seam-ivory) 0, rgba(244, 239, 231, 0.6) calc(var(--seam-fade) * 0.4), rgba(244, 239, 231, 0) var(--seam-fade)),
+      linear-gradient(0deg, var(--seam-ivory) 0, var(--seam-ivory) var(--seam-solid), rgba(244, 239, 231, 0.82) calc(var(--seam-fade) * 0.45), rgba(244, 239, 231, 0.35) calc(var(--seam-fade) * 0.75), rgba(244, 239, 231, 0) var(--seam-fade)),
       radial-gradient(ellipse 34% 52% at 30% 0%, rgba(248, 243, 236, 0.78), rgba(248, 243, 236, 0));
     pointer-events: none;
   }

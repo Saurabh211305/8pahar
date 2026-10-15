@@ -96,7 +96,10 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     overflow: hidden;
     /* Begins on the ivory the hero ends with (seamless boundary), then settles to the section tone. */
     --seam-ivory: #f4efe7;
-    --seam-fade: clamp(56px, 9vw, 150px);
+    --seam-solid: clamp(12px, 2.2vw, 36px);
+    /* colour the photo's top edge fades from: the seam ivory where the photo starts at the boundary */
+    --photo-fade: 244 239 231;
+    --seam-fade: clamp(64px, 10vw, 170px);
     background: linear-gradient(180deg, var(--seam-ivory) 0, var(--gaps-bg) clamp(160px, 18vw, 300px)) var(--gaps-bg);
     color: var(--onyx);
     scroll-margin-top: var(--header-h);
@@ -247,7 +250,7 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     inset: 0;
     background:
       /* the property emerges from the ivory carried over from the hero */
-      linear-gradient(180deg, var(--seam-ivory) 0, rgba(244, 239, 231, 0.55) calc(var(--seam-fade) * 0.45), rgba(244, 239, 231, 0) var(--seam-fade)),
+      linear-gradient(180deg, rgb(var(--photo-fade)) 0, rgb(var(--photo-fade)) var(--seam-solid), rgb(var(--photo-fade) / 0.8) calc(var(--seam-fade) * 0.45), rgb(var(--photo-fade) / 0.32) calc(var(--seam-fade) * 0.75), rgb(var(--photo-fade) / 0) var(--seam-fade)),
       radial-gradient(ellipse 42% 50% at 14% 6%, rgba(252, 249, 243, 0.88), rgba(252, 249, 243, 0) 70%),
       linear-gradient(0deg, rgba(252, 249, 243, 0.35), rgba(252, 249, 243, 0) 18%);
     pointer-events: none;
@@ -356,6 +359,12 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
 
   /* ---------- Laptop (1181–1440px): photo starts after the copy column ---------- */
   @media (max-width: 1440px) {
+    .gaps {
+      /* The photo starts below the boundary here, so its top edge fades by
+         transparency (mask below) rather than by painting the seam ivory. */
+      --seam-solid: 0px;
+      --seam-fade: 0px;
+    }
     .gaps__media {
       top: 50%;
       width: calc(100% - 560px);
@@ -363,8 +372,10 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
       transform: translateY(-50%);
     }
     .gaps__photo {
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 9%);
-      mask-image: linear-gradient(90deg, transparent 0%, #000 9%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 9%), linear-gradient(180deg, transparent 0, #000 clamp(60px, 9vw, 120px));
+      -webkit-mask-composite: source-in, source-over;
+      mask-image: linear-gradient(90deg, transparent 0%, #000 9%), linear-gradient(180deg, transparent 0, #000 clamp(60px, 9vw, 120px));
+      mask-composite: intersect, add;
     }
     .gaps__photo img {
       height: auto;
