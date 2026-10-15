@@ -142,70 +142,101 @@ export const methodology = {
   ] satisfies Stage[],
 };
 
-/* ---------- Section 05 — Services ---------- */
+/* ---------- Section 05 — Solutions & services (approved reference design) ---------- */
+export interface Service {
+  /** Anchor id (service-<id>) — linked from the header, footer and hero. */
+  id: string;
+  icon: 'cctv' | 'eye' | 'door' | 'intercom' | 'wrench' | 'gear';
+  title: string;
+  tagline: string;
+  text: string;
+  image: string;
+  imageAlt: string;
+  /** Reference crop: zoom and focal point (object-position) applied to the photo in its card. */
+  crop?: { scale: number; at: string };
+  cta: Cta;
+}
+
 export const services = {
+  number: '05',
   eyebrow: 'Solutions & services',
-  title: 'The Right Security Solution for Every Requirement.',
-  lede: 'From CCTV installation services to access control and annual maintenance, each solution is specified for the problem it needs to solve — not sold as a standard kit.',
-  imageAlt: 'Two dome and bullet CCTV cameras mounted on a pole against a clear blue sky',
+  title: { lines: ['The Right Security', 'Solutions.', 'Designed Around'], accent: 'Your Property.' },
+  lede: 'Explore security systems and services designed to work together—from surveillance and access control to installation, upgrades and ongoing support.',
+  tagline: ['Smarter', 'security', 'for safer', 'spaces'],
+  bgAlt: '',
   items: [
     {
       id: 'cctv',
-      glyph: 'camera',
-      title: 'CCTV & IP Camera Systems',
-      text: 'HD and network surveillance cameras planned for identification where it matters and overview where it’s enough — for homes, offices and sites.',
-      cta: { label: 'Explore CCTV Solutions', href: '#enquiry', requirement: 'cctv', source: 'services' },
+      icon: 'cctv',
+      title: 'CCTV & IP Surveillance',
+      tagline: 'See more of what matters.',
+      text: 'Design and installation of surveillance cameras, recording systems and coverage layouts suited to the property.',
+      image: 'svc-cctv',
+      crop: { scale: 1.45, at: '74% 32%' },
+      imageAlt: 'White dome security camera mounted beneath a stone-clad overhang beside a glazed facade',
+      cta: { label: 'Explore service', href: '#enquiry', requirement: 'cctv', source: 'services' },
     },
     {
       id: 'ai',
-      glyph: 'analytics',
-      title: 'AI-Enabled Surveillance',
-      text: 'Compatible video analytics that can flag line crossings, intrusions or loitering, so footage becomes useful before an incident — not only after.',
-      cta: { label: 'Discuss AI Surveillance', href: '#enquiry', requirement: 'ai-surveillance', source: 'services' },
+      icon: 'eye',
+      title: 'Intelligent Surveillance',
+      tagline: 'Turn footage into useful awareness.',
+      text: 'Compatible surveillance features that help identify relevant activity and provide alerts when supported by the equipment and configuration.',
+      image: 'svc-ai',
+      crop: { scale: 1.55, at: '20% 38%' },
+      imageAlt: 'Monitor showing a multi-camera surveillance view of a building entrance with a person in frame',
+      cta: { label: 'Explore service', href: '#enquiry', requirement: 'ai-surveillance', source: 'services' },
     },
     {
       id: 'access',
-      glyph: 'access',
-      title: 'Access Control Systems',
-      text: 'Card, PIN or biometric entry for doors and gates, giving you control over who enters restricted areas and a record of when.',
-      cta: { label: 'Enquire About Access Control', href: '#enquiry', requirement: 'access-control', source: 'services' },
+      icon: 'door',
+      title: 'Access Control',
+      tagline: 'Manage who can enter.',
+      text: 'Access management solutions designed for residential entrances, offices, commercial properties and controlled areas.',
+      image: 'svc-access',
+      crop: { scale: 1.45, at: '82% 40%' },
+      imageAlt: 'Keypad and card reader mounted on a stone wall beside a glass entrance door',
+      cta: { label: 'Explore service', href: '#enquiry', requirement: 'access-control', source: 'services' },
     },
     {
       id: 'vdp',
-      glyph: 'doorphone',
-      title: 'Video Door Phones',
-      text: 'See and speak to visitors before opening the door — video door phone installation for homes, villas and apartment entrances.',
-      cta: { label: 'Discuss Video Door Phones', href: '#enquiry', requirement: 'video-door-phone', source: 'services' },
+      icon: 'intercom',
+      title: 'Video Door Phones & Intercoms',
+      tagline: 'Know who’s at the entrance.',
+      text: 'Entry communication solutions that help occupants see or communicate with visitors using compatible devices.',
+      // TEMPORARY: cropped from the approved mock-up until the original photo is supplied (see README).
+      image: 'svc-vdp-temp',
+      imageAlt: 'Wall-mounted video door phone screen showing a visitor at the entrance',
+      cta: { label: 'Explore service', href: '#enquiry', requirement: 'video-door-phone', source: 'services' },
     },
     {
       id: 'install',
-      glyph: 'install',
-      title: 'Installation & Integration',
-      text: 'Professional CCTV camera installation, configuration and testing, with cameras, recorders and access points working as one system.',
-      cta: { label: 'Request Installation Support', href: '#enquiry', requirement: 'installation', source: 'services' },
-    },
-    {
-      id: 'monitoring',
-      glyph: 'monitor',
-      title: 'Monitoring Solutions',
-      text: 'Remote viewing on phone or desktop and centralised viewing of compatible cameras across one or more locations.',
-      cta: { label: 'Discuss Monitoring Options', href: '#enquiry', requirement: 'monitoring', source: 'services' },
-    },
-    {
-      id: 'upgrade',
-      glyph: 'upgrade',
-      title: 'Security System Upgrades',
-      text: 'Already have cameras? We assess what can be reused and upgrade the parts that limit image quality, storage or coverage.',
-      cta: { label: 'Plan My System Upgrade', href: '#enquiry', requirement: 'upgrade', source: 'services' },
+      icon: 'wrench',
+      title: 'Installation & System Integration',
+      tagline: 'Make the components work together.',
+      text: 'Professional deployment and configuration of agreed security equipment, including compatible integrations with existing infrastructure.',
+      image: 'svc-install',
+      crop: { scale: 1.5, at: '38% 18%' },
+      imageAlt: 'Technician fitting a dome camera to a ceiling, with a laptop showing camera feeds and network equipment nearby',
+      cta: { label: 'Explore service', href: '#enquiry', requirement: 'installation', source: 'services' },
     },
     {
       id: 'amc',
-      glyph: 'maintain',
-      title: 'Repair & Annual Maintenance',
-      text: 'CCTV repair and maintenance, fault diagnosis and CCTV AMC services that keep recording reliable long after installation.',
-      cta: { label: 'Explore AMC Services', href: '#enquiry', requirement: 'amc', source: 'services' },
+      icon: 'gear',
+      title: 'Monitoring, Upgrades & AMC',
+      tagline: 'Keep your system ready for changing needs.',
+      text: 'Ongoing support for existing security systems, including agreed monitoring arrangements, troubleshooting, upgrades and preventive maintenance.',
+      image: 'svc-amc',
+      crop: { scale: 1.45, at: '58% 25%' },
+      imageAlt: 'Technicians at workstations reviewing camera feeds and system status beside a network equipment rack',
+      cta: { label: 'Explore service', href: '#enquiry', requirement: 'amc', source: 'services' },
     },
-  ] satisfies { id: string; glyph: string; title: string; text: string; cta: Cta }[],
+  ] satisfies Service[],
+  band: {
+    kicker: ['Not sure what', 'your property', 'needs?'],
+    cta: { label: 'Find the Right Solution', href: '#audit', requirement: 'security-audit', source: 'services-band' } satisfies Cta,
+    text: 'Tell us about your property and we’ll help you explore the appropriate security solutions.',
+  },
 };
 
 /* ---------- Section 06 — Industries ---------- */

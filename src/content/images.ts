@@ -15,6 +15,15 @@ export interface ImageSource {
 const img = (name: string, widths: number[], width: number, height: number): ImageSource => ({ name, widths, width, height });
 
 export const images = {
+  // Approved Section 05 photography (supplied assets, resized only).
+  'svc-bg': img('svc-bg', [960, 1400], 1672, 941),
+  'svc-cctv': img('svc-cctv', [480, 800], 1672, 941),
+  'svc-ai': img('svc-ai', [480, 800], 1672, 941),
+  'svc-access': img('svc-access', [480, 800], 1672, 941),
+  // TEMPORARY crop from the approved mock-up; replace with the supplied photo.
+  'svc-vdp-temp': img('svc-vdp-temp', [330], 330, 176),
+  'svc-install': img('svc-install', [480, 800], 1672, 941),
+  'svc-amc': img('svc-amc', [480, 800], 1672, 941),
   // Approved Section 04 illustration (supplied asset, used unaltered).
   architecture: img('architecture', [960, 1400, 1672], 1672, 941),
   // Approved Section 03 illustration (supplied asset, used unaltered).

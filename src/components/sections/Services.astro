@@ -1,110 +1,493 @@
 ---
-import { services } from '../../content/site';
-import CtaLink from '../ui/CtaLink.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
-import Picture from '../ui/Picture.astro';
-import ServiceGlyph from '../illustrations/ServiceGlyph.astro';
+/**
+ * Section 05 — Solutions & services (approved reference design).
+ * Left: editorial copy over the supplied architectural photograph, which
+ * fades into the ivory. Right: six photo cards (supplied photography) and the
+ * "Find the Right Solution" band. Card links use the existing enquiry flow
+ * with the service pre-selected; the band links to the Section 03 form.
+ */
+import { services as sv } from '../../content/site';
+import { images, type ImageName } from '../../content/images';
+import Icon from '../ui/Icon.astro';
+
+const bg = images['svc-bg'];
+const bgSrcset = bg.widths.map((w) => `/images/${bg.name}-${w}.webp ${w}w`).join(', ');
+const num = (i: number) => String(i + 1).padStart(2, '0');
+const srcFor = (name: string) => {
+  const img = images[name as ImageName];
+  return {
+    src: `/images/${img.name}-${img.widths[img.widths.length - 1]}.webp`,
+    srcset: img.widths.map((w) => `/images/${img.name}-${w}.webp ${w}w`).join(', '),
+    width: img.width,
+    height: img.height,
+  };
+};
 ---
-<section class="section surface-ivory services" id="services" aria-labelledby="services-title">
-  <div class="container">
-    <div class="services__head">
-      <SectionHeading id="services-title" eyebrow={services.eyebrow} title={services.title} lede={services.lede} />
-      <div class="frame services__image">
-        <Picture name="cctv-pole" alt={services.imageAlt} sizes="(min-width: 1024px) 34vw, 100vw" />
-      </div>
+<section class="svc" id="services" aria-labelledby="services-title">
+  <div class="svc__bg" aria-hidden="true">
+    <img src={`/images/${bg.name}-960.webp`} srcset={bgSrcset} sizes="(min-width: 1441px) 60vw, 100vw" alt="" width={bg.width} height={bg.height} loading="lazy" decoding="async" />
+  </div>
+
+  <div class="svc__inner">
+    <div class="svc__copy">
+      <p class="svc__eyebrow">
+        <span class="svc__rule" aria-hidden="true"></span>
+        <span>{sv.number} / {sv.eyebrow}</span>
+      </p>
+      <h2 id="services-title" class="svc__title">
+        {sv.title.lines.map((line) => <><span class="svc__line">{line}</span>{' '}</>)}
+        <span class="svc__line svc__accent">{sv.title.accent}<svg class="svc__stroke" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M4 17.5C52 12 118 8.6 190 8.2c38-.2 72 .8 104 2.6-31 .6-70 1.8-108 3.7-58 2.9-112 6.8-176 10.4-4 .2-8-2.6-6-7.4Z" fill="currentColor" /></svg></span>
+      </h2>
+      <p class="svc__lede">{sv.lede}</p>
+      <p class="svc__tagline">{sv.tagline.map((l) => <span>{l}</span>)}</p>
     </div>
 
-    <ul role="list" class="services__grid">
-      {services.items.map((item, i) => (
-        <li class="service" id={`service-${item.id}`}>
-          <div class="service__top">
-            <ServiceGlyph kind={item.glyph} />
-            <span class="service__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-          </div>
-          <h3 class="h3 service__title">{item.title}</h3>
-          <p class="service__text">{item.text}</p>
-          <CtaLink cta={item.cta} variant="link" class="service__cta" />
-        </li>
-      ))}
-    </ul>
+    <div class="svc__main">
+      <ul class="svc__grid" role="list">
+        {sv.items.map((item, i) => {
+          const img = srcFor(item.image);
+          return (
+            <li class="svc__card" id={`service-${item.id}`}>
+              <div class="svc__media">
+                <img src={img.src} srcset={img.srcset} sizes="(min-width: 1441px) 30vw, (min-width: 701px) 50vw, 100vw" alt={item.imageAlt} width={img.width} height={img.height} loading="lazy" decoding="async" style={item.crop ? `--zoom:${item.crop.scale};--focus:${item.crop.at}` : undefined} />
+              </div>
+              <span class="svc__disk" aria-hidden="true"><Icon name={item.icon} size={34} strokeWidth={1.6} /></span>
+              <div class="svc__body">
+                <span class="svc__num" aria-hidden="true">{num(i)}</span>
+                <h3 class="svc__name">{item.title}</h3>
+                <p class="svc__text">{item.text}</p>
+                <a
+                  class="svc__link"
+                  href={item.cta.href}
+                  data-cta="service"
+                  data-cta-source={item.cta.source}
+                  data-cta-label={`${item.cta.label}: ${item.title}`}
+                  data-prefill-requirement={item.cta.requirement}
+                  aria-label={`Explore service: ${item.title}`}
+                >
+                  <span>{item.cta.label}</span><Icon name="arrow" size={16} />
+                </a>
+                <span class="svc__go" aria-hidden="true"><Icon name="arrow" size={16} /></span>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div class="svc__band">
+        <p class="svc__kicker">{sv.band.kicker.map((l) => <span>{l}</span>)}</p>
+        <div class="svc__band-main">
+          <a
+            class="svc__band-cta"
+            href={sv.band.cta.href}
+            data-cta="audit"
+            data-cta-source={sv.band.cta.source}
+            data-cta-label={sv.band.cta.label}
+            data-prefill-requirement={sv.band.cta.requirement}
+          >
+            <span>{sv.band.cta.label}</span>
+            <span class="svc__band-arrow" aria-hidden="true"><Icon name="arrow" size={18} /></span>
+          </a>
+          <p class="svc__band-text">{sv.band.text}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
-  .services__head {
-    display: grid;
-    gap: 32px;
-    align-items: end;
-    margin-bottom: clamp(40px, 5vw, 64px);
-  }
-  @media (min-width: 1024px) {
-    .services__head {
-      grid-template-columns: 1.4fr 1fr;
-      gap: 72px;
-    }
-  }
-  .services__image {
-    aspect-ratio: 16 / 10;
-    border-radius: var(--radius-lg);
-  }
-  @media (max-width: 1023px) {
-    .services__image {
-      aspect-ratio: 21 / 9;
-    }
-  }
-  .services__grid {
-    display: grid;
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
+  .svc {
+    position: relative;
+    isolation: isolate;
     overflow: hidden;
+    background: linear-gradient(180deg, #fcf4ed 0, #fcf7ee 140px);
+    color: var(--onyx);
   }
-  @media (min-width: 600px) {
-    .services__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+
+  /* ---------- Architectural photograph (bottom-left, fades into ivory) ---------- */
+  .svc__bg {
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    bottom: 0;
+    width: 60%;
+    max-width: 1100px;
+    pointer-events: none;
   }
-  @media (min-width: 1100px) {
-    .services__grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
+  .svc__bg img {
+    display: block;
+    width: 100%;
+    height: auto;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 30%), linear-gradient(90deg, #000 0, #000 48%, transparent 62%);
+    -webkit-mask-composite: source-in, source-over;
+    mask-image: linear-gradient(180deg, transparent 0, #000 30%), linear-gradient(90deg, #000 0, #000 48%, transparent 62%);
+    mask-composite: intersect, add;
   }
-  .service {
+
+  .svc__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 470px) minmax(0, 1060px);
+    justify-content: space-between;
+    column-gap: 30px;
+    max-width: 1720px;
+    margin-inline: auto;
+    padding: 38px clamp(16px, 2.6vw, 44px) 34px clamp(16px, 5.5vw, 93px);
+  }
+
+  /* ---------- Copy ---------- */
+  .svc__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: -13px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .svc__rule {
+    width: 44px;
+    height: 1.5px;
+    background: var(--onyx);
+  }
+  .svc__title {
+    margin-top: 34px;
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 1.6rem + 2.05vw, 3.48rem);
+    font-weight: 530;
+    font-variation-settings: 'opsz' 72;
+    line-height: 0.96;
+    letter-spacing: -0.016em;
+    color: #0a1410;
+    text-wrap: initial;
+  }
+  .svc__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .svc__accent {
+    position: relative;
+    width: fit-content;
+    font-weight: 470;
+    color: #995739;
+  }
+  .svc__stroke {
+    position: absolute;
+    left: 0.25em;
+    bottom: -0.24em;
+    width: 3.9em;
+    height: 0.21em;
+    color: #995739;
+  }
+  .svc__lede {
+    max-width: 420px;
+    margin-top: 38px;
+    font-size: 1.125rem;
+    line-height: 1.44;
+    color: #1d201f;
+  }
+  .svc__tagline {
+    display: grid;
+    gap: 4px;
+    width: fit-content;
+    margin: 26px 0 0 340px;
+    padding: 4px 0 4px 26px;
+    border-left: 1.5px solid #173c36;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #3a3d3b;
+  }
+
+  /* ---------- Cards ---------- */
+  .svc__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .svc__card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: clamp(24px, 2.4vw, 32px);
-    background: var(--white);
-    transition: background-color 0.25s var(--ease);
+    overflow: hidden;
+    border-radius: 14px;
+    background: #fdfaf5;
+    box-shadow:
+      0 1px 2px rgba(17, 18, 18, 0.04),
+      0 14px 30px -22px rgba(17, 18, 18, 0.35);
     scroll-margin-top: calc(var(--header-h) + 24px);
+    container-type: inline-size;
+    transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
   }
-  .service:hover {
-    background: #fdfcfa;
+  .svc__card:hover {
+    box-shadow:
+      0 1px 2px rgba(17, 18, 18, 0.05),
+      0 22px 40px -24px rgba(17, 18, 18, 0.45);
   }
-  .service:target {
-    box-shadow: inset 0 0 0 2px var(--terracotta);
+  .svc__card:target {
+    box-shadow: 0 0 0 2px #995739;
   }
-  .service__top {
+  .svc__media {
+    aspect-ratio: 330 / 181;
+    overflow: hidden;
+    background: var(--sand);
+  }
+  .svc__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus, 50% 50%);
+    transform: scale(var(--zoom, 1));
+    transform-origin: var(--focus, 50% 50%);
+    transition: transform 0.5s var(--ease);
+  }
+  .svc__card:hover .svc__media img {
+    transform: scale(calc(var(--zoom, 1) * 1.03));
+  }
+  .svc__disk {
+    position: absolute;
+    z-index: 1;
+    left: 17px;
+    /* centred 13px above the photo's bottom edge, as in the reference */
+    top: calc(100cqw * 181 / 330 - 49px);
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #fdfaf5;
+    box-shadow: 0 4px 14px -6px rgba(17, 18, 18, 0.35);
+    color: #111212;
+  }
+  .svc__body {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
-  }
-  .service__num {
-    font-family: var(--font-serif);
-    font-size: 0.95rem;
-    color: var(--grey);
-    font-feature-settings: 'lnum';
-  }
-  .service__text {
     flex: 1;
-    color: var(--ink-soft);
-    font-size: var(--fs-small);
-    line-height: 1.6;
+    flex-direction: column;
+    padding: 28px 20px 16px;
   }
-  .service :global(.service__cta) {
-    margin-top: 6px;
-    align-self: flex-start;
+  .svc__num {
+    font-size: 1.15rem;
+    line-height: 1.2;
+    color: #b0452c;
+    font-feature-settings: 'lnum', 'tnum';
+  }
+  .svc__name {
+    margin-top: 4px;
+    font-size: 1.14rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .svc__text {
+    flex: 1;
+    margin-top: 8px;
+    padding-right: 4px;
+    font-size: 0.9rem;
+    line-height: 1.36;
+    color: #3a3d3b;
+  }
+  .svc__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    min-height: 32px;
+    margin-top: 10px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #173c36;
+    text-decoration: none;
+  }
+  /* the whole card is clickable via the link's overlay */
+  .svc__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .svc__card:has(.svc__link) {
+    cursor: pointer;
+  }
+  .svc__link :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+  .svc__card:hover .svc__link :global(svg) {
+    transform: translateX(3px);
+  }
+  .svc__card:focus-within {
+    box-shadow: 0 0 0 2px #995739;
+  }
+  .svc__link:focus-visible {
+    outline: none;
+  }
+  .svc__go {
+    position: absolute;
+    right: 18px;
+    bottom: 22px;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(17, 18, 18, 0.55);
+    border-radius: 50%;
+    color: #111212;
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .svc__card:hover .svc__go {
+    background: #173c36;
+    border-color: #173c36;
+    color: #fff;
+  }
+
+  /* ---------- Find the Right Solution band ---------- */
+  .svc__band {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 34px;
+    margin-top: 16px;
+    padding: 22px 34px 22px 34px;
+    overflow: hidden;
+    border-radius: 14px;
+    background:
+      radial-gradient(120% 140% at 100% 50%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 55%),
+      #173c36;
+    color: #f4efe7;
+  }
+  .svc__kicker {
+    display: grid;
+    gap: 4px;
+    padding: 6px 34px 6px 26px;
+    border-left: 1.5px solid rgba(244, 239, 231, 0.6);
+    border-right: 1.5px solid rgba(244, 239, 231, 0.6);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  .svc__band-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 22px;
+    width: fit-content;
+    color: #fff;
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 1.2rem + 0.9vw, 2.05rem);
+    font-weight: 500;
+    font-variation-settings: 'opsz' 48;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+  .svc__band-arrow {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    color: #173c36;
+    transition: transform 0.2s var(--ease);
+  }
+  .svc__band-cta:hover .svc__band-arrow {
+    transform: translateX(4px);
+  }
+  .svc__band-cta:focus-visible {
+    outline: 2px solid #f4efe7;
+    outline-offset: 4px;
+  }
+  .svc__band-text {
+    max-width: 440px;
+    margin-top: 10px;
+    font-size: 0.97rem;
+    line-height: 1.4;
+    color: rgba(244, 239, 231, 0.92);
+  }
+  .svc :focus-visible {
+    outline-color: #995739;
+  }
+
+  /* ---------- Laptop: copy above, image banner, full-width cards ---------- */
+  @media (max-width: 1440px) {
+    .svc__inner {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 32px;
+      padding: 56px var(--gutter) 48px;
+    }
+    .svc__copy {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        'eyebrow eyebrow'
+        'title lede'
+        'title tagline';
+      column-gap: 56px;
+      align-items: end;
+    }
+    .svc__eyebrow {
+      grid-area: eyebrow;
+      margin-left: 0;
+    }
+    .svc__title {
+      grid-area: title;
+    }
+    .svc__lede {
+      grid-area: lede;
+      max-width: 520px;
+    }
+    .svc__tagline {
+      grid-area: tagline;
+      margin-left: 0;
+    }
+    .svc__bg {
+      width: 55%;
+      opacity: 0.55;
+    }
+  }
+  @media (max-width: 1180px) {
+    .svc__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .svc__copy {
+      display: block;
+    }
+    .svc__title {
+      margin-top: 22px;
+    }
+    .svc__lede {
+      margin-top: 22px;
+    }
+    .svc__tagline {
+      display: none;
+    }
+    .svc__bg {
+      width: 100%;
+      opacity: 0.4;
+    }
+  }
+  @media (max-width: 700px) {
+    .svc__line {
+      white-space: normal;
+    }
+    .svc__grid {
+      grid-template-columns: 1fr;
+    }
+    .svc__band {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 24px 22px;
+    }
+    .svc__kicker {
+      border-right: 0;
+      padding-right: 0;
+    }
+    .svc__bg {
+      display: none;
+    }
   }
 </style>

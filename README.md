@@ -74,6 +74,15 @@ of the image. The stage labels are HTML, pinned to the nodes via
 `methodology.stages[].at` (percent of the 1672×941 artwork) in `src/content/site.ts`.
 Node centres were measured from the image; update `at` if the artwork changes.
 
+## Section 05 (approved reference design)
+
+Photography is the supplied set ("section 5-*.png"), resized only; per-card
+zoom/focal points (`services.items[].crop`) reproduce the reference crops.
+**Missing asset:** the Video Door Phones & Intercoms photo was not supplied.
+`public/images/svc-vdp-temp-330.webp` is a temporary crop of that photo from the
+approved mock-up (no text) — replace it with the original and update the
+`svc-vdp-temp` entry in `src/content/images.ts`.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is
