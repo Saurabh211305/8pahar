@@ -1,0 +1,130 @@
+---
+/**
+ * Section 08 step vignettes. One visual language: a pale stone facade with a
+ * timber panel and soft foliage behind a single foreground object, in the
+ * brand's ivory, sand, forest-green and terracotta. Decorative (aria-hidden).
+ */
+interface Props {
+  kind: 'enquiry' | 'assess' | 'plan' | 'install' | 'maintain';
+  class?: string;
+}
+const { kind, class: className } = Astro.props;
+const id = `pa-${kind}`;
+---
+<svg class={className} viewBox="0 0 248 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={`${id}-fade`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f3ede4" stop-opacity="0" />
+      <stop offset="1" stop-color="#f3ede4" stop-opacity="0.9" />
+    </linearGradient>
+    <pattern id={`${id}-wood`} width="5" height="10" patternUnits="userSpaceOnUse">
+      <rect width="5" height="10" fill="#9c6a45" />
+      <rect width="1.2" height="10" fill="#7f5235" />
+    </pattern>
+  </defs>
+
+  <!-- shared backdrop -->
+  <g>
+    <rect x="0" y="0" width="248" height="160" fill="#efe8de" />
+    <path d="M118 22h130v138H118Z" fill="#e3d9cb" />
+    <path d="M150 22h98v10h-98Z" fill="#d6cab9" />
+    <rect x="186" y="44" width="34" height="116" fill={`url(#${id}-wood)`} />
+    <rect x="128" y="62" width="48" height="98" fill="#2f3a36" opacity="0.85" />
+    <path d="M140 62v98M152 62v98M164 62v98" stroke="#efe8de" stroke-opacity="0.35" stroke-width="1" />
+    <rect x="128" y="62" width="48" height="98" fill="#f2c88a" opacity="0.18" />
+    <g fill="#2f5a3f">
+      <circle cx="12" cy="132" r="18" /><circle cx="30" cy="146" r="16" /><circle cx="234" cy="140" r="16" />
+    </g>
+    <g fill="#4a7a52">
+      <circle cx="20" cy="118" r="11" /><circle cx="228" cy="126" r="10" /><circle cx="44" cy="150" r="10" />
+    </g>
+    <rect x="0" y="120" width="248" height="40" fill={`url(#${id}-fade)`} />
+  </g>
+
+  {kind === 'enquiry' && (
+    <g>
+      <rect x="30" y="34" width="112" height="98" rx="8" fill="#fbf8f3" stroke="#d9cfbf" />
+      <path d="M44 132 52 142 60 132" fill="#fbf8f3" stroke="#d9cfbf" />
+      <rect x="44" y="48" width="18" height="16" rx="3" fill="#173c36" />
+      <path d="M48 53h10M48 57h7" stroke="#f4efe7" stroke-width="1.6" stroke-linecap="round" />
+      <path d="M70 52h48M70 59h30" stroke="#b9ae9e" stroke-width="2.4" stroke-linecap="round" />
+      <rect x="44" y="76" width="18" height="16" rx="3" fill="none" stroke="#173c36" stroke-width="1.8" />
+      <rect x="49" y="81" width="8" height="6" rx="1" fill="#173c36" />
+      <path d="M70 80h40M70 87h24M118 84h10" stroke="#cfc5b6" stroke-width="2.4" stroke-linecap="round" />
+      <rect x="44" y="104" width="18" height="16" rx="3" fill="#e6dfd3" />
+      <path d="M70 108h34M70 115h22M118 112h10" stroke="#ddd4c6" stroke-width="2.4" stroke-linecap="round" />
+    </g>
+  )}
+
+  {kind === 'assess' && (
+    <g>
+      <path d="M0 24h96v44H0Z" fill="#e7dfd3" />
+      <rect x="60" y="92" width="30" height="68" fill={`url(#${id}-wood)`} opacity="0.9" />
+      <circle cx="176" cy="60" r="38" fill="#fbf8f3" fill-opacity="0.88" stroke="#141716" stroke-width="7" />
+      <path d="m203 88 26 26" stroke="#141716" stroke-width="11" stroke-linecap="round" />
+      <path d="m203 88 8 8" stroke="#3b3f3c" stroke-width="13" stroke-linecap="round" />
+      <g transform="translate(150 44)">
+        <path d="M2 6 34 0l4 12-32 7Z" fill="#3a3e3c" />
+        <path d="M2 6 34 0l1.4 4L4 10Z" fill="#6c706d" />
+        <circle cx="31" cy="11" r="4" fill="#111212" stroke="#9aa09c" stroke-width="1.2" />
+        <path d="M18 14v10h-6" fill="none" stroke="#3a3e3c" stroke-width="3" />
+      </g>
+    </g>
+  )}
+
+  {kind === 'plan' && (
+    <g>
+      <rect x="22" y="28" width="148" height="98" rx="5" fill="#141716" />
+      <rect x="27" y="33" width="138" height="88" rx="2" fill="#fbf8f3" />
+      <path d="M12 126h168l-8 10H20Z" fill="#c9c3b8" />
+      <g fill="none" stroke="#2c302e" stroke-width="1.6">
+        <path d="M40 46h112v62H40Z" /><path d="M78 46v30M78 88v20M40 76h22M70 76h40M118 46v62M118 80h34" />
+      </g>
+      <g fill="#9b6558"><rect x="44" y="40" width="5" height="3" /><rect x="100" y="104" width="5" height="3" /></g>
+      <rect x="182" y="36" width="44" height="100" rx="6" fill="#fbf8f3" stroke="#d9cfbf" />
+      {[48, 80, 112].map((y) => (
+        <g transform={`translate(192 ${y})`}>
+          <path d="M0 4 18 0l2 7-18 4Z" fill="#2f3332" />
+          <circle cx="18" cy="7" r="2.6" fill="#111212" />
+          <path d="M2 18h20" stroke="#d6cec2" stroke-width="2" stroke-linecap="round" />
+        </g>
+      ))}
+    </g>
+  )}
+
+  {kind === 'install' && (
+    <g>
+      <path d="M48 8h170v34H48Z" fill="#d9cfbf" />
+      <path d="M48 42h170l-8 6H56Z" fill="#c6baa8" />
+      <path d="M150 46h18v18h-18Z" fill="#8f938f" />
+      <path d="M150 52h32" stroke="#8f938f" stroke-width="10" />
+      <rect x="180" y="42" width="12" height="22" rx="2" fill="#5b5f5c" />
+      <ellipse cx="128" cy="78" rx="36" ry="13" fill="#f6f4ef" stroke="#cfcac0" />
+      <path d="M92 78v10c0 6 16 12 36 12s36-6 36-12V78" fill="#f1eee8" stroke="#cfcac0" />
+      <path d="M100 96c0 16 12 26 28 26s28-10 28-26" fill="#1c1f1e" />
+      <circle cx="122" cy="106" r="8" fill="#0b0c0c" stroke="#444" stroke-width="2" />
+      <circle cx="120" cy="104" r="2.2" fill="#9fb5b0" />
+    </g>
+  )}
+
+  {kind === 'maintain' && (
+    <g>
+      <rect x="18" y="30" width="150" height="94" rx="5" fill="#141716" />
+      <rect x="23" y="35" width="140" height="84" rx="2" fill="#26302c" />
+      <rect x="23" y="35" width="22" height="84" fill="#1b2421" />
+      <path d="M29 46h10M29 56h10M29 66h10M29 76h10" stroke="#5f8c6e" stroke-width="2" stroke-linecap="round" />
+      <rect x="50" y="42" width="106" height="70" rx="2" fill="#e8dccb" />
+      <path d="M50 92h106v20H50Z" fill="#d7cbb9" />
+      <path d="M66 62h54v30H66Z" fill="#efe6d8" />
+      <rect x="96" y="70" width="14" height="22" fill={`url(#${id}-wood)`} />
+      <circle cx="132" cy="70" r="14" fill="#4a7a52" />
+      <circle cx="60" cy="76" r="10" fill="#2f5a3f" />
+      <path d="M84 124h18l4 10H80Z" fill="#c9c3b8" />
+      <rect x="176" y="46" width="44" height="90" rx="7" fill="#141716" />
+      <rect x="180" y="52" width="36" height="76" rx="3" fill="#e8dccb" />
+      <path d="M180 100h36v28h-36Z" fill="#d7cbb9" />
+      <circle cx="204" cy="82" r="9" fill="#4a7a52" />
+      <rect x="186" y="58" width="16" height="4" rx="2" fill="#173c36" />
+    </g>
+  )}
+</svg>

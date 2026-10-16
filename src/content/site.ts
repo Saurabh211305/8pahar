@@ -337,21 +337,20 @@ export const intelligence = {
   ],
 };
 
-/* ---------- Section 08 — How it works ---------- */
+/* ---------- Section 08 — How it works (approved reference design) ---------- */
 export const howItWorks = {
+  number: '08',
   eyebrow: 'How it works',
-  title: 'From Security Gaps to a Clear Action Plan.',
+  title: { line: 'A Clear Process.', accent: 'Security Built Around You.' },
+  lede: 'From understanding your property’s needs to installation and ongoing support, every step is planned around your requirements and the agreed scope.',
   steps: [
-    { title: 'Tell Us About Your Property', text: 'Share the property type, location and your main concern through the form, a call or WhatsApp.', you: 'A few minutes to describe what’s worrying you.' },
-    { title: 'Assess Your Requirements', text: 'We discuss the property and, where needed, visit to review coverage, entry points and any existing equipment.', you: 'Walk us through how the property is used.' },
-    { title: 'Receive a Recommended Plan', text: 'You get our recommendations, the proposed scope and a quotation where work or equipment is involved.', you: 'Review, ask questions, and decide — no obligation.' },
-    { title: 'Deploy the Agreed Solution', text: 'Our team installs, configures and tests the system according to the agreed scope, then shows you how to use it.', you: 'Confirm access and timings for the work.' },
-    { title: 'Maintain and Improve the System', text: 'Optional maintenance, repairs and upgrades keep the system performing as your needs change.', you: 'Choose the level of ongoing support you want.' },
-  ],
-  note: 'Proposals, installation, monitoring and maintenance are always agreed in writing for your specific project.',
-  primary: { label: 'Start My Security Assessment', href: '#audit', requirement: 'security-audit', source: 'process' } satisfies Cta,
-  secondary: { label: 'Discuss My Requirements', href: '#enquiry', source: 'process' } satisfies Cta,
-  link: { label: 'Contact Our Team', href: '#contact', source: 'process' } satisfies Cta,
+    { art: 'enquiry', title: ['Tell Us About', 'Your Property'], text: 'Share your property type, security concerns and what you want to protect.', icon: 'note', outcome: 'An understanding of your requirements.' },
+    { art: 'assess', title: ['Assess Your', 'Security Needs'], text: 'Review the relevant areas, existing equipment and potential coverage or access-control gaps.', icon: 'search', outcome: 'A clearer picture of the property’s needs.' },
+    { art: 'plan', title: ['Receive Your', 'Recommended Plan'], text: 'Discuss suitable equipment, system configuration, scope and pricing based on the assessment.', icon: 'note', outcome: 'A proposed solution for your approval.' },
+    { art: 'install', title: ['Install, Configure', '& Test'], text: 'Deploy the agreed equipment, configure compatible features and test the system.', icon: 'gear', outcome: 'A system configured to the agreed scope.' },
+    { art: 'maintain', title: ['Maintain &', 'Improve'], text: 'Access agreed maintenance, troubleshooting, upgrades and ongoing support as required.', icon: 'chart', outcome: 'A path for continued system support.' },
+  ] as const,
+  cta: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'process' } satisfies Cta,
 };
 
 /* ---------- Section 09 — Why 8PAHAR ---------- */

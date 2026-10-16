@@ -97,6 +97,16 @@ coordinates (`intelligence.chip/events[].at`); they are illustrative, not a
 live feed. **Temporary assets:** `public/images/evt-{person,vehicle,delivery}.webp`
 are thumbnail crops from the approved mock-up — replace with supplied images.
 
+## Section 08 (approved reference design)
+
+Content lives in `howItWorks` (`src/content/site.ts`). No image assets were
+supplied for this section, so the five step vignettes are inline SVG
+(`src/components/illustrations/ProcessArt.astro`, decorative, `aria-hidden`).
+Desktop: five columns joined by a curved connector with arrows. Tablet
+(≤1180px): 3 + 2 grid, connector hidden. Mobile (≤700px): vertical timeline.
+The CTA goes to the Section 03 form (`#audit`); a click is tracked as a CTA
+event only, not as a lead or booking.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is
