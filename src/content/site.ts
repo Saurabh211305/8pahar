@@ -353,25 +353,21 @@ export const howItWorks = {
   cta: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'process' } satisfies Cta,
 };
 
-/* ---------- Section 09 — Why 8PAHAR ---------- */
+/* ---------- Section 09 — The 8PAHAR difference ---------- */
 export const why = {
-  eyebrow: 'Why 8PAHAR',
-  title: 'Security Decisions Based on Your Property, Not Guesswork.',
-  lede: 'Our approach is simple: understand the property first, then recommend only what will make a measurable difference to how it is protected.',
-  imageAlt: 'Person drafting technical drawings at a desk with a ruler, pens and printed plans',
-  caption: 'Every recommendation starts with the property — its layout, use and existing infrastructure.',
+  number: '09',
+  eyebrow: 'The 8PAHAR difference',
+  title: { line: 'Security That Starts', accent: 'With Understanding.' },
+  lede: 'Every property is different. We focus on understanding your security requirements, recommending suitable solutions and helping you maintain a system that works for your needs.',
   points: [
-    { title: 'Property-specific assessment', text: 'We look at your layout, entry points and daily use before suggesting any equipment.' },
-    { title: 'Recommendations based on actual requirements', text: 'Each recommendation is tied to a gap we found — not to a package size.' },
-    { title: 'Appropriate equipment selection', text: 'Cameras, recorders and access hardware are chosen for the job each one needs to do.' },
-    { title: 'Clear proposals and scope', text: 'You see what is included, what isn’t and why, before any work begins.' },
-    { title: 'Respect for existing infrastructure', text: 'Where your current cameras or cabling can be reused, we say so.' },
-    { title: 'Installation and integration support', text: 'One team takes the system from plan to a working, tested installation.' },
-    { title: 'Maintenance after deployment', text: 'Repair, AMC and upgrade options are available once your system is live.' },
-  ],
-  primary: { label: 'Discuss My Security Requirements', href: '#enquiry', source: 'why' } satisfies Cta,
-  secondary: { label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'why' } satisfies Cta,
-  link: { label: 'Ask Our Team a Question', href: '#enquiry', requirement: 'question', source: 'why' } satisfies Cta,
+    { title: ['Start With the', 'Real Requirements'], text: 'Understand the property’s layout, priorities and existing security concerns before recommending a setup.' },
+    { title: ['Recommendations', 'With a Purpose'], text: 'Choose equipment and features based on the property’s needs, rather than adding unnecessary components.' },
+    { title: ['Systems That', 'Work Together'], text: 'Plan compatible surveillance, access control and other security components as a coordinated setup where appropriate.' },
+    { title: ['Make Existing', 'Equipment Count'], text: 'Where compatible and suitable, assess whether existing equipment can be retained, upgraded or integrated.' },
+    { title: ['Clear Scope', 'and Expectations'], text: 'Understand the proposed equipment, installation scope and pricing before approving the work.' },
+    { title: ['Support Beyond', 'Installation'], text: 'Plan for maintenance, troubleshooting and upgrades through the support arrangements agreed for your system.' },
+  ] as const,
+  cta: { label: 'Discuss Your Security Needs', href: '#audit', requirement: 'security-audit', source: 'difference' } satisfies Cta,
 };
 
 /* ---------- Section 10 — AMC ---------- */

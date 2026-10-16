@@ -1,121 +1,317 @@
 ---
-import { why } from '../../content/site';
-import CtaLink from '../ui/CtaLink.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
-import Picture from '../ui/Picture.astro';
----
-<section class="section surface-white why" id="why-8pahar" aria-labelledby="why-title">
-  <div class="container why__grid">
-    <figure class="why__figure">
-      <div class="frame why__frame">
-        <Picture name="assessment" alt={why.imageAlt} sizes="(min-width: 1024px) 40vw, 100vw" />
-      </div>
-      <figcaption class="why__caption">{why.caption}</figcaption>
-    </figure>
+/**
+ * Section 09 — The 8PAHAR difference (approved reference design).
+ * Centred heading, six numbered differentiators on a 3 × 2 grid with fine
+ * dividers and terracotta accent lines, and one CTA to the Section 03 form.
+ */
+import { why as d } from '../../content/site';
+import Icon from '../ui/Icon.astro';
 
-    <div class="why__content">
-      <SectionHeading id="why-title" eyebrow={why.eyebrow} title={why.title} lede={why.lede} />
-      <ol role="list" class="why__points">
-        {why.points.map((point, i) => (
-          <li class="why__point">
-            <span class="why__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <div>
-              <h3 class="why__title">{point.title}</h3>
-              <p class="why__text">{point.text}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-      <div class="cta-row">
-        <CtaLink cta={why.primary} />
-        <CtaLink cta={why.secondary} variant="secondary" />
-      </div>
-      <CtaLink cta={why.link} variant="link" />
-    </div>
+const num = (i: number) => String(i + 1).padStart(2, '0');
+---
+<section class="eightpahar-difference" id="why-8pahar" aria-labelledby="why-title">
+  <div class="dif__inner">
+    <header class="dif__head">
+      <p class="dif__eyebrow">
+        <span class="dif__rule" aria-hidden="true"></span>
+        <span>{d.number}</span><span>/</span><span>{d.eyebrow}</span>
+        <span class="dif__rule" aria-hidden="true"></span>
+      </p>
+      <h2 id="why-title" class="dif__title">
+        <span class="dif__line">{d.title.line}</span>{' '}
+        <span class="dif__line dif__accent">{d.title.accent}</span>
+      </h2>
+      <p class="dif__lede">{d.lede}</p>
+    </header>
+
+    <ol class="dif__grid" role="list">
+      {d.points.map((p, i) => (
+        <li class="dif__item">
+          <span class="dif__num" aria-hidden="true">{num(i)}</span>
+          <div class="dif__body">
+            <h3 class="dif__name"><span class="visually-hidden">{num(i)}. </span>{p.title[0]}{' '}<br />{p.title[1]}</h3>
+            <p class="dif__text">{p.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <a class="dif__cta" href={d.cta.href} data-cta="audit" data-cta-source={d.cta.source} data-cta-label={d.cta.label} data-prefill-requirement={d.cta.requirement}>
+      {d.cta.label}<Icon name="arrow" size={22} />
+    </a>
   </div>
 </section>
 
 <style>
-  .why__grid {
-    display: grid;
-    gap: clamp(40px, 5vw, 80px);
+  .eightpahar-difference {
+    --dif-line: #e1d8cb;
+    --dif-dot: clamp(64px, 4.8vw, 80px);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: #f5eee5;
+    color: #111212;
   }
-  @media (min-width: 1024px) {
-    .why__grid {
-      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-      align-items: start;
-    }
-    .why__figure {
-      position: sticky;
-      top: calc(var(--header-h) + 24px);
-    }
-  }
-  .why__frame {
-    aspect-ratio: 4 / 3;
-    border-radius: var(--radius-lg);
-  }
-  @media (max-width: 1023px) {
-    .why__frame {
-      aspect-ratio: 16 / 10;
-    }
-  }
-  .why__frame :global(img) {
-    object-position: 62% 50%;
-  }
-  .why__caption {
-    display: flex;
-    gap: 12px;
-    margin-top: 16px;
-    font-size: var(--fs-small);
-    color: var(--ink-muted);
-    line-height: 1.5;
-  }
-  .why__caption::before {
+  /* oversized, low-contrast corner curves (decorative) */
+  .eightpahar-difference::before,
+  .eightpahar-difference::after {
     content: '';
-    flex: none;
-    width: 28px;
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .eightpahar-difference::before {
+    left: -410px;
+    top: -410px;
+    width: 700px;
+    height: 700px;
+    background: #efe6db;
+  }
+  .eightpahar-difference::after {
+    right: -440px;
+    bottom: -550px;
+    width: 786px;
+    height: 786px;
+    background: #ece2d5;
+    box-shadow: inset 0 0 0 128px #eee5d9, inset 0 0 0 129px #e2d6c6;
+  }
+  .dif__inner {
+    max-width: 1672px;
+    margin-inline: auto;
+    padding: 50px clamp(16px, 6.5vw, 109px) 47px;
+  }
+
+  /* ---------- Heading ---------- */
+  .dif__head {
+    text-align: center;
+  }
+  .dif__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #2a5a51;
+  }
+  .dif__rule {
+    width: clamp(40px, 8.3vw, 138px);
     height: 1px;
-    margin-top: 0.75em;
-    background: var(--terracotta);
+    margin-inline: 16px;
+    background: rgba(42, 90, 81, 0.45);
   }
-  .why__content {
+  .dif__title {
+    margin-top: 33px;
+    font-family: var(--font-serif);
+    font-size: clamp(2.4rem, 1.5rem + 3.07vw, 4.72rem);
+    font-weight: 500;
+    font-variation-settings: 'opsz' 72;
+    line-height: 1.03;
+    letter-spacing: -0.02em;
+  }
+  .dif__line {
+    display: block;
+  }
+  .dif__accent {
+    color: #9b5a3e;
+  }
+  .dif__lede {
+    max-width: 968px;
+    margin: 4px auto 0;
+    font-size: clamp(1.0625rem, 0.88rem + 0.52vw, 1.37rem);
+    line-height: 1.37;
+    color: #5a5954;
+  }
+
+  /* ---------- Grid ---------- */
+  .dif__grid {
     display: grid;
-    gap: 32px;
-    justify-items: start;
+    grid-template-columns: 471fr 500fr 483fr;
+    margin: 53px 0 0;
+    padding: 0;
+    list-style: none;
   }
-  .why__points {
-    width: 100%;
+  .dif__item {
+    --pt: 0px;
+    position: relative;
     display: grid;
-    border-top: 1px solid var(--line-strong);
+    grid-template-columns: var(--dif-dot) minmax(0, 1fr);
+    column-gap: clamp(22px, 2.2vw, 37px);
+    align-items: start;
+    min-width: 0;
+    padding: var(--pt) 20px 2px 0;
   }
-  @media (min-width: 720px) {
-    .why__points {
-      grid-template-columns: 1fr 1fr;
-      column-gap: 40px;
+  .dif__item:nth-child(3n + 2),
+  .dif__item:nth-child(3n) {
+    padding-left: clamp(28px, 2.7vw, 45px);
+  }
+  /* vertical dividers between columns */
+  .dif__item::before {
+    position: absolute;
+    left: 0;
+    top: var(--pt);
+    bottom: 0;
+    width: 1px;
+    background: var(--dif-line);
+  }
+  .dif__item:nth-child(3n + 2)::before,
+  .dif__item:nth-child(3n)::before {
+    content: '';
+  }
+  /* one horizontal divider between the rows */
+  .dif__item:nth-child(n + 4) {
+    --pt: 26px;
+    margin-top: 24px;
+    border-top: 1px solid var(--dif-line);
+  }
+  .dif__num {
+    display: grid;
+    place-items: center;
+    width: var(--dif-dot);
+    height: var(--dif-dot);
+    border-radius: 50%;
+    background: #e5e4d8;
+    color: #173c36;
+    font-size: calc(var(--dif-dot) * 0.372);
+    font-weight: 500;
+    font-feature-settings: 'tnum', 'lnum';
+    letter-spacing: -0.01em;
+  }
+  .dif__name {
+    margin-top: 3px;
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 1.02rem + 0.8vw, 1.89rem);
+    font-weight: 450;
+    line-height: 1;
+    letter-spacing: -0.012em;
+  }
+  .dif__text {
+    max-width: 330px;
+    margin-top: 12px;
+    font-size: clamp(1rem, 0.9rem + 0.22vw, 1.1rem);
+    line-height: 1.25;
+    color: #52524d;
+  }
+  .dif__text::after {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 2px;
+    margin-top: 16px;
+    background: #9b5a3e;
+  }
+
+  /* ---------- CTA ---------- */
+  .dif__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: min(418px, 100%);
+    min-height: 64px;
+    margin: 32px auto 0;
+    border-radius: 9px;
+    background: #173c36;
+    color: #fff;
+    font-size: 1.22rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease);
+  }
+  .dif__cta:hover {
+    background: #0f2a25;
+  }
+  .dif__cta :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+  .dif__cta:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  .eightpahar-difference :focus-visible {
+    outline: 2px solid #9b6558;
+    outline-offset: 3px;
+  }
+
+  /* ---------- Tablet: two columns ---------- */
+  @media (max-width: 1240px) {
+    .dif__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .dif__item,
+    .dif__item:nth-child(n) {
+      --pt: 0px;
+      margin-top: 0;
+      border-top: 0;
+      padding: var(--pt) 20px 2px 0;
+    }
+    .dif__item:nth-child(n)::before {
+      content: none;
+    }
+    .dif__item:nth-child(even) {
+      padding-left: 36px;
+    }
+    .dif__item:nth-child(even)::before {
+      content: '';
+    }
+    .dif__item:nth-child(n + 3) {
+      --pt: 26px;
+      margin-top: 24px;
+      border-top: 1px solid var(--dif-line);
+    }
+    .eightpahar-difference {
+      --dif-dot: 64px;
+    }
+    .dif__item {
+      column-gap: 24px;
     }
   }
-  .why__point {
-    display: grid;
-    grid-template-columns: 36px 1fr;
-    gap: 8px;
-    padding-block: 20px;
-    border-bottom: 1px solid var(--line);
-  }
-  .why__num {
-    font-family: var(--font-serif);
-    color: var(--terracotta-ink);
-    font-feature-settings: 'lnum';
-    line-height: 1.5;
-  }
-  .why__title {
-    font-size: 1.0625rem;
-    font-weight: 700;
-    line-height: 1.4;
-    margin-bottom: 4px;
-  }
-  .why__text {
-    color: var(--ink-soft);
-    font-size: var(--fs-small);
-    line-height: 1.6;
+
+  /* ---------- Mobile: single column ---------- */
+  @media (max-width: 700px) {
+    .dif__rule {
+      flex: none;
+      width: 24px;
+      margin-inline: 2px;
+    }
+    .dif__eyebrow {
+      gap: 7px;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+    .dif__text {
+      max-width: none;
+    }
+    .dif__grid {
+      display: block;
+      margin-top: 36px;
+    }
+    .dif__item:nth-child(n) {
+      padding: var(--pt) 0 2px;
+    }
+    .dif__item:nth-child(n)::before {
+      content: none;
+    }
+    .dif__item:nth-child(n + 2) {
+      --pt: 24px;
+      margin-top: 22px;
+      border-top: 1px solid var(--dif-line);
+    }
+    .eightpahar-difference {
+      --dif-dot: 52px;
+    }
+    .dif__item {
+      column-gap: 18px;
+    }
+    .dif__name br {
+      display: none;
+    }
+    .dif__cta {
+      width: 100%;
+      margin-top: 36px;
+    }
   }
 </style>

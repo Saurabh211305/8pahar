@@ -107,6 +107,15 @@ Desktop: five columns joined by a curved connector with arrows. Tablet
 The CTA goes to the Section 03 form (`#audit`); a click is tracked as a CTA
 event only, not as a lead or booking.
 
+## Section 09 (approved reference design)
+
+Content lives in `why` (`src/content/site.ts`); the component is
+`src/components/sections/Why.astro` (id `why-8pahar` kept for the existing nav
+link). No images or icons: numbered circles, fine dividers, terracotta accent
+lines and two low-contrast CSS corner curves. Desktop 3 × 2 grid; ≤1240px two
+columns; ≤700px one column. The CTA goes to the Section 03 form (`#audit`).
+The previous `assessment` photo is no longer used on the page.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is
