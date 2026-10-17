@@ -129,6 +129,17 @@ Side-by-side layout above 1400px (compact buttons ≤1660px); stacked below;
 single-column services on mobile. The previous `technician` photo is no
 longer used on the page.
 
+## Section 11 (approved reference design)
+
+Questions and answers live in `src/content/faq.ts` (exactly six, in the
+approved order); the same text feeds the FAQPage structured data. The
+component is `src/components/sections/Faq.astro` on a white background. The
+accordion uses real buttons (`aria-expanded`, `aria-controls`, labelled answer
+regions), keeps one answer open at a time, and opens the matching answer for
+deep links (`#faq-audit`, `#faq-amc` are linked from Section 02, Section 10
+and the header, so keep those ids). Without JavaScript every answer is shown.
+"Talk to Our Team" goes to the enquiry form with "General question" selected.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is

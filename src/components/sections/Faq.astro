@@ -1,134 +1,365 @@
 ---
+/**
+ * Section 11 — Frequently asked questions (approved reference design).
+ * Left: label, headline, lede, one CTA and microcopy. Right: six numbered
+ * questions in an accessible accordion (one open at a time). Without JS all
+ * answers stay visible; deep links such as #faq-amc open their answer.
+ */
 import { getFaqs } from '../../content/faq';
-import { telHref, whatsappHref } from '../../config/business';
-import CtaLink from '../ui/CtaLink.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
 import Icon from '../ui/Icon.astro';
 
 const faqs = getFaqs();
-const wa = whatsappHref('Hello 8PAHAR, I have a question about security for my property.');
+const cta = { label: 'Talk to Our Team', href: '#enquiry', requirement: 'question', source: 'faq' };
+const num = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<section class="section surface-ivory faq" id="faq" aria-labelledby="faq-title">
-  <div class="container faq__grid">
-    <div class="faq__aside">
-      <SectionHeading
-        id="faq-title"
-        eyebrow="Frequently asked questions"
-        title="Everything You Need to Know Before Getting Started."
-        lede="Straight answers about audits, installation, AI surveillance and maintenance. If your question isn’t here, ask us directly."
-      />
-      <div class="faq__actions">
-        <CtaLink cta={{ label: 'Book a Security Audit', href: '#audit', requirement: 'security-audit', source: 'faq' }} block />
-        {telHref && (
-          <a class="btn btn--secondary btn--block" href={telHref} data-contact="phone" data-cta-source="faq">
-            <Icon name="phone" /><span>Call Our Team</span>
-          </a>
-        )}
-        {wa && (
-          <a class="btn btn--secondary btn--block" href={wa} target="_blank" rel="noopener noreferrer" data-contact="whatsapp" data-cta-source="faq">
-            <Icon name="whatsapp" /><span>WhatsApp Your Question</span>
-          </a>
-        )}
-        {!telHref && !wa && <CtaLink cta={{ label: 'Ask Our Team a Question', href: '#enquiry', requirement: 'question', source: 'faq' }} variant="secondary" block />}
-      </div>
+<section class="eightpahar-faq" id="faq" aria-labelledby="faq-title">
+  <div class="faq11__inner">
+    <div class="faq11__intro">
+      <p class="faq11__eyebrow">
+        <span class="faq11__rule" aria-hidden="true"></span>
+        <span>11/ Frequently asked questions</span>
+        <span class="faq11__rule" aria-hidden="true"></span>
+      </p>
+      <h2 id="faq-title" class="faq11__title">
+        <span class="faq11__line">Good Security</span>
+        <span class="faq11__line">Starts With</span>
+        <span class="faq11__line faq11__accent">Clear Answers.</span>
+      </h2>
+      <p class="faq11__lede">Everything you need to know before securing your property with 8PAHAR.</p>
+      <a class="faq11__cta" href={cta.href} data-cta="service" data-cta-source={cta.source} data-cta-label={cta.label} data-prefill-requirement={cta.requirement}>
+        {cta.label}<Icon name="arrow" size={24} />
+      </a>
+      <p class="faq11__micro">Have a specific question? Let’s discuss your requirements.</p>
     </div>
 
-    <div class="faq__list">
-      {faqs.map((faq) => (
-        <details class="faq__item" id={faq.id} data-faq>
-          <summary class="faq__question">
-            <span>{faq.question}</span>
-            <span class="faq__icon" aria-hidden="true"><Icon name="plus" size={18} /></span>
-          </summary>
-          <div class="faq__answer">
-            {faq.answer.map((p) => <p>{p}</p>)}
+    <ol class="faq11__list" role="list" data-faq11>
+      {faqs.map((f, i) => (
+        <li class="faq11__item" id={f.id}>
+          <h3 class="faq11__h">
+            <button class="faq11__q" type="button" aria-expanded="false" aria-controls={`${f.id}-answer`} id={`${f.id}-q`}>
+              <span class="faq11__num" aria-hidden="true">{num(i)}</span>
+              <span class="faq11__text">{f.question}</span>
+              <span class="faq11__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq11__answer" id={`${f.id}-answer`} role="region" aria-labelledby={`${f.id}-q`}>
+            {f.answer.map((p) => <p>{p}</p>)}
           </div>
-        </details>
+        </li>
       ))}
-    </div>
+    </ol>
   </div>
 </section>
 
+<script>
+  const list = document.querySelector<HTMLElement>('[data-faq11]');
+  if (list) {
+    const items = [...list.querySelectorAll<HTMLElement>('.faq11__item')];
+    const set = (item: HTMLElement, open: boolean) => {
+      item.classList.toggle('is-open', open);
+      item.querySelector('.faq11__q')?.setAttribute('aria-expanded', String(open));
+    };
+    // One answer open at a time.
+    const openOnly = (target: HTMLElement | null) => items.forEach((it) => set(it, it === target));
+
+    list.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('.faq11__q');
+      const item = btn?.closest<HTMLElement>('.faq11__item');
+      if (!item) return;
+      openOnly(item.classList.contains('is-open') ? null : item);
+    });
+
+    // Deep links (#faq-amc etc.) from the header and other sections.
+    const fromHash = (hash: string) => {
+      const item = items.find((it) => `#${it.id}` === hash);
+      if (item) openOnly(item);
+    };
+    fromHash(window.location.hash);
+    window.addEventListener('hashchange', () => fromHash(window.location.hash));
+    document.addEventListener('click', (e) => {
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href*="#faq-"]');
+      if (link && link.pathname === window.location.pathname) fromHash(link.hash);
+    });
+  }
+</script>
+
 <style>
-  .faq__grid {
+  .eightpahar-faq {
+    background: #fff;
+    color: #111212;
+  }
+  .faq11__inner {
     display: grid;
-    gap: clamp(40px, 5vw, 72px);
+    grid-template-columns: 660fr 952fr;
+    align-items: start;
+    max-width: 1774px;
+    margin-inline: auto;
+    padding: 122px clamp(16px, 4vw, 71px) 88px clamp(16px, 5.13vw, 91px);
   }
-  @media (min-width: 1024px) {
-    .faq__grid {
-      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-      align-items: start;
-    }
-    .faq__aside {
-      position: sticky;
-      top: calc(var(--header-h) + 24px);
-    }
+
+  /* ---------- Left column ---------- */
+  .faq11__intro {
+    align-self: stretch;
+    padding: 25px 30px 0 0;
+    border-right: 1px solid #e4e3de;
   }
-  .faq__actions {
-    display: grid;
-    gap: 12px;
-    margin-top: 32px;
-    max-width: 360px;
-  }
-  .faq__list {
-    border-top: 1px solid var(--line-strong);
-  }
-  .faq__item {
-    border-bottom: 1px solid var(--line-strong);
-    scroll-margin-top: calc(var(--header-h) + 24px);
-  }
-  .faq__question {
+  .faq11__eyebrow {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 24px;
-    padding-block: 22px;
-    font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-    font-weight: 650;
-    line-height: 1.4;
-    cursor: pointer;
+    gap: 14px;
+    font-size: clamp(0.9375rem, 0.75rem + 0.43vw, 1.21rem);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #173c36;
+  }
+  .faq11__rule {
+    flex: none;
+    width: 71px;
+    height: 1.5px;
+    background: #173c36;
+  }
+  .faq11__title {
+    margin-top: 55px;
+    font-family: var(--font-serif);
+    font-size: clamp(2.6rem, 1.45rem + 3.17vw, 5rem);
+    font-weight: 500;
+    font-variation-settings: 'opsz' 72;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+  }
+  .faq11__line {
+    display: block;
+  }
+  .faq11__accent {
+    font-size: 1.1em;
+    line-height: 1.02;
+    color: #a16c5b;
+  }
+  .faq11__lede {
+    max-width: 520px;
+    margin-top: 17px;
+    font-size: clamp(1.0625rem, 0.85rem + 0.75vw, 1.7rem);
+    line-height: 1.53;
+    letter-spacing: 0.02em;
+    text-wrap: wrap;
+    color: #6f6f6f;
+  }
+  .faq11__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    min-height: 82px;
+    margin-top: 36px;
+    padding: 0 43px;
+    border-radius: 10px;
+    background: #173c36;
+    color: #fff;
+    font-size: clamp(1.0625rem, 0.95rem + 0.47vw, 1.5rem);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease);
+  }
+  .faq11__cta:hover {
+    background: #0f2a25;
+  }
+  .faq11__cta :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+  .faq11__cta:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  .faq11__micro {
+    margin-top: 29px;
+    font-size: clamp(0.9375rem, 0.85rem + 0.42vw, 1.35rem);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: #6f6f6f;
+  }
+
+  /* ---------- FAQ list ---------- */
+  .faq11__list {
+    margin: 0 0 0 69px;
+    padding: 0;
     list-style: none;
   }
-  .faq__question::-webkit-details-marker {
+  .faq11__item:not(:last-child) {
+    border-bottom: 1px solid #e4e3de;
+  }
+  .faq11__h {
+    font: inherit;
+  }
+  .faq11__q {
+    display: grid;
+    grid-template-columns: 67px minmax(0, 1fr) 24px;
+    align-items: center;
+    column-gap: 16px;
+    width: 100%;
+    min-height: 112px;
+    padding: 12px 31px 12px 17px;
+    border: 0;
+    background: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .faq11__num {
+    font-size: clamp(1.25rem, 0.9rem + 0.75vw, 1.85rem);
+    font-weight: 400;
+    font-feature-settings: 'tnum', 'lnum';
+    color: #995038;
+  }
+  .faq11__text {
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 0.85rem + 0.95vw, 2.1rem);
+    font-weight: 450;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+    color: #111212;
+  }
+  .faq11__q:hover .faq11__text {
+    color: #173c36;
+  }
+  /* plus / minus drawn with two bars */
+  .faq11__icon {
+    position: relative;
+    width: 23px;
+    height: 23px;
+    justify-self: end;
+  }
+  .faq11__icon::before,
+  .faq11__icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+    margin-top: -1px;
+    border-radius: 1px;
+    background: #173c36;
+    transition: transform 0.2s var(--ease);
+  }
+  .faq11__icon::after {
+    transform: rotate(90deg);
+  }
+  .faq11__item.is-open .faq11__icon::after {
+    transform: rotate(0deg);
+  }
+  .faq11__q:focus-visible {
+    outline: 2px solid #9b6558;
+    outline-offset: -2px;
+    border-radius: 4px;
+  }
+  .faq11__answer {
+    padding: 0 31px 28px calc(17px + 67px + 16px);
+  }
+  .faq11__answer p {
+    max-width: 62ch;
+    font-size: clamp(1rem, 0.9rem + 0.25vw, 1.15rem);
+    line-height: 1.6;
+    color: #5f5f5f;
+  }
+  /* With JS, collapsed answers are hidden; without it every answer shows. */
+  :global(.js) .faq11__item:not(.is-open) .faq11__answer {
     display: none;
   }
-  .faq__question:hover {
-    color: var(--green);
+  :global(html:not(.js)) .faq11__icon {
+    visibility: hidden;
   }
-  /* Neumorphic toggle: soft raised disc that presses in when the answer is open. */
-  .faq__icon {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--ivory);
-    box-shadow:
-      3px 3px 8px rgba(17, 18, 18, 0.12),
-      -3px -3px 8px rgba(255, 255, 255, 0.9);
-    transition:
-      transform 0.25s var(--ease),
-      box-shadow 0.25s var(--ease);
+  .eightpahar-faq :focus-visible {
+    outline: 2px solid #9b6558;
+    outline-offset: 3px;
   }
-  .faq__item[open] .faq__icon {
-    transform: rotate(45deg);
-    box-shadow:
-      inset 2px 2px 6px rgba(17, 18, 18, 0.14),
-      inset -2px -2px 6px rgba(255, 255, 255, 0.9);
-    color: var(--terracotta-ink);
+  .faq11__item.is-open .faq11__answer {
+    animation: faq11-in 0.2s var(--ease);
   }
-  .faq__answer {
-    display: grid;
-    gap: 12px;
-    padding: 0 64px 26px 0;
-    color: var(--ink-soft);
-    line-height: 1.7;
-    max-width: 70ch;
+  @keyframes faq11-in {
+    from {
+      opacity: 0;
+    }
   }
-  @media (max-width: 639px) {
-    .faq__answer {
-      padding-right: 0;
+  @media (prefers-reduced-motion: reduce) {
+    .faq11__item.is-open .faq11__answer {
+      animation: none;
+    }
+  }
+
+  /* ---------- Narrow desktop / tablet ---------- */
+  @media (max-width: 1240px) {
+    .faq11__inner {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 48px;
+      padding-top: 88px;
+      padding-right: clamp(16px, 5.13vw, 91px);
+    }
+    .faq11__intro {
+      padding: 0;
+      border-right: 0;
+    }
+    .faq11__list {
+      margin-left: 0;
+      border-top: 1px solid #e4e3de;
+    }
+    .faq11__q {
+      grid-template-columns: 56px minmax(0, 1fr) 22px;
+      min-height: 88px;
+      padding-left: 0;
+      padding-right: 4px;
+    }
+    .faq11__answer {
+      padding: 0 4px 24px calc(56px + 16px);
+    }
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 700px) {
+    .faq11__inner {
+      padding-top: 64px;
+      padding-bottom: 56px;
+    }
+    .faq11__eyebrow {
+      gap: 10px;
+      font-size: 0.8125rem;
+      letter-spacing: 0.1em;
+    }
+    .faq11__rule {
+      width: 24px;
+    }
+    .faq11__rule:last-child {
+      flex-shrink: 1;
+      min-width: 0;
+    }
+    .faq11__title {
+      margin-top: 24px;
+    }
+    .faq11__lede {
+      margin-top: 20px;
+    }
+    .faq11__cta {
+      display: flex;
+      min-height: 60px;
+      margin-top: 28px;
+      padding-inline: 24px;
+    }
+    .faq11__micro {
+      margin-top: 16px;
+    }
+    .faq11__q {
+      grid-template-columns: 34px minmax(0, 1fr) 18px;
+      column-gap: 12px;
+      min-height: 76px;
+      padding-block: 16px;
+    }
+    .faq11__icon {
+      width: 18px;
+      height: 18px;
+    }
+    .faq11__answer {
+      padding: 0 0 20px 46px;
     }
   }
 </style>
