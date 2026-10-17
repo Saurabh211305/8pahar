@@ -151,6 +151,19 @@ placeholder (an `<a>` without `href`, not clickable, arrow dimmed). Internal
 paths open in the same tab; full `https://` URLs open in a new tab with
 `rel="noopener noreferrer"`.
 
+## Section 13 (Book your security audit — enquiry form)
+
+`src/components/sections/FinalCta.astro` (ids `contact` and `enquiry` kept, so
+every "#enquiry" CTA still lands here). Content lives in `finalCta`
+(`src/content/site.ts`). The form uses the shared lead workflow; its field
+rules are the `formId: "enquiry"` branch of `validateLeadFields`
+(`src/lib/lead-schema.ts`): name, phone (any country, 7–15 digits; Indian
+numbers normalised to 10 digits), email and property type are required; the
+message is optional; consent is given by the notice above the submit button.
+A hidden `requirement` field records the context of the CTA that brought the
+visitor (e.g. `amc`, `question`). Two field columns while the card is at least
+~570px wide, otherwise one; intro stacks above the form at ≤1200px.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is
@@ -180,11 +193,15 @@ themes in the copy are a starting point, not verified search-volume targets.
 The browser POSTs JSON to `PUBLIC_LEAD_ENDPOINT`:
 
 ```json
-{ "name", "phone", "propertyType", "location", "requirement", "details?",
+{ "name", "phone", "email?", "propertyType", "location", "requirement?", "details?",
   "consent": true, "formId": "audit|enquiry", "ctaSource",
   "landingPage", "attribution": { "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "referrer" },
   "_hp": "honeypot", "_t": msSincePageLoad }
 ```
+
+The Section 03 form (`audit`) sends location and requirement and requires the
+consent checkbox; the Section 13 form (`enquiry`) sends email instead of
+location (location is then empty) and a requirement only when a CTA set one.
 
 `server/lead-handler.ts` is a ready-made Web-standard handler
 (`Request → Response`) that re-validates every field with the shared schema,

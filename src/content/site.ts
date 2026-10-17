@@ -392,15 +392,21 @@ export const amc = {
   secondary: { label: 'Discuss Your AMC', href: '#enquiry', requirement: 'amc', source: 'amc' } satisfies Cta,
 };
 
-/* ---------- Section 12 — Final conversion ---------- */
+/* ---------- Section 13 — Book your security audit (enquiry form) ---------- */
 export const finalCta = {
-  eyebrow: 'Get started',
-  title: 'Let’s Identify Your Security Gaps.',
-  lede: 'Tell us about your property and your security concerns. Our team can understand your requirements and help determine the appropriate next step.',
-  next: [
-    'We review your enquiry.',
-    'A team member contacts you on the number you provide.',
-    'Together we agree the right next step — an audit, a proposal, or simply advice.',
+  number: '13',
+  eyebrow: 'Book your security audit',
+  title: { lines: ['Stronger Security', 'Starts With'], accent: 'a Conversation.' },
+  lede: ['Tell us about your property and security requirements.', 'Our team will get in touch to discuss the next steps.'],
+  benefits: [
+    { label: 'Understand', text: 'your security needs' },
+    { label: 'Get expert advice', text: 'for your property' },
+    { label: 'Plan the right solution', text: 'with our team' },
   ],
-  formTitle: 'Tell us about your property',
+  form: {
+    submit: 'Request a Security Audit',
+    busy: 'Sending…',
+    consent: 'By submitting this form, you agree to be contacted by the 8PAHAR team regarding your enquiry.',
+    success: 'Thank you for contacting 8PAHAR. Our team will get in touch to discuss your security requirements.',
+  },
 };

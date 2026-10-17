@@ -63,7 +63,32 @@ export const ASSESSMENT_PREFILL_ALIASES: Record<string, string> = {
   'security-audit': '',
 };
 
-export type PropertyType = (typeof PROPERTY_TYPES)[number]['value'] | (typeof ASSESSMENT_PROPERTY_TYPES)[number]['value'];
+/** Section 13 (book your security audit) enquiry form option set. */
+export const ENQUIRY_PROPERTY_TYPES = [
+  { value: 'residential', label: 'Residential' },
+  { value: 'commercial', label: 'Commercial' },
+  { value: 'industrial', label: 'Industrial' },
+  { value: 'institutional-educational', label: 'Institutional / Educational' },
+  { value: 'hospitality', label: 'Hospitality' },
+  { value: 'other', label: 'Other' },
+] as const;
+
+/** Maps general CTA property values onto the Section 13 options ('' = visitor chooses). */
+export const ENQUIRY_PREFILL_ALIASES: Record<string, string> = {
+  'residential-home': 'residential',
+  'housing-society': 'residential',
+  'office-commercial': 'commercial',
+  retail: 'commercial',
+  'industrial-warehouse': 'industrial',
+  'construction-site': 'other',
+  institution: 'institutional-educational',
+  'other-institutional': '',
+};
+
+export type PropertyType =
+  | (typeof PROPERTY_TYPES)[number]['value']
+  | (typeof ASSESSMENT_PROPERTY_TYPES)[number]['value']
+  | (typeof ENQUIRY_PROPERTY_TYPES)[number]['value'];
 export type Requirement = (typeof REQUIREMENTS)[number]['value'] | (typeof ASSESSMENT_REQUIREMENTS)[number]['value'];
 
 export interface LeadAttribution {
@@ -78,9 +103,13 @@ export interface LeadAttribution {
 export interface LeadPayload {
   name: string;
   phone: string;
+  /** Collected by the Section 13 enquiry form. */
+  email?: string;
   propertyType: PropertyType;
+  /** Empty when the form does not ask for it (Section 13). */
   location: string;
-  requirement: Requirement;
+  /** Absent when the visitor did not arrive from a requirement-specific CTA (Section 13). */
+  requirement?: Requirement;
   details?: string;
   consent: true;
   /** Which form captured the lead: "audit" | "enquiry". */
@@ -93,11 +122,11 @@ export interface LeadPayload {
   submittedAt: string;
 }
 
-export type FieldErrors = Partial<Record<'name' | 'phone' | 'propertyType' | 'location' | 'requirement' | 'details' | 'consent', string>>;
+export type FieldErrors = Partial<Record<'name' | 'phone' | 'email' | 'propertyType' | 'location' | 'requirement' | 'details' | 'consent', string>>;
 
-export const LIMITS = { name: 80, location: 80, details: 1000, attribution: 150 } as const;
+export const LIMITS = { name: 80, email: 254, location: 80, details: 1000, attribution: 150 } as const;
 
-const propertyValues = new Set<string>([...PROPERTY_TYPES, ...ASSESSMENT_PROPERTY_TYPES].map((p) => p.value));
+const propertyValues = new Set<string>([...PROPERTY_TYPES, ...ASSESSMENT_PROPERTY_TYPES, ...ENQUIRY_PROPERTY_TYPES].map((p) => p.value));
 const requirementValues = new Set<string>([...REQUIREMENTS, ...ASSESSMENT_REQUIREMENTS].map((r) => r.value));
 
 /**
@@ -113,9 +142,33 @@ export function normalisePhone(input: string): string | null {
   return /^[1-9]\d{9}$/.test(digits) ? digits : null;
 }
 
+/**
+ * Section 13 accepts numbers from any country: an Indian number is
+ * normalised to 10 digits; otherwise 7–15 digits with an optional leading +
+ * (E.164 length) are kept as entered, without separators.
+ */
+export function normaliseFlexiblePhone(input: string): string | null {
+  const indian = normalisePhone(input);
+  if (indian) return indian;
+  const compact = input.replace(/[\s\-().]/g, '');
+  return /^\+?\d{7,15}$/.test(compact) ? compact : null;
+}
+
+/** The enquiry form (Section 13) has its own field rules; see validateLeadFields. */
+export const isEnquiryForm = (formId: unknown) => formId === 'enquiry';
+
+/** Phone normalisation for the form that captured the lead. */
+export function normaliseLeadPhone(input: string, formId: unknown): string | null {
+  return isEnquiryForm(formId) ? normaliseFlexiblePhone(input) : normalisePhone(input);
+}
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 export interface RawLeadFields {
+  formId?: unknown;
   name?: unknown;
   phone?: unknown;
+  email?: unknown;
   propertyType?: unknown;
   location?: unknown;
   requirement?: unknown;
@@ -125,29 +178,45 @@ export interface RawLeadFields {
 
 const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
 
-/** Validates the visitor-entered fields. Returns errors keyed by field. */
+/**
+ * Validates the visitor-entered fields. Returns errors keyed by field.
+ * The Section 13 enquiry form (formId "enquiry") asks for an email address
+ * instead of a location and requirement, accepts international phone
+ * numbers, and takes consent from the notice shown above its submit button.
+ */
 export function validateLeadFields(raw: RawLeadFields): FieldErrors {
   const errors: FieldErrors = {};
+  const enquiry = isEnquiryForm(raw.formId);
   const name = str(raw.name);
+  const email = str(raw.email);
   const location = str(raw.location);
+  const requirement = str(raw.requirement);
   const details = str(raw.details);
 
   if (name.length < 2) errors.name = 'Please enter your name.';
   else if (name.length > LIMITS.name) errors.name = `Please keep your name under ${LIMITS.name} characters.`;
 
   if (!str(raw.phone)) errors.phone = 'Please enter a phone number so our team can reach you.';
-  else if (!normalisePhone(str(raw.phone))) errors.phone = 'Please enter a valid 10-digit phone number, e.g. 98XXX XXXXX.';
+  else if (enquiry && !normaliseFlexiblePhone(str(raw.phone))) errors.phone = 'Please enter a valid phone number, including the country code if outside India.';
+  else if (!enquiry && !normalisePhone(str(raw.phone))) errors.phone = 'Please enter a valid 10-digit phone number, e.g. 98XXX XXXXX.';
+
+  if (enquiry) {
+    if (!email) errors.email = 'Please enter your email address.';
+    else if (email.length > LIMITS.email || !EMAIL_PATTERN.test(email)) errors.email = 'Please enter a valid email address, e.g. name@example.com.';
+  }
 
   if (!propertyValues.has(str(raw.propertyType))) errors.propertyType = 'Please choose your property type.';
 
-  if (location.length < 2) errors.location = 'Please enter the city or area of the property.';
+  if (!enquiry && location.length < 2) errors.location = 'Please enter the city or area of the property.';
   else if (location.length > LIMITS.location) errors.location = `Please keep the location under ${LIMITS.location} characters.`;
 
-  if (!requirementValues.has(str(raw.requirement))) errors.requirement = 'Please choose what you need help with.';
+  if (enquiry ? requirement !== '' && !requirementValues.has(requirement) : !requirementValues.has(requirement)) {
+    errors.requirement = 'Please choose what you need help with.';
+  }
 
-  if (details.length > LIMITS.details) errors.details = `Please keep additional details under ${LIMITS.details} characters.`;
+  if (details.length > LIMITS.details) errors.details = `Please keep ${enquiry ? 'your message' : 'additional details'} under ${LIMITS.details} characters.`;
 
-  if (raw.consent !== true && raw.consent !== 'on' && raw.consent !== 'true') {
+  if (!enquiry && raw.consent !== true && raw.consent !== 'on' && raw.consent !== 'true') {
     errors.consent = 'Please confirm that we may contact you about this enquiry.';
   }
   return errors;

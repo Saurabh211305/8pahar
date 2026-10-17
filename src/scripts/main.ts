@@ -4,7 +4,7 @@
  * still POST to the configured endpoint.
  */
 import { captureAttribution, readAttribution, track, EVENTS } from '../lib/tracking';
-import { LIMITS, normalisePhone, validateLeadFields, type FieldErrors, type RawLeadFields } from '../lib/lead-schema';
+import { LIMITS, normaliseLeadPhone, validateLeadFields, type FieldErrors, type RawLeadFields } from '../lib/lead-schema';
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scrollBehavior = (): ScrollBehavior => (reducedMotion() ? 'auto' : 'smooth');
@@ -84,13 +84,15 @@ function initMenus(): void {
 /* ------------------------------------------------------------------ Forms */
 
 type LeadForm = HTMLFormElement & { dataset: DOMStringMap };
-const FIELD_NAMES = ['name', 'phone', 'propertyType', 'location', 'requirement', 'details', 'consent'] as const;
+const FIELD_NAMES = ['name', 'phone', 'email', 'propertyType', 'location', 'requirement', 'details', 'consent'] as const;
 
 function readFields(form: LeadForm): RawLeadFields {
   const data = new FormData(form);
   return {
+    formId: form.dataset.leadForm ?? '',
     name: String(data.get('name') ?? ''),
     phone: String(data.get('phone') ?? ''),
+    email: String(data.get('email') ?? ''),
     propertyType: String(data.get('propertyType') ?? ''),
     location: String(data.get('location') ?? ''),
     requirement: String(data.get('requirement') ?? ''),
@@ -212,7 +214,10 @@ function initLeadForm(form: LeadForm): void {
     const endpoint = form.dataset.endpoint ?? '';
     const payload = {
       ...fields,
-      phone: normalisePhone(String(fields.phone)),
+      phone: normaliseLeadPhone(String(fields.phone), formId),
+      email: String(fields.email ?? '').trim() || undefined,
+      location: String(fields.location ?? '').trim(),
+      requirement: String(fields.requirement ?? '') || undefined,
       consent: true,
       formId,
       ctaSource: (form.elements.namedItem('ctaSource') as HTMLInputElement | null)?.value || undefined,
@@ -226,6 +231,10 @@ function initLeadForm(form: LeadForm): void {
     submitting = true;
     button?.setAttribute('aria-disabled', 'true');
     button?.setAttribute('aria-busy', 'true');
+    // Optional visible loading label (data-busy-label on the form).
+    const submitText = form.querySelector<HTMLElement>('[data-submit-text]');
+    const idleLabel = submitText?.textContent ?? '';
+    if (submitText && form.dataset.busyLabel) submitText.textContent = form.dataset.busyLabel;
 
     let ok: boolean;
     if (endpoint) {
@@ -243,6 +252,7 @@ function initLeadForm(form: LeadForm): void {
     submitting = false;
     button?.removeAttribute('aria-disabled');
     button?.removeAttribute('aria-busy');
+    if (submitText && form.dataset.busyLabel) submitText.textContent = idleLabel;
 
     if (ok) {
       // Counted only after the endpoint has accepted the lead.
@@ -278,6 +288,11 @@ function prefillForm(form: LeadForm, property?: string, requirement?: string, so
     const value = raw && raw in aliases ? aliases[raw] : raw;
     if (!value) return;
     const item = form.elements.namedItem(name);
+    if (item instanceof HTMLInputElement && item.type === 'hidden') {
+      // A form without a visible requirement field still records the CTA's context.
+      item.value = value;
+      return;
+    }
     if (item instanceof RadioNodeList) {
       const radio = [...item].find((r) => (r as HTMLInputElement).value === value) as HTMLInputElement | undefined;
       if (!radio) return;
@@ -301,7 +316,7 @@ function prefillForm(form: LeadForm, property?: string, requirement?: string, so
 
 function focusForm(root: HTMLElement, form: LeadForm): void {
   root.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
-  const fields = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[type="text"], input[type="tel"], select')].filter((el) => el.tabIndex !== -1);
+  const fields = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[type="text"], input[type="tel"], input[type="email"], select')].filter((el) => el.tabIndex !== -1);
   const firstEmpty = fields.find((el) => !el.value);
   // Focus after the scroll settles so the browser doesn't jump.
   window.setTimeout(() => (firstEmpty ?? fields[0])?.focus({ preventScroll: true }), reducedMotion() ? 0 : 450);

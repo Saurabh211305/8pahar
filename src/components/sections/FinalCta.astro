@@ -1,138 +1,547 @@
 ---
-import { finalCta } from '../../content/site';
-import { telHref, whatsappHref, business } from '../../config/business';
-import EnquiryForm from '../ui/EnquiryForm.astro';
+/**
+ * Section 13 — Book your security audit (approved reference design).
+ * Left: label, headline, lede and three benefit points. Right: the site's
+ * enquiry form (#enquiry). It uses the shared lead workflow in
+ * src/scripts/main.ts (validation, CTA pre-selection, analytics, submission to
+ * PUBLIC_LEAD_ENDPOINT) and the field rules for formId "enquiry" in
+ * src/lib/lead-schema.ts. Without JavaScript it falls back to a plain POST.
+ */
+import { finalCta as c } from '../../content/site';
+import { business } from '../../config/business';
+import { ENQUIRY_PROPERTY_TYPES, ENQUIRY_PREFILL_ALIASES, LIMITS } from '../../lib/lead-schema';
 import Icon from '../ui/Icon.astro';
 
-const wa = whatsappHref('Hello 8PAHAR, I would like to discuss security for my property.');
+const id = 'enquiry';
+const f = (name: string) => `${id}-${name}`;
 ---
-<section class="section surface-green on-dark final" id="contact" aria-labelledby="final-title">
-  <!-- Concentric fields of view radiating from one corner: a quiet nod to coverage. -->
-  <svg class="final__arcs" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
-    <g fill="none" stroke="#F4EFE7" stroke-opacity="0.09" stroke-width="1">
-      <path d="M0 600 A600 600 0 0 1 600 0" />
-      <path d="M0 600 A480 480 0 0 1 480 120" />
-      <path d="M0 600 A360 360 0 0 1 360 240" />
-      <path d="M0 600 A240 240 0 0 1 240 360" />
-      <path d="M0 600 L600 0 M0 600 L600 330" stroke-dasharray="3 6" />
-    </g>
-    <circle cx="420" cy="180" r="5" fill="#9B6558" />
-  </svg>
+<section class="eightpahar-audit" id="contact" aria-labelledby="final-title">
+  <div class="aud13__deco" aria-hidden="true">
+    <span class="aud13__shape aud13__shape--green"></span>
+    <span class="aud13__shape aud13__shape--ring"></span>
+    <span class="aud13__shape aud13__shape--sand"></span>
+    <span class="aud13__shape aud13__shape--arc"></span>
+  </div>
 
-  <div class="container final__grid">
-    <div class="final__copy">
-      <p class="eyebrow">{finalCta.eyebrow}</p>
-      <h2 id="final-title" class="h2">{finalCta.title}</h2>
-      <p class="lede">{finalCta.lede}</p>
-
-      <ol role="list" class="final__next" aria-label="What happens next">
-        {finalCta.next.map((step, i) => (
-          <li><span aria-hidden="true">{i + 1}</span>{step}</li>
+  <div class="aud13__inner">
+    <div class="aud13__intro">
+      <p class="aud13__eyebrow">
+        <span class="aud13__rule" aria-hidden="true"></span>
+        <span>{c.number} / {c.eyebrow}</span>
+        <span class="aud13__rule" aria-hidden="true"></span>
+      </p>
+      <h2 id="final-title" class="aud13__title">
+        {c.title.lines.map((l) => <span class="aud13__line">{l}</span>)}
+        <span class="aud13__line aud13__accent">{c.title.accent}</span>
+      </h2>
+      <p class="aud13__lede">{c.lede[0]} <br class="aud13__br" />{c.lede[1]}</p>
+      <ul class="aud13__benefits" role="list">
+        {c.benefits.map((b) => (
+          <li>
+            <span class="aud13__blabel">{b.label}</span>
+            <span class="aud13__btext">{b.text}</span>
+          </li>
         ))}
-      </ol>
-
-      {(telHref || wa) && (
-        <div class="final__direct">
-          <p class="final__direct-label">Prefer to talk now?</p>
-          <div class="cta-row">
-            {telHref && (
-              <a class="btn btn--secondary" href={telHref} data-contact="phone" data-cta-source="final">
-                <Icon name="phone" /><span>Call Us</span>
-              </a>
-            )}
-            {wa && (
-              <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" data-contact="whatsapp" data-cta-source="final">
-                <Icon name="whatsapp" /><span>WhatsApp Us</span>
-              </a>
-            )}
-          </div>
-          {business.phone && <p class="final__phone">{business.phone}</p>}
-        </div>
-      )}
+      </ul>
     </div>
 
-    <div class="final__form" id="enquiry">
-      <EnquiryForm
-        id="enquiry"
-        title={finalCta.formTitle}
-        submitLabel="Book a Security Audit"
-        altSubmitLabel="Send My Enquiry"
-        showDetails
-      />
+    <div class="aud13__card" id="enquiry" data-lead-root={id}>
+      <form
+        class="aud13__form"
+        id={f('form')}
+        data-lead-form={id}
+        data-endpoint={business.leadEndpoint ?? ''}
+        data-submit-label={c.form.submit}
+        data-busy-label={c.form.busy}
+        data-prefill-aliases={JSON.stringify(ENQUIRY_PREFILL_ALIASES)}
+        action={business.leadEndpoint ?? undefined}
+        method="post"
+        aria-label="Request a security audit"
+      >
+        <div class="aud13__field">
+          <label for={f('name')}>Full Name <span class="aud13__req" aria-hidden="true">*</span></label>
+          <input id={f('name')} name="name" type="text" autocomplete="name" required minlength="2" maxlength={LIMITS.name} placeholder="Your name" aria-describedby={f('name-error')} />
+          <p class="aud13__error" id={f('name-error')} aria-live="polite"></p>
+        </div>
+        <div class="aud13__field">
+          <label for={f('phone')}>Phone Number <span class="aud13__req" aria-hidden="true">*</span></label>
+          <input id={f('phone')} name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" placeholder="Your phone number" aria-describedby={f('phone-error')} />
+          <p class="aud13__error" id={f('phone-error')} aria-live="polite"></p>
+        </div>
+        <div class="aud13__field">
+          <label for={f('email')}>Email Address <span class="aud13__req" aria-hidden="true">*</span></label>
+          <input id={f('email')} name="email" type="email" inputmode="email" autocomplete="email" required maxlength={LIMITS.email} placeholder="Your email address" aria-describedby={f('email-error')} />
+          <p class="aud13__error" id={f('email-error')} aria-live="polite"></p>
+        </div>
+        <div class="aud13__field">
+          <label for={f('propertyType')}>Property Type <span class="aud13__req" aria-hidden="true">*</span></label>
+          <div class="aud13__select">
+            <select id={f('propertyType')} name="propertyType" required aria-describedby={f('propertyType-error')}>
+              <option value="" selected disabled>Select property type</option>
+              {ENQUIRY_PROPERTY_TYPES.map((p) => <option value={p.value}>{p.label}</option>)}
+            </select>
+            <Icon name="chevron" size={26} strokeWidth={1.8} class="aud13__chevron" />
+          </div>
+          <p class="aud13__error" id={f('propertyType-error')} aria-live="polite"></p>
+        </div>
+        <div class="aud13__field aud13__field--wide">
+          <label for={f('details')}>Your Message (Optional)</label>
+          <textarea id={f('details')} name="details" rows="2" maxlength={LIMITS.details} placeholder="Tell us about your requirements" aria-describedby={f('details-error')}></textarea>
+          <p class="aud13__error" id={f('details-error')} aria-live="polite"></p>
+        </div>
+
+        <!-- Spam trap: hidden from people and assistive tech. -->
+        <div class="aud13__trap" aria-hidden="true">
+          <label for={f('website')}>Leave this field empty</label>
+          <input id={f('website')} name="_hp" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <input type="hidden" name="formId" value={id} />
+        <!-- Set by CTAs elsewhere on the page (e.g. AMC, general question) so the lead keeps its context. -->
+        <input type="hidden" name="requirement" value="" />
+        <input type="hidden" name="ctaSource" value="" data-cta-source-field />
+
+        <div class="aud13__field--wide aud13__actions">
+          <button class="aud13__submit" type="submit">
+            <span data-submit-text>{c.form.submit}</span>
+            <Icon name="arrow" size={24} />
+          </button>
+          <p class="aud13__consent">{c.form.consent}</p>
+          <div class="aud13__status" role="alert" data-lead-status hidden>
+            <Icon name="alert" size={20} />
+            <p data-lead-status-text>We couldn’t send your enquiry just now. Please try again in a moment.</p>
+          </div>
+        </div>
+      </form>
+
+      <div class="aud13__success" data-lead-success tabindex="-1" hidden>
+        <span class="aud13__success-icon"><Icon name="check" size={24} /></span>
+        <p>{c.form.success}</p>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .final {
+  .eightpahar-audit {
+    --aud-green: #103d35;
+    --aud-line: #dcd7cf;
+    --aud-border: #dedad4;
+    position: relative;
     overflow: hidden;
+    isolation: isolate;
+    background: #f5f1ea;
+    color: #171916;
   }
-  .final__arcs {
+
+  /* ---------- Decorative curves (behind content) ---------- */
+  .aud13__deco {
     position: absolute;
-    left: 0;
-    bottom: 0;
-    width: min(720px, 90vw);
-    height: auto;
+    inset: 0;
+    z-index: -1;
     pointer-events: none;
   }
-  .final__grid {
-    position: relative;
-    display: grid;
-    gap: clamp(40px, 5vw, 80px);
+  .aud13__shape {
+    position: absolute;
+    border-radius: 50%;
   }
-  @media (min-width: 1024px) {
-    .final__grid {
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-      align-items: start;
+  .aud13__shape--green {
+    right: -1000px;
+    top: -258px;
+    width: 1316px;
+    height: 1316px;
+    background: var(--aud-green);
+  }
+  .aud13__shape--ring {
+    right: -1070px;
+    top: -328px;
+    width: 1456px;
+    height: 1456px;
+    border: 1.5px solid #ddd6cc;
+  }
+  .aud13__shape--sand {
+    left: -620px;
+    bottom: -370px;
+    width: 740px;
+    height: 740px;
+    background: #e6e3da;
+  }
+  .aud13__shape--arc {
+    left: -945px;
+    top: calc(50% - 515px);
+    width: 1030px;
+    height: 1030px;
+    border: 1.5px solid #ddd6cc;
+  }
+
+  .aud13__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 789fr) minmax(0, 927fr);
+    column-gap: 55px;
+    align-items: start;
+    max-width: 1983px;
+    margin-inline: auto;
+    padding: 107px clamp(16px, 3.3vw, 65px) 78px clamp(16px, 7.4vw, 147px);
+  }
+
+  /* ---------- Left column ---------- */
+  .aud13__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: clamp(0.875rem, 0.7rem + 0.45vw, 1.25rem);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--aud-green);
+    margin-top: -11px;
+  }
+  .aud13__rule {
+    flex: 0 1 67px;
+    min-width: 16px;
+    height: 1.5px;
+    background: var(--aud-green);
+  }
+  .aud13__title {
+    margin-top: 53px;
+    font-family: var(--font-serif);
+    font-size: clamp(2.6rem, 4.92vw, 6.1rem);
+    font-weight: 500;
+    font-variation-settings: 'opsz' 72;
+    line-height: 0.99;
+    letter-spacing: -0.025em;
+  }
+  .aud13__line {
+    display: block;
+  }
+  .aud13__accent {
+    color: #a16c5b;
+  }
+  .aud13__lede {
+    margin-top: 12px;
+    font-size: clamp(1.0625rem, 1.37vw, 1.7rem);
+    line-height: 1.52;
+    letter-spacing: 0.02em;
+    color: #777;
+  }
+  .aud13__benefits {
+    display: flex;
+    margin: 42px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .aud13__benefits li {
+    display: grid;
+    gap: 0;
+    padding: 0 clamp(18px, 2.2vw, 44px);
+    border-left: 1px solid var(--aud-line);
+  }
+  .aud13__benefits li:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .aud13__benefits li:last-child {
+    padding-right: 0;
+  }
+  .aud13__benefits li::before {
+    content: '';
+    width: 40px;
+    height: 2px;
+    margin-bottom: 20px;
+    background: #aab0a4;
+  }
+  .aud13__blabel {
+    font-size: clamp(0.8125rem, 0.96vw, 1.1875rem);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--aud-green);
+  }
+  .aud13__btext {
+    font-size: clamp(0.875rem, 0.91vw, 1.125rem);
+    line-height: 1.4;
+    color: #525452;
+  }
+
+  /* ---------- Form card ---------- */
+  .aud13__card {
+    container-type: inline-size;
+    border: 1px solid #e0dbd7;
+    border-radius: 14px;
+    background: #faf8f4;
+    padding: 36px 39px 37px 41px;
+    transition: box-shadow 0.3s var(--ease);
+  }
+  .aud13__card:global(.is-highlighted) {
+    box-shadow: 0 0 0 3px rgba(161, 108, 91, 0.35);
+  }
+  .aud13__form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 30px;
+  }
+  .aud13__form[hidden] {
+    display: none;
+  }
+  /* Fields stack whenever the card itself is narrow (narrow desktop, mobile). */
+  @container (max-width: 570px) {
+    .aud13__form {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
-  .final__copy {
+  .aud13__field {
     display: grid;
-    gap: 22px;
     align-content: start;
+    min-width: 0;
   }
-  .final__next {
+  .aud13__field--wide {
+    grid-column: 1 / -1;
+  }
+  .aud13__field label {
+    margin-bottom: 8px;
+    font-size: clamp(1rem, 0.85rem + 0.35vw, 1.2rem);
+    font-weight: 500;
+    color: #171916;
+  }
+  .aud13__req {
+    color: #a5453b;
+  }
+  .aud13__field input,
+  .aud13__field select,
+  .aud13__field textarea {
+    width: 100%;
+    min-height: 63px;
+    padding: 0 22px;
+    border: 1px solid var(--aud-border);
+    border-radius: 6px;
+    background: #fbfaf8;
+    color: #171916;
+    font: inherit;
+    font-size: clamp(1rem, 0.85rem + 0.35vw, 1.2rem);
+    transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  }
+  .aud13__field textarea {
+    min-height: 104px;
+    padding-block: 16px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+  .aud13__field ::placeholder {
+    color: #888;
+    opacity: 1;
+  }
+  .aud13__select {
+    position: relative;
+  }
+  .aud13__field select {
+    appearance: none;
+    padding-right: 56px;
+    cursor: pointer;
+  }
+  .aud13__field select:invalid {
+    color: #888;
+  }
+  .aud13__field select option {
+    color: #171916;
+  }
+  .aud13__select :global(.aud13__chevron) {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    margin-top: -13px;
+    color: #171916;
+    pointer-events: none;
+  }
+  .aud13__field input:focus,
+  .aud13__field select:focus,
+  .aud13__field textarea:focus {
+    border-color: var(--aud-green);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(16, 61, 53, 0.14);
+  }
+  .aud13__field [aria-invalid='true'] {
+    border-color: #a5453b;
+  }
+  .aud13__error {
+    min-height: 1.5em;
+    padding-top: 4px;
+    font-size: 0.875rem;
+    line-height: 1.35;
+    color: #a5453b;
+  }
+  .aud13__error:empty {
+    min-height: 22px;
+  }
+  .aud13__trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .aud13__actions {
     display: grid;
-    gap: 14px;
-    margin-top: 8px;
+    gap: 0;
+    margin-top: 4px;
   }
-  .final__next li {
+  .aud13__submit {
     display: flex;
-    gap: 14px;
-    align-items: baseline;
-    color: var(--ivory);
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    width: 100%;
+    min-height: 74px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--aud-green);
+    color: #fff;
+    font: inherit;
+    font-size: clamp(1.0625rem, 0.85rem + 0.55vw, 1.45rem);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease);
   }
-  .final__next span {
-    flex: none;
+  .aud13__submit:hover {
+    background: #0a2c26;
+  }
+  .aud13__submit :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+  .aud13__submit:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  .aud13__submit[aria-busy='true'] {
+    cursor: progress;
+    opacity: 0.85;
+  }
+  .aud13__submit:focus-visible {
+    outline: 3px solid #a16c5b;
+    outline-offset: 3px;
+  }
+  .aud13__consent {
+    margin-top: 16px;
+    font-size: clamp(0.8125rem, 0.72rem + 0.22vw, 1rem);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: #777;
+  }
+  .aud13__status {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 6px;
+    background: #f8ece8;
+    color: #6e2c20;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  .aud13__status[hidden] {
+    display: none;
+  }
+  .aud13__success {
+    display: grid;
+    justify-items: start;
+    gap: 18px;
+    padding-block: 24px;
+    outline: none;
+  }
+  .aud13__success[hidden] {
+    display: none;
+  }
+  .aud13__success p {
+    max-width: 36ch;
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 1.1rem + 0.8vw, 2rem);
+    line-height: 1.25;
+    color: #171916;
+  }
+  .aud13__success-icon {
     display: grid;
     place-items: center;
-    width: 26px;
-    height: 26px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    border: 1px solid rgba(244, 239, 231, 0.45);
-    font-size: 0.75rem;
-    font-weight: 700;
-    transform: translateY(-1px);
+    background: var(--aud-green);
+    color: #fff;
   }
-  .final__direct {
-    display: grid;
-    gap: 14px;
-    margin-top: 12px;
-    padding-top: 24px;
-    border-top: 1px solid var(--line-dark);
+
+  /* ---------- Narrow desktop / tablet: stack ---------- */
+  @media (max-width: 1200px) {
+    .aud13__inner {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 48px;
+      padding: 80px clamp(16px, 5vw, 64px) 72px;
+    }
+    .aud13__intro {
+      max-width: 760px;
+    }
+    .aud13__shape--green {
+      right: -1180px;
+      top: -620px;
+    }
+    .aud13__shape--ring {
+      right: -1250px;
+      top: -690px;
+    }
   }
-  .final__direct-label {
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--terracotta-light);
-  }
-  .final__phone {
-    font-family: var(--font-serif);
-    font-size: 1.4rem;
-  }
-  .final__form {
-    scroll-margin-top: calc(var(--header-h) + 16px);
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 700px) {
+    .aud13__inner {
+      padding-top: 60px;
+      padding-bottom: 56px;
+    }
+    .aud13__deco {
+      display: none;
+    }
+    .aud13__eyebrow {
+      gap: 10px;
+      font-size: 0.8125rem;
+    }
+    .aud13__rule {
+      flex-basis: 24px;
+    }
+    .aud13__title {
+      margin-top: 24px;
+    }
+    .aud13__lede {
+      margin-top: 18px;
+    }
+    .aud13__br {
+      display: none;
+    }
+    .aud13__benefits {
+      display: grid;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .aud13__benefits li,
+    .aud13__benefits li:first-child {
+      grid-template-columns: 28px 1fr;
+      column-gap: 14px;
+      padding: 0;
+      border-left: 0;
+    }
+    .aud13__benefits li::before {
+      grid-row: 1 / span 2;
+      width: 28px;
+      margin: 10px 0 0;
+    }
+    .aud13__card {
+      padding: 24px 18px;
+      border-radius: 12px;
+    }
+    .aud13__field input,
+    .aud13__field select {
+      min-height: 54px;
+      padding-inline: 16px;
+    }
+    .aud13__submit {
+      min-height: 60px;
+    }
   }
 </style>

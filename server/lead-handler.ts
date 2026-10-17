@@ -12,7 +12,7 @@
  *  - forward the lead to the CRM webhook with an HMAC signature
  *  - never log personal data
  */
-import { LIMITS, normalisePhone, validateLeadFields, type LeadPayload } from '../src/lib/lead-schema';
+import { LIMITS, normaliseLeadPhone, validateLeadFields, type LeadPayload } from '../src/lib/lead-schema';
 
 export interface LeadHandlerEnv {
   /** CRM / automation webhook that stores the lead (secret, server-only). */
@@ -77,10 +77,11 @@ export async function handleLead(request: Request, env: LeadHandlerEnv): Promise
   const attribution = (typeof body.attribution === 'object' && body.attribution) || {};
   const lead: LeadPayload = {
     name: clip(body.name, LIMITS.name)!,
-    phone: normalisePhone(String(body.phone))!,
+    phone: normaliseLeadPhone(String(body.phone), body.formId)!,
+    email: clip(body.email, LIMITS.email) || undefined,
     propertyType: body.propertyType as LeadPayload['propertyType'],
-    location: clip(body.location, LIMITS.location)!,
-    requirement: body.requirement as LeadPayload['requirement'],
+    location: clip(body.location, LIMITS.location) ?? '',
+    requirement: (clip(body.requirement, 40) || undefined) as LeadPayload['requirement'],
     details: clip(body.details, LIMITS.details) || undefined,
     consent: true,
     formId: clip(body.formId, 40) ?? 'unknown',
