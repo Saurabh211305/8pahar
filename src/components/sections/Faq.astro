@@ -21,8 +21,8 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
         <span class="faq11__rule" aria-hidden="true"></span>
       </p>
       <h2 id="faq-title" class="faq11__title">
-        <span class="faq11__line">Good Security</span>
-        <span class="faq11__line">Starts With</span>
+        <span class="faq11__line">Good Security</span>{' '}
+        <span class="faq11__line">Starts With</span>{' '}
         <span class="faq11__line faq11__accent">Clear Answers.</span>
       </h2>
       <p class="faq11__lede">Everything you need to know before securing your property with 8PAHAR.</p>
@@ -335,6 +335,13 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     }
     .faq11__title {
       margin-top: 24px;
+      text-wrap: balance;
+    }
+    .faq11__line {
+      display: inline;
+    }
+    .faq11__accent {
+      font-size: 1em;
     }
     .faq11__lede {
       margin-top: 20px;

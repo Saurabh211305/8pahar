@@ -31,7 +31,7 @@ const f = (name: string) => `${id}-${name}`;
         <span class="aud13__rule" aria-hidden="true"></span>
       </p>
       <h2 id="final-title" class="aud13__title">
-        {c.title.lines.map((l) => <span class="aud13__line">{l}</span>)}
+        {c.title.lines.map((l) => <><span class="aud13__line">{l}</span>{' '}</>)}
         <span class="aud13__line aud13__accent">{c.title.accent}</span>
       </h2>
       <p class="aud13__lede">{c.lede[0]} <br class="aud13__br" />{c.lede[1]}</p>

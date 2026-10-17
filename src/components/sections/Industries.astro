@@ -431,7 +431,14 @@ const photo = (name: string) => {
   }
   @media (max-width: 700px) {
     .ind__line {
+      display: inline;
       white-space: normal;
+    }
+    .ind__title {
+      text-wrap: balance;
+    }
+    .ind__eyebrow {
+      letter-spacing: 0.12em;
     }
     .ind__grid {
       grid-template-columns: 1fr;

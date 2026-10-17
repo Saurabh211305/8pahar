@@ -136,6 +136,7 @@ const expert = telHref
     transition: box-shadow 0.2s var(--ease);
   }
   .site-header.is-scrolled {
+    background: rgba(250, 247, 243, 0.985);
     box-shadow: 0 1px 0 var(--line);
   }
   .hdr {
@@ -377,14 +378,18 @@ const expert = telHref
   /* Narrow laptops: tighten spacing so the full bar fits before the menu collapses. */
   @media (max-width: 1260px) {
     .hdr {
-      gap: 16px;
+      gap: 14px;
     }
     .hdr__menus {
-      gap: 14px;
+      gap: 4px;
     }
     .hdr__btn {
       padding-inline: 16px;
       gap: 10px;
+    }
+    /* the headset icon is decorative; dropping it keeps "Resources" clear of the CTA */
+    .hdr__btn--expert :global(svg) {
+      display: none;
     }
     .hdr__btn--expert,
     .hdr__btn--audit {

@@ -29,6 +29,8 @@ function initMobileNav(): { close: () => void } {
   const setOpen = (open: boolean, returnFocus = false) => {
     toggle.setAttribute('aria-expanded', String(open));
     nav.classList.toggle('is-open', open);
+    // Lets other UI (e.g. the mobile CTA bar) step aside while the menu is open.
+    document.documentElement.toggleAttribute('data-menu-open', open);
     if (label) label.textContent = open ? 'Close menu' : 'Open menu';
     if (open) nav.querySelector<HTMLElement>('a, button')?.focus();
     else if (returnFocus) toggle.focus();
@@ -41,7 +43,7 @@ function initMobileNav(): { close: () => void } {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false, true);
   });
-  window.matchMedia('(min-width: 961px)').addEventListener('change', (mq) => {
+  window.matchMedia('(min-width: 1181px)').addEventListener('change', (mq) => {
     if (mq.matches) setOpen(false);
   });
   return { close: () => setOpen(false) };
@@ -385,23 +387,50 @@ function initMobileCta(): void {
   const hero = document.querySelector('[data-hero]');
   if (!bar || !hero || !('IntersectionObserver' in window)) return;
 
-  const visible = new Set<Element>();
+  // The bar never sits over the hero, a lead form or the footer, and while
+  // reading (scrolling down) it stays out of the way: it only slides in when
+  // the visitor scrolls back up, i.e. is looking for something.
+  const blocking = new Set<Element>();
   const footer = document.querySelector('.site-footer');
   const watched = [hero, ...document.querySelectorAll('[data-lead-root]'), ...(footer ? [footer] : [])];
+  let scrollingUp = false;
+  let lastY = window.scrollY;
   const update = () => {
-    const show = visible.size === 0;
+    const menuOpen = document.documentElement.hasAttribute('data-menu-open');
+    const show = blocking.size === 0 && scrollingUp && !menuOpen;
     bar.classList.toggle('is-visible', show);
     bar.toggleAttribute('inert', !show);
     bar.setAttribute('aria-hidden', String(!show));
   };
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
-      if (entry.isIntersecting) visible.add(entry.target);
-      else visible.delete(entry.target);
+      if (entry.isIntersecting) blocking.add(entry.target);
+      else blocking.delete(entry.target);
     }
     update();
   });
   watched.forEach((el) => io.observe(el));
+
+  let ticking = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const y = window.scrollY;
+        // Ignore tiny movements (momentum jitter, address-bar resize).
+        if (Math.abs(y - lastY) > 12) {
+          scrollingUp = y < lastY;
+          lastY = y;
+          update();
+        }
+        ticking = false;
+      });
+    },
+    { passive: true },
+  );
+  new MutationObserver(update).observe(document.documentElement, { attributes: true, attributeFilter: ['data-menu-open'] });
 }
 
 /* ------------------------------------------------------------------- Init */

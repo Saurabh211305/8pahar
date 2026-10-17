@@ -594,6 +594,13 @@ const srcset = photo.widths.map((w) => `/images/${photo.name}-${w}.webp ${w}w`).
       display: block;
     }
   }
+  /* Landscape tablets and small laptops: at 125% the photo grows to ~a full screen tall. */
+  @media (min-width: 900px) and (max-width: 1180px) {
+    .hero__media {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
   @media (max-width: 599px) {
     .hero__line {
       white-space: normal;

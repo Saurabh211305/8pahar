@@ -1,7 +1,9 @@
 ---
 /**
- * Persistent mobile CTA. Hidden while the hero CTA or a lead form is on
- * screen, so it never covers form fields (see scripts/main.ts).
+ * Persistent mobile CTA (below 768px). It is hidden while the hero, a lead
+ * form or the footer is on screen, while the mobile menu is open, and while
+ * the visitor is scrolling down — it only slides in on scroll-up, so it never
+ * sits over content being read (see initMobileCta in scripts/main.ts).
  */
 import CtaLink from './ui/CtaLink.astro';
 import Icon from './ui/Icon.astro';

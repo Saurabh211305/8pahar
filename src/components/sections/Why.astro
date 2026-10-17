@@ -309,6 +309,13 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     .dif__name br {
       display: none;
     }
+    /* desktop line breaks would strand a word ("With") on phones */
+    .dif__line {
+      display: inline;
+    }
+    .dif__title {
+      text-wrap: balance;
+    }
     .dif__cta {
       width: 100%;
       margin-top: 36px;

@@ -20,7 +20,7 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
           <span class="amc10__rule" aria-hidden="true"></span>
         </p>
         <h2 id="amc-title" class="amc10__title">
-          {a.title.lines.map((l) => <span class="amc10__line">{l}</span>)}
+          {a.title.lines.map((l) => <><span class="amc10__line">{l}</span>{' '}</>)}
           <span class="amc10__line amc10__accent">{a.title.accent}</span>
         </h2>
         <p class="amc10__lede">{a.lede}</p>

@@ -177,6 +177,16 @@ a stacked mobile layout. Unconfigured contact rows and social icons are
 hidden; with no contact details at all, a single "Send us an enquiry" link to
 the form is shown.
 
+## Responsive notes
+
+- Mobile CTA bar (below 768px): shown only while scrolling **up**, and never
+  over the hero, a lead form, the footer or an open mobile menu.
+- Breakpoints: header collapses to the menu at 1180px; most sections stack at
+  1180px and go single-column at 700px. Section 02 resets the laptop photo
+  centring (`transform`) when stacked.
+- Multi-line headlines use block spans on desktop and flow inline (with
+  `text-wrap: balance`) on phones so no word is stranded.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is

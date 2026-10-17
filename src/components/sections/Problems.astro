@@ -393,6 +393,9 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
 
   /* ---------- Tablet & mobile: stacked ---------- */
   @media (max-width: 1180px) {
+    .gaps__link {
+      padding-top: 12px; /* 44px+ tap target on touch-sized layouts */
+    }
     .gaps__stage {
       min-height: 0;
       padding: 56px 0 0;
@@ -403,10 +406,13 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     }
     .gaps__media {
       position: relative;
+      top: auto;
       right: auto;
       width: 100%;
       height: auto;
       margin-top: 40px;
+      /* undo the laptop rule's vertical centring, which would pull the photo up over the copy */
+      transform: none;
     }
     .gaps__photo {
       position: relative;
