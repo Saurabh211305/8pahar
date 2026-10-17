@@ -1,0 +1,188 @@
+---
+/**
+ * Section 12 — Insights & resources. A compact, typography-led list of six
+ * article links (two columns of three on desktop, one column on mobile).
+ * Article titles and URLs live in src/content/insights.ts. A block without a
+ * URL renders as a placeholder link (<a> without href): visible, not clickable.
+ */
+import { insights } from '../../content/insights';
+
+const isExternal = (url: string) => /^https?:\/\//.test(url);
+---
+<section class="eightpahar-insights" id="insights" aria-labelledby="insights-title">
+  <div class="ins12__inner">
+    <p class="ins12__eyebrow">
+      <span class="ins12__rule" aria-hidden="true"></span>
+      <span>12/ Insights &amp; resources</span>
+      <span class="ins12__rule" aria-hidden="true"></span>
+    </p>
+    <h2 id="insights-title" class="ins12__title">
+      Insights for <span class="ins12__accent">Smarter Security.</span>
+    </h2>
+
+    <ol class="ins12__list" role="list">
+      {insights.map((a) => (
+        <li class="ins12__item" data-key={a.id}>
+          <a
+            class="ins12__link"
+            href={a.url || undefined}
+            target={a.url && isExternal(a.url) ? '_blank' : undefined}
+            rel={a.url && isExternal(a.url) ? 'noopener noreferrer' : undefined}
+            data-insight={a.id}
+          >
+            <span class="ins12__num" aria-hidden="true">{a.id}</span>
+            <span class="ins12__headline">{a.title}</span>
+            <svg class="ins12__arrow" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+              <path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .eightpahar-insights {
+    background: #fff;
+    color: #171916;
+  }
+  .ins12__inner {
+    max-width: 1672px;
+    margin-inline: auto;
+    padding: clamp(48px, 5vw, 80px) clamp(16px, 5.6vw, 94px) clamp(40px, 4vw, 64px);
+  }
+  .ins12__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: clamp(0.8125rem, 0.72rem + 0.3vw, 1.0625rem);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #173c36;
+  }
+  .ins12__rule {
+    flex: 0 1 64px;
+    min-width: 16px;
+    height: 1.5px;
+    background: #173c36;
+  }
+  .ins12__title {
+    margin-top: 14px;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 1.3rem + 2.1vw, 3.6rem);
+    font-weight: 500;
+    font-variation-settings: 'opsz' 72;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+  .ins12__accent {
+    color: #a16c5b;
+  }
+
+  /* ---------- Links: two columns of three ---------- */
+  .ins12__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    margin: clamp(24px, 2.6vw, 40px) 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid #e4e3de;
+  }
+  .ins12__item {
+    min-width: 0;
+    padding-right: clamp(24px, 3vw, 48px);
+  }
+  .ins12__item:nth-child(-n + 3) {
+    border-right: 1px solid #e4e3de;
+  }
+  .ins12__item:nth-child(n + 4) {
+    padding-right: 0;
+    padding-left: clamp(24px, 3vw, 48px);
+  }
+  .ins12__item:not(:nth-child(3n)) {
+    border-bottom: 1px solid #e4e3de;
+  }
+  .ins12__link {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 22px;
+    align-items: center;
+    column-gap: 20px;
+    min-height: 96px;
+    padding-block: 18px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .ins12__num {
+    font-size: clamp(0.9375rem, 0.85rem + 0.25vw, 1.125rem);
+    font-weight: 500;
+    font-feature-settings: 'tnum', 'lnum';
+    color: #a16c5b;
+  }
+  .ins12__headline {
+    font-size: clamp(1.0625rem, 0.92rem + 0.42vw, 1.375rem);
+    font-weight: 500;
+    line-height: 1.35;
+    color: #171916;
+    transition: color 0.15s var(--ease);
+  }
+  .ins12__arrow {
+    justify-self: end;
+    color: #173c36;
+    transition: transform 0.15s var(--ease);
+  }
+  /* Hover/focus only for real links (placeholders have no href). */
+  .ins12__link[href]:hover .ins12__headline,
+  .ins12__link[href]:focus-visible .ins12__headline {
+    color: #173c36;
+  }
+  .ins12__link[href]:hover .ins12__arrow,
+  .ins12__link[href]:focus-visible .ins12__arrow {
+    transform: translateX(3px);
+  }
+  .ins12__link:not([href]) {
+    cursor: default;
+  }
+  .ins12__link:not([href]) .ins12__arrow {
+    opacity: 0.35;
+  }
+  .ins12__link:focus-visible {
+    outline: 2px solid #9b6558;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* ---------- Tablet: keep two columns, tighter ---------- */
+  @media (max-width: 1024px) {
+    .ins12__link {
+      grid-template-columns: 34px minmax(0, 1fr) 20px;
+      column-gap: 14px;
+      min-height: 84px;
+    }
+  }
+
+  /* ---------- Mobile: one column ---------- */
+  @media (max-width: 700px) {
+    .ins12__list {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: none;
+      grid-auto-flow: row;
+    }
+    .ins12__item,
+    .ins12__item:nth-child(n) {
+      padding: 0;
+      border-right: 0;
+      border-bottom: 1px solid #e4e3de;
+    }
+    .ins12__link {
+      grid-template-columns: 30px minmax(0, 1fr) 20px;
+      column-gap: 12px;
+      min-height: 72px;
+      padding-block: 14px;
+    }
+  }
+</style>

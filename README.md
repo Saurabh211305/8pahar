@@ -140,6 +140,17 @@ deep links (`#faq-audit`, `#faq-amc` are linked from Section 02, Section 10
 and the header, so keep those ids). Without JavaScript every answer is shown.
 "Talk to Our Team" goes to the enquiry form with "General question" selected.
 
+## Section 12 (Insights & resources)
+
+`src/components/sections/Insights.astro`, placed between the FAQ and the
+final enquiry section (which keeps the `#enquiry` form every CTA uses). Six
+article links, two columns of three on desktop, one column ≤700px.
+**Article titles and URLs are set in `src/content/insights.ts`.** No URLs
+have been supplied yet: while a `url` is empty the block renders as a
+placeholder (an `<a>` without `href`, not clickable, arrow dimmed). Internal
+paths open in the same tab; full `https://` URLs open in a new tab with
+`rel="noopener noreferrer"`.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is
