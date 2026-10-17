@@ -164,6 +164,19 @@ A hidden `requirement` field records the context of the CTA that brought the
 visitor (e.g. `amc`, `question`). Two field columns while the card is at least
 ~570px wide, otherwise one; intro stacks above the form at ≤1200px.
 
+## Footer (approved reference design)
+
+`src/components/Footer.astro`, links in `src/content/footer.ts`, contact and
+social values from `src/config/business.ts` (env). The logo is
+`public/brand/logo-footer-{360,720}.webp`, generated from the official
+`public/images/Final Logo.png` by `scripts/make-footer-logo.py`: ivory
+background removed, owl in its original colours, dark lettering reversed to
+warm white from the original glyph pixels (nothing redrawn). Five columns
+above 1320px; brand + contact over the three link columns down to 700px; then
+a stacked mobile layout. Unconfigured contact rows and social icons are
+hidden; with no contact details at all, a single "Send us an enquiry" link to
+the form is shown.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is
@@ -180,7 +193,9 @@ hidden instead of showing placeholders.
 | Audit free / paid | `auditPricing` in `business.ts` | audit panel note + FAQ answer |
 | Service areas | `serviceAreas` in `business.ts` | footer, FAQ, `areaServed` |
 | Address | `address` in `business.ts` | footer; with phone, upgrades schema to `LocalBusiness` |
-| Social profiles | `social` in `business.ts` | footer + `sameAs` |
+| Business hours / email note / location | `PUBLIC_BUSINESS_HOURS`, `PUBLIC_EMAIL_NOTE`, `PUBLIC_LOCATION`, `PUBLIC_LOCATION_NOTE` | footer "Get in touch" lines (approved wording only) |
+| Social profiles | `PUBLIC_SOCIAL_LINKEDIN`, `_INSTAGRAM`, `_YOUTUBE`, `_FACEBOOK`, `_X` | footer icons + `sameAs` |
+| Footer pages | `href: null` entries in `src/content/footer.ts` | About Us, Careers, Case Studies, Cookie Policy show as plain text until a real URL is set |
 | Legal text approved | `legalPagesApproved` | removes the draft notice and `noindex` from /privacy and /terms |
 
 Also: replace stock photography with real project photos (see `CREDITS.md`),

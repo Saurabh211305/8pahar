@@ -20,6 +20,17 @@ export type AuditPricing =
   | { type: 'paid'; note: string }
   | null; // Not confirmed yet — copy explains that terms are confirmed before booking.
 
+export type SocialPlatform = 'linkedin' | 'instagram' | 'youtube' | 'facebook' | 'x';
+
+/** Footer order. Each profile URL comes from its env variable; unset ones are hidden. */
+const SOCIAL_PROFILES: { platform: SocialPlatform; label: string; href: string | null }[] = [
+  { platform: 'linkedin', label: 'LinkedIn', href: fromEnv(env.PUBLIC_SOCIAL_LINKEDIN) },
+  { platform: 'instagram', label: 'Instagram', href: fromEnv(env.PUBLIC_SOCIAL_INSTAGRAM) },
+  { platform: 'youtube', label: 'YouTube', href: fromEnv(env.PUBLIC_SOCIAL_YOUTUBE) },
+  { platform: 'facebook', label: 'Facebook', href: fromEnv(env.PUBLIC_SOCIAL_FACEBOOK) },
+  { platform: 'x', label: 'X', href: fromEnv(env.PUBLIC_SOCIAL_X) },
+];
+
 export interface BusinessConfig {
   name: string;
   descriptor: string;
@@ -32,6 +43,14 @@ export interface BusinessConfig {
   /** E.164 WhatsApp Business number. */
   whatsapp: string | null;
   email: string | null;
+  /** Confirmed business hours shown under the phone number, e.g. "Mon – Sat, 9:30 AM – 6:30 PM". */
+  hours: string | null;
+  /** Approved note shown under the email address, e.g. a confirmed response time. */
+  emailNote: string | null;
+  /** Short public location line for the footer, e.g. "Jaipur, Rajasthan, India". */
+  location: string | null;
+  /** Approved note shown under the location, e.g. a service-area statement. */
+  locationNote: string | null;
   /** Registered or principal business address, once confirmed. */
   address: {
     street: string;
@@ -48,8 +67,8 @@ export interface BusinessConfig {
   leadEndpoint: string | null;
   /** Google Tag Manager container ID. */
   gtmId: string | null;
-  /** Social profiles, once confirmed. */
-  social: { label: string; href: string }[];
+  /** Social profiles, once confirmed (only configured ones are listed). */
+  social: { platform: SocialPlatform; label: string; href: string }[];
   /** Set to true once legal has approved the privacy policy and terms text. */
   legalPagesApproved: boolean;
 }
@@ -63,12 +82,16 @@ export const business: BusinessConfig = {
   phone: fromEnv(env.PUBLIC_PHONE),
   whatsapp: fromEnv(env.PUBLIC_WHATSAPP),
   email: fromEnv(env.PUBLIC_EMAIL),
+  hours: fromEnv(env.PUBLIC_BUSINESS_HOURS),
+  emailNote: fromEnv(env.PUBLIC_EMAIL_NOTE),
+  location: fromEnv(env.PUBLIC_LOCATION),
+  locationNote: fromEnv(env.PUBLIC_LOCATION_NOTE),
   address: null,
   serviceAreas: [],
   auditPricing: null,
   leadEndpoint: fromEnv(env.PUBLIC_LEAD_ENDPOINT),
   gtmId: fromEnv(env.PUBLIC_GTM_ID),
-  social: [],
+  social: SOCIAL_PROFILES.filter((s): s is BusinessConfig['social'][number] => s.href !== null),
   legalPagesApproved: false,
 };
 

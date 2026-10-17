@@ -1,185 +1,500 @@
 ---
-import Logo from './brand/Logo.astro';
-import HindiMark from './brand/HindiMark.astro';
-import Icon from './ui/Icon.astro';
-import { business, telHref, whatsappHref, mailHref } from '../config/business';
-import { services, industries } from '../content/site';
+/**
+ * Site footer (approved reference design). Brand + social, three link
+ * columns, contact details, and a slim legal bar. Links live in
+ * src/content/footer.ts; contact and social values come from
+ * src/config/business.ts (env-driven). Anything not configured or without a
+ * real destination is hidden or rendered as plain text — never a dead link.
+ */
+import { business, telHref, mailHref, type SocialPlatform } from '../config/business';
+import { footerNav, footerLegal, footerAbout, footerTagline, type FooterLink } from '../content/footer';
 
 const isHome = Astro.url.pathname === '/';
-const prefix = isHome ? '' : '/';
+const href = (l: FooterLink) => (l.href && l.href.startsWith('#') && !isHome ? `/${l.href}` : l.href);
 const year = new Date().getFullYear();
-const wa = whatsappHref('Hello 8PAHAR, I would like to discuss security for my property.');
-const hasDirectContact = Boolean(telHref || wa || mailHref);
+const hasContact = Boolean(telHref || mailHref || business.location);
+
+/** Simple brand glyphs (24×24), filled with currentColor. */
+const socialIcons: Record<SocialPlatform, string> = {
+  linkedin: 'M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3a1.97 1.97 0 1 0 0 3.94 1.97 1.97 0 0 0 0-3.94ZM20.44 13.4c0-3.1-1.65-4.9-4.2-4.9a3.7 3.7 0 0 0-3.3 1.8V8.5H9.6V20h3.38v-6.1c0-1.6.6-2.7 2.05-2.7 1.4 0 1.97 1.05 1.97 2.7V20h3.44v-6.6Z',
+  instagram: 'M12 7.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6Zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2ZM17.1 5.8a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2ZM16.4 2.5H7.6A5.1 5.1 0 0 0 2.5 7.6v8.8a5.1 5.1 0 0 0 5.1 5.1h8.8a5.1 5.1 0 0 0 5.1-5.1V7.6a5.1 5.1 0 0 0-5.1-5.1Zm3.4 13.9a3.4 3.4 0 0 1-3.4 3.4H7.6a3.4 3.4 0 0 1-3.4-3.4V7.6a3.4 3.4 0 0 1 3.4-3.4h8.8a3.4 3.4 0 0 1 3.4 3.4v8.8Z',
+  youtube: 'M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15V9l5.2 3L10 15Z',
+  facebook: 'M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.87.25-1.46 1.5-1.46h1.6V4.46a21 21 0 0 0-2.3-.16c-2.3 0-3.86 1.4-3.86 3.97v2.23H7.8v3h2.64V21h3.06Z',
+  x: 'M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77L17.75 3Zm-1.08 16.2h1.7L7.4 4.73H5.58L16.67 19.2Z',
+};
+const contactIcons = {
+  phone: 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.12.37 2.33.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1L6.6 10.8Z',
+  mail: 'M3 5h18a1 1 0 0 1 1 1v.4l-10 6.25L2 6.4V6a1 1 0 0 1 1-1Zm-1 3.75 9.47 5.92a1 1 0 0 0 1.06 0L22 8.75V18a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8.75Z',
+  pin: 'M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z',
+};
 ---
-<footer class="site-footer surface-onyx on-dark">
-  <div class="container">
-    <div class="site-footer__top">
-      <div class="site-footer__brand">
-        <Logo tone="dark" />
-        <p class="site-footer__descriptor">{business.descriptor}</p>
-        <HindiMark class="site-footer__hindi" />
-        <p class="site-footer__about">
-          8PAHAR helps homes, businesses and industrial sites find their security gaps, then designs, installs and maintains systems built around how each property actually works.
-        </p>
-        <p class="site-footer__tagline">{business.tagline}</p>
-      </div>
+<footer class="site-footer eightpahar-footer">
+  <div class="ftr__deco" aria-hidden="true">
+    <span class="ftr__shape ftr__shape--tr"></span>
+    <span class="ftr__shape ftr__shape--tr-line"></span>
+    <span class="ftr__shape ftr__shape--bl"></span>
+    <span class="ftr__shape ftr__shape--bl-line"></span>
+  </div>
 
-      <nav class="site-footer__col" aria-labelledby="footer-services">
-        <h2 class="site-footer__heading" id="footer-services">Services</h2>
-        <ul role="list">
-          {services.items.map((s) => <li><a href={`${prefix}#service-${s.id}`}>{s.title}</a></li>)}
-        </ul>
-      </nav>
-
-      <nav class="site-footer__col" aria-labelledby="footer-industries">
-        <h2 class="site-footer__heading" id="footer-industries">Industries</h2>
-        <ul role="list">
-          {industries.items.map((i) => <li><a href={`${prefix}#industry-${i.id}`}>{i.label}</a></li>)}
-          <li><a href={`${prefix}#how-it-works`}>How it works</a></li>
-          <li><a href={`${prefix}#faq`}>FAQ</a></li>
-        </ul>
-      </nav>
-
-      <div class="site-footer__col">
-        <h2 class="site-footer__heading">Contact</h2>
-        <ul role="list" class="site-footer__contact">
-          {telHref && <li><a href={telHref} data-contact="phone" data-cta-source="footer"><Icon name="phone" size={16} />{business.phone}</a></li>}
-          {wa && <li><a href={wa} target="_blank" rel="noopener noreferrer" data-contact="whatsapp" data-cta-source="footer"><Icon name="whatsapp" size={16} />WhatsApp</a></li>}
-          {mailHref && <li><a href={mailHref}><Icon name="mail" size={16} />{business.email}</a></li>}
-          {!hasDirectContact && <li><a href={`${prefix}#enquiry`}>Send us an enquiry</a></li>}
-        </ul>
-        {business.address && (
-          <address class="site-footer__address">
-            {business.address.street}<br />{business.address.locality}, {business.address.region} {business.address.postalCode}
-          </address>
-        )}
-        {business.serviceAreas.length > 0 && (
-          <>
-            <h2 class="site-footer__heading site-footer__heading--spaced">Service locations</h2>
-            <p class="site-footer__areas">{business.serviceAreas.join(' · ')}</p>
-          </>
-        )}
+  <div class="ftr__inner">
+    <div class="ftr__main">
+      <div class="ftr__brand">
+        <a class="ftr__logo" href={isHome ? '#top' : '/'} aria-label="8PAHAR — Intelligent Security Systems, home">
+          <img
+            src="/brand/logo-footer-360.webp"
+            srcset="/brand/logo-footer-360.webp 360w, /brand/logo-footer-720.webp 720w"
+            sizes="(min-width: 1400px) 340px, 300px"
+            width="360"
+            height="236"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+        <p class="ftr__about">{footerAbout}</p>
         {business.social.length > 0 && (
-          <ul role="list" class="site-footer__social">
-            {business.social.map((s) => <li><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a></li>)}
+          <ul class="ftr__social" role="list" aria-label="8PAHAR on social media">
+            {business.social.map((s) => (
+              <li>
+                <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={`${s.label} (opens in a new tab)`}>
+                  <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true" focusable="false"><path d={socialIcons[s.platform]} fill="currentColor" fill-rule="evenodd" /></svg>
+                </a>
+              </li>
+            ))}
           </ul>
         )}
       </div>
+
+      {footerNav.map((col) => (
+        <nav class="ftr__col" aria-labelledby={`footer-${col.id}`}>
+          <h2 class="ftr__heading" id={`footer-${col.id}`}>{col.heading}</h2>
+          <ul role="list" class="ftr__links">
+            {col.links.map((l) => (
+              <li>{href(l) ? <a href={href(l)}>{l.label}</a> : <span class="ftr__pending">{l.label}</span>}</li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+
+      <div class="ftr__col ftr__col--contact">
+        <h2 class="ftr__heading">Get in touch</h2>
+        <ul role="list" class="ftr__contact">
+          {telHref && (
+            <li>
+              <span class="ftr__cicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40"><path d={contactIcons.phone} fill="currentColor" /></svg></span>
+              <div>
+                <a class="ftr__cmain" href={telHref} data-contact="phone" data-cta-source="footer">{business.phone}</a>
+                {business.hours && <p class="ftr__cnote">{business.hours}</p>}
+              </div>
+            </li>
+          )}
+          {mailHref && (
+            <li>
+              <span class="ftr__cicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40"><path d={contactIcons.mail} fill="currentColor" /></svg></span>
+              <div>
+                <a class="ftr__cmain" href={mailHref}>{business.email}</a>
+                {business.emailNote && <p class="ftr__cnote">{business.emailNote}</p>}
+              </div>
+            </li>
+          )}
+          {business.location && (
+            <li>
+              <span class="ftr__cicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40"><path d={contactIcons.pin} fill="currentColor" fill-rule="evenodd" /></svg></span>
+              <div>
+                <p class="ftr__cmain">{business.location}</p>
+                {business.locationNote && <p class="ftr__cnote">{business.locationNote}</p>}
+              </div>
+            </li>
+          )}
+          {!hasContact && (
+            <li>
+              <span class="ftr__cicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40"><path d={contactIcons.mail} fill="currentColor" /></svg></span>
+              <div><a class="ftr__cmain" href={isHome ? '#enquiry' : '/#enquiry'}>Send us an enquiry</a></div>
+            </li>
+          )}
+        </ul>
+      </div>
     </div>
 
-    <div class="site-footer__bottom">
-      <p>© {year} 8PAHAR. All rights reserved.</p>
-      <ul role="list">
-        <li><a href="/privacy">Privacy policy</a></li>
-        <li><a href="/terms">Terms &amp; conditions</a></li>
+    <div class="ftr__bottom">
+      <p class="ftr__copy">© {year} 8PAHAR. All rights reserved.</p>
+      <ul class="ftr__legal" role="list" aria-label="Legal">
+        {footerLegal.map((l) => (
+          <li>{href(l) ? <a href={href(l)}>{l.label}</a> : <span class="ftr__pending">{l.label}</span>}</li>
+        ))}
       </ul>
+      <p class="ftr__tagline"><span class="ftr__dash" aria-hidden="true"></span><span>{footerTagline[0]}<br />{footerTagline[1]}</span></p>
     </div>
   </div>
 </footer>
 
 <style>
-  .site-footer {
-    padding-block: clamp(64px, 8vw, 104px) 28px;
-    font-size: var(--fs-small);
+  .eightpahar-footer {
+    --ftr-bg: #082f29;
+    --ftr-deep: #062720;
+    --ftr-surface: #103d35;
+    --ftr-text: #f5f1ea;
+    --ftr-muted: #c8d1cc;
+    --ftr-accent: #b8795d;
+    --ftr-line: rgba(245, 241, 234, 0.24);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(180deg, #0a372f 0%, var(--ftr-bg) 38%, #072b25 100%);
+    color: var(--ftr-text);
   }
-  .site-footer a {
-    color: var(--on-dark-muted);
-    text-decoration: none;
-    transition: color 0.2s var(--ease);
+
+  /* ---------- Decorative curves ---------- */
+  .ftr__deco {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
   }
-  .site-footer a:hover {
-    color: var(--ivory);
+  .ftr__shape {
+    position: absolute;
+    border-radius: 50%;
   }
-  .site-footer__top {
+  .ftr__shape--tr {
+    right: -427px;
+    top: -215px;
+    width: 510px;
+    height: 510px;
+    background: radial-gradient(circle at 30% 60%, rgba(245, 241, 234, 0.1), rgba(245, 241, 234, 0.04) 70%);
+  }
+  .ftr__shape--tr-line {
+    right: -405px;
+    top: -373px;
+    width: 666px;
+    height: 666px;
+    border: 1px solid rgba(245, 241, 234, 0.16);
+  }
+  .ftr__shape--bl {
+    left: -420px;
+    top: 390px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle at 70% 40%, rgba(245, 241, 234, 0.12), rgba(245, 241, 234, 0.04) 70%);
+  }
+  .ftr__shape--bl-line {
+    left: -605px;
+    top: 215px;
+    width: 690px;
+    height: 690px;
+    border: 1px solid rgba(245, 241, 234, 0.16);
+  }
+
+  .ftr__inner {
+    max-width: 1978px;
+    margin-inline: auto;
+    padding: 135px clamp(16px, 3.2vw, 63px) 0 clamp(16px, 5.6vw, 110px);
+  }
+
+  /* ---------- Main columns ---------- */
+  .ftr__main {
     display: grid;
-    gap: 48px 32px;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 467fr) minmax(0, 250fr) minmax(0, 293fr) minmax(0, 295fr) minmax(0, 500fr);
+    padding-bottom: 29px;
   }
-  @media (min-width: 640px) {
-    .site-footer__top {
-      grid-template-columns: 1fr 1fr;
-    }
-    .site-footer__brand {
-      grid-column: 1 / -1;
-    }
+  .ftr__col {
+    min-width: 0;
+    padding: 22px 0 0 clamp(20px, 2.7vw, 54px);
+    border-left: 1px solid var(--ftr-line);
   }
-  @media (min-width: 1024px) {
-    .site-footer__top {
-      grid-template-columns: 1.6fr 1fr 1fr 1fr;
-    }
-    .site-footer__brand {
-      grid-column: auto;
-    }
+  .ftr__brand {
+    min-width: 0;
+    padding: 8px clamp(20px, 2.2vw, 43px) 0 0;
   }
-  .site-footer__brand {
-    display: grid;
-    gap: 14px;
-    justify-items: start;
-    max-width: 380px;
+  .ftr__logo {
+    display: inline-block;
+    border-radius: 6px;
   }
-  .site-footer__descriptor {
-    margin-top: 6px;
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
+  .ftr__logo img {
+    display: block;
+    width: clamp(220px, 16.5vw, 326px);
+    height: auto;
   }
-  .site-footer__brand :global(.site-footer__hindi) {
-    width: 220px;
-    color: var(--terracotta-light);
+  .ftr__about {
+    max-width: 430px;
+    margin-top: 10px;
+    font-size: clamp(0.9375rem, 0.7rem + 0.45vw, 1.21rem);
+    line-height: 1.52;
+    color: var(--ftr-text);
   }
-  .site-footer__about {
-    color: var(--on-dark-muted);
-    line-height: 1.65;
-  }
-  .site-footer__tagline {
-    font-family: var(--font-serif);
-    font-size: 1.25rem;
-    font-style: italic;
-    color: var(--ivory);
-  }
-  .site-footer__heading {
-    margin-bottom: 16px;
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ivory);
-  }
-  .site-footer__heading--spaced {
-    margin-top: 28px;
-  }
-  .site-footer__col ul {
-    display: grid;
-    gap: 2px;
-  }
-  .site-footer__col li a {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    min-height: 36px;
-  }
-  .site-footer__address {
-    margin-top: 12px;
-    font-style: normal;
-    color: var(--on-dark-muted);
-  }
-  .site-footer__areas {
-    color: var(--on-dark-muted);
-  }
-  .site-footer__bottom {
+  .ftr__social {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 12px 24px;
-    margin-top: clamp(48px, 6vw, 80px);
-    padding-top: 24px;
-    border-top: 1px solid var(--line-dark);
-    color: var(--on-dark-muted);
-    font-size: var(--fs-xs);
+    gap: clamp(10px, 1.1vw, 22px);
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
   }
-  .site-footer__bottom ul {
-    display: flex;
+  .ftr__social a {
+    display: grid;
+    place-items: center;
+    width: clamp(44px, 3.15vw, 62px);
+    height: clamp(44px, 3.15vw, 62px);
+    border-radius: 50%;
+    background: var(--ftr-surface);
+    box-shadow: inset 0 0 0 1px rgba(245, 241, 234, 0.08);
+    color: var(--ftr-text);
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .ftr__social a:hover {
+    background: #17483f;
+    color: #fff;
+  }
+
+  .ftr__heading {
+    font-size: clamp(0.8125rem, 0.6rem + 0.3vw, 0.97rem);
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ftr-text);
+  }
+  .ftr__heading::after {
+    content: '';
+    display: block;
+    width: 42px;
+    height: 2px;
+    margin-top: 28px;
+    background: var(--ftr-accent);
+  }
+  .ftr__links {
+    display: grid;
+    gap: clamp(14px, 1.3vw, 25px);
+    margin: clamp(18px, 1.4vw, 27px) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: clamp(0.9375rem, 0.7rem + 0.45vw, 1.25rem);
+    line-height: 1.1;
+  }
+  .ftr__links a,
+  .ftr__legal a {
+    color: var(--ftr-text);
+    text-decoration: none;
+    transition: color 0.15s var(--ease);
+  }
+  .ftr__links a:hover,
+  .ftr__legal a:hover,
+  .ftr__cmain[href]:hover {
+    color: #d9a184;
+  }
+  /* Destinations not yet available: shown as text, not links. */
+  .ftr__pending {
+    color: var(--ftr-text);
+    opacity: 0.6;
+  }
+
+  .ftr__contact {
+    display: grid;
+    gap: clamp(26px, 2.3vw, 46px);
+    margin: clamp(22px, 1.9vw, 34px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ftr__contact li {
+    display: grid;
+    grid-template-columns: clamp(52px, 3.6vw, 70px) minmax(0, 1fr);
+    align-items: center;
+    column-gap: clamp(14px, 1.1vw, 22px);
+  }
+  .ftr__cicon {
+    display: grid;
+    place-items: center;
+    width: clamp(52px, 3.6vw, 70px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--ftr-surface);
+    color: var(--ftr-text);
+  }
+  .ftr__contact li > div {
+    min-width: 0;
+    padding-left: clamp(14px, 1.1vw, 20px);
+    border-left: 1px solid rgba(184, 121, 93, 0.45);
+  }
+  .ftr__cmain {
+    display: inline-block;
+    font-size: clamp(1rem, 0.75rem + 0.5vw, 1.32rem);
+    font-weight: 500;
+    color: var(--ftr-text);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    transition: color 0.15s var(--ease);
+  }
+  .ftr__cnote {
+    margin-top: 4px;
+    font-size: clamp(0.875rem, 0.7rem + 0.35vw, 1.14rem);
+    line-height: 1.4;
+    color: var(--ftr-muted);
+  }
+
+  /* ---------- Bottom bar ---------- */
+  .ftr__bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
     gap: 24px;
+    min-height: 157px;
+    margin-left: calc(-1 * clamp(0px, 1.4vw, 27px));
+    padding-inline: clamp(0px, 1.4vw, 27px) 0;
+    border-top: 1px solid var(--ftr-line);
+  }
+  .ftr__copy {
+    font-size: clamp(0.875rem, 0.7rem + 0.32vw, 1.1rem);
+    color: var(--ftr-text);
+  }
+  .ftr__legal {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: clamp(0.875rem, 0.7rem + 0.32vw, 1.1rem);
+  }
+  .ftr__legal li {
+    padding: 2px clamp(16px, 1.75vw, 34px);
+    border-left: 1px solid var(--ftr-line);
+  }
+  .ftr__tagline {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+    gap: clamp(16px, 1.6vw, 30px);
+    font-size: clamp(0.75rem, 0.6rem + 0.24vw, 0.92rem);
+    font-weight: 500;
+    line-height: 1.75;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ftr-text);
+  }
+  .ftr__dash {
+    flex: none;
+    width: 47px;
+    height: 2px;
+    background: var(--ftr-accent);
+  }
+
+  .eightpahar-footer a:focus-visible {
+    outline: 2px solid #d9a184;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .ftr__social a:focus-visible {
+    border-radius: 50%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eightpahar-footer * {
+      transition: none !important;
+    }
+  }
+
+  /* ---------- Narrow desktop / tablet ---------- */
+  @media (max-width: 1320px) {
+    .ftr__inner {
+      padding: 88px clamp(16px, 5vw, 64px) 0;
+    }
+    .ftr__main {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      row-gap: 48px;
+    }
+    .ftr__brand {
+      grid-column: 1 / span 2;
+      padding: 0;
+    }
+    .ftr__col--contact {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    .ftr__col:not(.ftr__col--contact) {
+      padding-top: 0;
+    }
+    .ftr__col:nth-child(2) {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .ftr__bottom {
+      margin-left: 0;
+      padding-inline: 0;
+    }
+  }
+  @media (max-width: 1024px) {
+    .ftr__bottom {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: start;
+      gap: 16px;
+      min-height: 0;
+      padding-block: 32px 40px;
+    }
+    .ftr__legal li:first-child {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .ftr__tagline {
+      justify-self: start;
+    }
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 700px) {
+    .ftr__inner {
+      padding-top: 56px;
+    }
+    .ftr__deco {
+      display: none;
+    }
+    .ftr__main {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 36px;
+      column-gap: 20px;
+      padding-bottom: 40px;
+    }
+    .ftr__brand,
+    .ftr__col--contact {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+    .ftr__col,
+    .ftr__col:nth-child(2) {
+      padding: 0;
+      border-left: 0;
+    }
+    .ftr__col--contact {
+      order: 9;
+    }
+    .ftr__heading::after {
+      margin-top: 16px;
+    }
+    .ftr__links {
+      gap: 0;
+      margin-top: 8px;
+    }
+    .ftr__links li > * {
+      display: inline-block;
+      padding-block: 10px;
+    }
+    .ftr__social {
+      gap: 10px;
+    }
+    .ftr__social a {
+      width: 48px;
+      height: 48px;
+    }
+    .ftr__social svg {
+      width: 26px;
+      height: 26px;
+    }
+    .ftr__legal {
+      gap: 4px 24px;
+    }
+    .ftr__legal li,
+    .ftr__legal li:first-child {
+      padding-inline: 0;
+      border-left: 0;
+    }
+    .ftr__legal li > * {
+      display: inline-block;
+      padding-block: 6px;
+    }
   }
 </style>
