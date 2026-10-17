@@ -370,26 +370,26 @@ export const why = {
   cta: { label: 'Discuss Your Security Needs', href: '#audit', requirement: 'security-audit', source: 'difference' } satisfies Cta,
 };
 
-/* ---------- Section 10 — AMC ---------- */
+/* ---------- Section 10 — Ongoing security care (AMC) ---------- */
 export const amc = {
-  eyebrow: 'Ongoing security & AMC',
-  title: 'Security Doesn’t End After Installation.',
-  lede: 'Cameras drift, lenses gather dust, drives fill up and firmware ages. Regular care keeps the system you invested in working when you need it.',
-  imageAlt: 'Technician in a hard hat and gloves working on wiring inside a wall-mounted electrical panel',
-  groups: [
-    {
-      title: 'Preventive care',
-      items: ['Preventive maintenance visits', 'Equipment inspections', 'Camera and recording-system checks', 'Applicable monitoring support'],
-    },
-    {
-      title: 'Fixes & improvements',
-      items: ['Fault diagnosis', 'Repair support', 'System upgrades', 'Annual Maintenance Contract (AMC) plans'],
-    },
-  ],
-  note: 'Each AMC agreement sets out its visit frequency, inclusions, exclusions and any response commitments in writing. We don’t promise uptime or response times that haven’t been agreed for your site.',
-  primary: { label: 'Request AMC Information', href: '#enquiry', requirement: 'amc', source: 'amc' } satisfies Cta,
-  secondary: { label: 'Get Maintenance Support', href: '#enquiry', requirement: 'repair', source: 'amc' } satisfies Cta,
-  link: { label: 'Explore Maintenance Plans', href: '#faq-amc', source: 'amc' } satisfies Cta,
+  number: '10',
+  eyebrow: 'Ongoing security care',
+  title: { lines: ['Your Security', "Doesn't End at"], accent: 'Installation.' },
+  lede: 'Keep your security system maintained and ready to perform with ongoing support from 8PAHAR after your complete camera system installation.',
+  services: [
+    { label: 'Prevent', title: ['Preventive', 'Maintenance'], text: 'Routine system checks to help identify potential faults and performance issues.' },
+    { label: 'Restore', title: ['Troubleshooting', '& Repairs'], text: 'Support for diagnosing and resolving system issues, subject to AMC terms.' },
+    { label: 'Verify', title: ['System', 'Health Checks'], text: 'Review camera operation, recording and connectivity where applicable.' },
+    { label: 'Improve', title: ['Upgrades &', 'Expansion'], text: 'Explore upgrades as your property and security requirements evolve.' },
+  ] as const,
+  eligibility: {
+    label: 'AMC eligibility',
+    text: 'Available only for complete camera systems installed by 8PAHAR at the property. Third-party installations and incomplete camera installations are not eligible.',
+  },
+  // No dedicated AMC plans page exists yet: "Explore" opens the AMC answer in the FAQ,
+  // "Discuss" goes to the enquiry form with AMC preselected.
+  primary: { label: 'Explore AMC Plans', href: '#faq-amc', source: 'amc' } satisfies Cta,
+  secondary: { label: 'Discuss Your AMC', href: '#enquiry', requirement: 'amc', source: 'amc' } satisfies Cta,
 };
 
 /* ---------- Section 12 — Final conversion ---------- */

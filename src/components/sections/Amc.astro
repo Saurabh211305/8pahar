@@ -1,123 +1,421 @@
 ---
-import { amc } from '../../content/site';
-import CtaLink from '../ui/CtaLink.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
-import Picture from '../ui/Picture.astro';
-import ServiceGlyph from '../illustrations/ServiceGlyph.astro';
+/**
+ * Section 10 — Ongoing security care / AMC (approved reference design).
+ * Left: label, headline, lede and two CTAs. Right: four numbered services on
+ * a 2 × 2 grid with fine dividers. Below: the AMC eligibility banner, which
+ * states the business rule and must always stay visible.
+ */
+import { amc as a } from '../../content/site';
+import Icon from '../ui/Icon.astro';
+
+const num = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<section class="section surface-onyx on-dark amc" id="maintenance" aria-labelledby="amc-title">
-  <div class="container amc__grid">
-    <div class="amc__content">
-      <SectionHeading id="amc-title" eyebrow={amc.eyebrow} title={amc.title} lede={amc.lede} />
+<section class="eightpahar-amc" id="maintenance" aria-labelledby="amc-title">
+  <div class="amc10__inner">
+    <div class="amc10__main">
+      <div class="amc10__intro">
+        <p class="amc10__eyebrow">
+          <span class="amc10__rule" aria-hidden="true"></span>
+          <span>{a.number}/ {a.eyebrow}</span>
+          <span class="amc10__rule" aria-hidden="true"></span>
+        </p>
+        <h2 id="amc-title" class="amc10__title">
+          {a.title.lines.map((l) => <span class="amc10__line">{l}</span>)}
+          <span class="amc10__line amc10__accent">{a.title.accent}</span>
+        </h2>
+        <p class="amc10__lede">{a.lede}</p>
+        <div class="amc10__ctas">
+          <a class="amc10__btn amc10__btn--primary" href={a.primary.href} data-cta="nav" data-cta-source={a.primary.source} data-cta-label={a.primary.label}>
+            {a.primary.label}<Icon name="arrow" size={22} />
+          </a>
+          <a class="amc10__btn amc10__btn--secondary" href={a.secondary.href} data-cta="service" data-cta-source={a.secondary.source} data-cta-label={a.secondary.label} data-prefill-requirement={a.secondary.requirement}>
+            {a.secondary.label}
+          </a>
+        </div>
+      </div>
 
-      <div class="amc__groups">
-        {amc.groups.map((group) => (
-          <div class="amc__group">
-            <h3 class="amc__group-title">{group.title}</h3>
-            <ul role="list">
-              {group.items.map((item) => <li>{item}</li>)}
-            </ul>
-          </div>
+      <ol class="amc10__grid" role="list">
+        {a.services.map((s, i) => (
+          <li class="amc10__item">
+            <span class="amc10__num" aria-hidden="true">{num(i)}</span>
+            <div>
+              <p class="amc10__label">{s.label}</p>
+              <h3 class="amc10__name">{s.title[0]}{' '}<br />{s.title[1]}</h3>
+              <p class="amc10__text">{s.text}</p>
+            </div>
+          </li>
         ))}
-      </div>
-
-      <p class="note amc__note">{amc.note}</p>
-
-      <div class="cta-row">
-        <CtaLink cta={amc.primary} />
-        <CtaLink cta={amc.secondary} variant="secondary" />
-      </div>
-      <CtaLink cta={amc.link} variant="link" />
+      </ol>
     </div>
 
-    <figure class="amc__figure">
-      <div class="frame amc__frame">
-        <Picture name="technician" alt={amc.imageAlt} sizes="(min-width: 1024px) 42vw, 100vw" />
-      </div>
-      <figcaption class="amc__cycle">
-        <span class="amc__cycle-icon"><ServiceGlyph kind="maintain" /></span>
-        <span>Inspect · Clean · Test · Repair · Review — on a schedule agreed in your AMC.</span>
-      </figcaption>
-    </figure>
+    <div class="amc10__eligibility">
+      <p class="amc10__elabel">{a.eligibility.label}</p>
+      <p class="amc10__etext">{a.eligibility.text}</p>
+    </div>
   </div>
 </section>
 
 <style>
-  .amc__grid {
+  .eightpahar-amc {
+    --amc-line: #d9d2c7;
+    --amc-dot: clamp(56px, 4.3vw, 72px);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: #f6f1eb;
+    color: #111212;
+  }
+  /* oversized, low-contrast corner curves (decorative) */
+  .eightpahar-amc::before,
+  .eightpahar-amc::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .eightpahar-amc::before {
+    left: -330px;
+    top: -420px;
+    width: 640px;
+    height: 640px;
+    background: #f0ebe4;
+    box-shadow: 0 0 0 1px #ebe4da;
+  }
+  .eightpahar-amc::after {
+    right: -470px;
+    bottom: -560px;
+    width: 760px;
+    height: 760px;
+    background: #f1ece5;
+    box-shadow: inset 0 0 0 150px #f3eee8, inset 0 0 0 151px #e8e0d5;
+  }
+  .amc10__inner {
+    max-width: 1672px;
+    margin-inline: auto;
+    padding: 130px clamp(16px, 5.6vw, 94px) 63px;
+  }
+  .amc10__main {
     display: grid;
-    gap: clamp(40px, 5vw, 80px);
+    grid-template-columns: 620fr 864fr;
   }
-  @media (min-width: 1024px) {
-    .amc__grid {
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-      align-items: center;
-    }
+
+  /* ---------- Left column ---------- */
+  .amc10__intro {
+    padding: 2px 24px 0 32px;
+    border-right: 1px solid var(--amc-line);
   }
-  .amc__content {
-    display: grid;
-    gap: 32px;
-    justify-items: start;
-  }
-  .amc__groups {
-    display: grid;
-    gap: 28px;
-    width: 100%;
-  }
-  @media (min-width: 640px) {
-    .amc__groups {
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-  }
-  .amc__group-title {
-    padding-bottom: 12px;
-    margin-bottom: 4px;
-    border-bottom: 1px solid var(--line-dark);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--terracotta-light);
-  }
-  .amc__group li {
-    padding-block: 11px;
-    border-bottom: 1px solid var(--line-dark);
-    font-weight: 550;
-  }
-  .amc__note {
-    padding-left: 16px;
-    border-left: 2px solid var(--terracotta);
-  }
-  .amc__figure {
-    display: grid;
-    gap: 0;
-  }
-  .amc__frame {
-    aspect-ratio: 4 / 5;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  }
-  @media (max-width: 1023px) {
-    .amc__frame {
-      aspect-ratio: 16 / 10;
-    }
-  }
-  .amc__cycle {
+  .amc10__eyebrow {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 18px 20px;
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    background: var(--ivory);
-    color: var(--ink);
-    font-size: var(--fs-small);
-    font-weight: 600;
-    line-height: 1.45;
+    gap: 14px;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #173c36;
   }
-  .amc__cycle-icon {
+  .amc10__rule {
     flex: none;
+    width: 77px;
+    height: 1px;
+    background: rgba(23, 60, 54, 0.6);
   }
-  .amc__cycle-icon :global(svg) {
-    width: 44px;
-    height: 44px;
+  .amc10__title {
+    margin-top: 32px;
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 1.55rem + 3.14vw, 4.8rem);
+    font-weight: 500;
+    font-variation-settings: 'opsz' 72;
+    line-height: 1.09;
+    letter-spacing: -0.02em;
+  }
+  .amc10__line {
+    display: block;
+  }
+  .amc10__accent {
+    color: #9b5a3e;
+  }
+  .amc10__lede {
+    max-width: 525px;
+    margin-top: 22px;
+    text-wrap: wrap;
+    font-size: clamp(1.0625rem, 0.82rem + 0.62vw, 1.56rem);
+    line-height: 1.4;
+    letter-spacing: 0.025em;
+    color: #55534f;
+  }
+  .amc10__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 36px;
+  }
+  .amc10__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: 65px;
+    padding: 0 32px;
+    border-radius: 7px;
+    font-size: clamp(1.0625rem, 0.9rem + 0.4vw, 1.3rem);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .amc10__btn--primary {
+    background: #173c36;
+    color: #fff;
+  }
+  .amc10__btn--primary:hover {
+    background: #0f2a25;
+  }
+  .amc10__btn--primary :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+  .amc10__btn--primary:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  .amc10__btn--secondary {
+    border: 1.5px solid #173c36;
+    color: #173c36;
+  }
+  .amc10__btn--secondary:hover {
+    background: rgba(23, 60, 54, 0.06);
+  }
+
+  /* ---------- Services grid ---------- */
+  .amc10__grid {
+    display: grid;
+    grid-template-columns: 417fr 406fr;
+    align-content: start;
+    margin: 0 0 0 41px;
+    padding: 0;
+    list-style: none;
+  }
+  .amc10__item {
+    display: grid;
+    grid-template-columns: var(--amc-dot) minmax(0, 1fr);
+    column-gap: clamp(20px, 2.1vw, 35px);
+    align-items: start;
+    min-width: 0;
+    padding: 0 16px 48px clamp(16px, 1.75vw, 29px);
+  }
+  .amc10__item:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--amc-line);
+  }
+  .amc10__item:nth-child(even) {
+    padding-left: 31px;
+    border-left: 1px solid var(--amc-line);
+  }
+  .amc10__item:nth-child(n + 3) {
+    padding-top: 38px;
+    padding-bottom: 14px;
+  }
+  .amc10__num {
+    display: grid;
+    place-items: center;
+    width: var(--amc-dot);
+    height: var(--amc-dot);
+    border-radius: 50%;
+    background: #e3e5dc;
+    color: #111212;
+    font-size: calc(var(--amc-dot) * 0.42);
+    font-weight: 400;
+    font-feature-settings: 'tnum', 'lnum';
+  }
+  .amc10__label {
+    margin-top: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9b5a3e;
+  }
+  .amc10__name {
+    margin-top: 14px;
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, -0.08rem + 2.03vw, 2.1rem);
+    font-weight: 450;
+    line-height: 1.19;
+    letter-spacing: -0.015em;
+  }
+  .amc10__text {
+    max-width: 280px;
+    margin-top: 8px;
+    font-size: clamp(1rem, 0.88rem + 0.28vw, 1.15rem);
+    line-height: 1.5;
+    color: #5a5854;
+  }
+  .amc10__text::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    margin-top: 22px;
+    background: #9b5a3e;
+  }
+
+  /* ---------- Eligibility banner ---------- */
+  .amc10__eligibility {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    min-height: 125px;
+    margin-top: 46px;
+    padding: 24px 40px 24px 55px;
+    border-radius: 18px;
+    background: #ebe3db;
+  }
+  .amc10__elabel {
+    position: relative;
+    padding: 0 64px 0 32px;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #173c36;
+  }
+  /* terracotta accent on the left */
+  .amc10__elabel::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 2px;
+    height: 45px;
+    margin-top: -22px;
+    background: #9b5a3e;
+  }
+  .amc10__etext {
+    max-width: 1000px;
+    padding: 14px 0 14px 37px;
+    border-left: 1px solid #cfc6b9;
+    font-size: clamp(1rem, 0.9rem + 0.3vw, 1.22rem);
+    line-height: 1.5;
+    color: #575551;
+  }
+
+  .eightpahar-amc :focus-visible {
+    outline: 2px solid #9b6558;
+    outline-offset: 3px;
+  }
+
+  /* ---------- Narrow desktop: compact buttons keep both CTAs on one row ---------- */
+  @media (max-width: 1660px) {
+    .amc10__btn {
+      gap: 14px;
+      padding-inline: 22px;
+      font-size: 1.0625rem;
+    }
+  }
+
+  /* ---------- Narrow desktop / tablet: stack intro over the grid ---------- */
+  @media (max-width: 1400px) {
+    .amc10__inner {
+      padding-top: 88px;
+    }
+    .amc10__main {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 56px;
+    }
+    .amc10__intro {
+      padding: 0;
+      border-right: 0;
+    }
+    .amc10__grid {
+      margin-left: 0;
+    }
+    .amc10__item {
+      padding-left: 0;
+    }
+    .amc10__text {
+      max-width: 34ch;
+    }
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 700px) {
+    .eightpahar-amc {
+      --amc-dot: 52px;
+    }
+    .amc10__inner {
+      padding-top: 64px;
+      padding-bottom: 48px;
+    }
+    .amc10__eyebrow {
+      gap: 10px;
+      font-size: 0.8125rem;
+      letter-spacing: 0.1em;
+    }
+    .amc10__rule {
+      width: 28px;
+    }
+    .amc10__title {
+      margin-top: 20px;
+    }
+    .amc10__lede {
+      margin-top: 20px;
+    }
+    .amc10__ctas {
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .amc10__btn {
+      flex: 1 1 100%;
+      min-height: 56px;
+      padding-inline: 20px;
+    }
+    .amc10__main {
+      row-gap: 40px;
+    }
+    .amc10__grid {
+      display: block;
+    }
+    .amc10__item,
+    .amc10__item:nth-child(n) {
+      column-gap: 18px;
+      padding: 24px 0;
+      border-left: 0;
+      border-bottom: 0;
+      border-top: 1px solid var(--amc-line);
+    }
+    .amc10__name br {
+      display: none;
+    }
+    .amc10__label {
+      margin-top: 4px;
+    }
+    .amc10__text {
+      max-width: none;
+      margin-top: 12px;
+    }
+    .amc10__text::after {
+      margin-top: 16px;
+    }
+    .amc10__eligibility {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 12px;
+      margin-top: 32px;
+      padding: 24px 20px;
+      border-radius: 12px;
+    }
+    .amc10__elabel {
+      padding: 0 0 0 16px;
+      font-size: 0.9375rem;
+    }
+    .amc10__elabel::before {
+      height: 24px;
+      margin-top: -12px;
+    }
+    .amc10__etext {
+      padding: 12px 0 0;
+      border-left: 0;
+      border-top: 1px solid #cfc6b9;
+    }
   }
 </style>

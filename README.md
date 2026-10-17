@@ -116,6 +116,19 @@ lines and two low-contrast CSS corner curves. Desktop 3 × 2 grid; ≤1240px two
 columns; ≤700px one column. The CTA goes to the Section 03 form (`#audit`).
 The previous `assessment` photo is no longer used on the page.
 
+## Section 10 (approved reference design)
+
+Content lives in `amc` (`src/content/site.ts`); the component is
+`src/components/sections/Amc.astro` (id `maintenance` kept for existing links).
+Typography and layout only: no photos or icons. The **AMC eligibility banner**
+states the business rule (complete camera systems installed by 8PAHAR only)
+and must stay visible at every breakpoint. There is no dedicated AMC plans
+page yet: "Explore AMC Plans" opens the AMC answer in the FAQ (`#faq-amc`),
+and "Discuss Your AMC" goes to the enquiry form with AMC preselected.
+Side-by-side layout above 1400px (compact buttons ≤1660px); stacked below;
+single-column services on mobile. The previous `technician` photo is no
+longer used on the page.
+
 ## Before launch
 
 Nothing below is published as fact until it is configured — the related UI is
